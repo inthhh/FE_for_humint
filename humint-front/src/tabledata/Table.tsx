@@ -51,7 +51,7 @@ export const Table = () => {
         "Guide: Only can detect logo in image format with png, jpg and jpeg.",
         "Guide: The Samsung logo cannot be used in duplicate within the dotcom image except for the GNB logo.",
         "Guide: Background color must be transparent or #f4f4f4",
-        "Guide: Image is not detected."]
+        "Guide: Image is not detected.","Pass"]
     
   
       const getAPI = async() => {
@@ -168,32 +168,32 @@ export const Table = () => {
                                         {index === row.cells.length - 4 ? ( // 드롭다운 생성 조건
                                         <td {...cell.getCellProps()}>
                                             
-                                            {cell.render('Cell')!=null ? ( 
+                                            {dataList[ri].check_result ? ( 
                                             <select
                                                 key={cell.render('Cell')} // 기존 데이터에 든 값
                                                 defaultValue={cell.render('Cell')} // 기존 데이터에 든 값
                                                 onChange={(e) => handleDropdownChange(cell.render('Cell'))}
                                             >
                                                     <option>{cell.render('Cell')}</option>
-                                                    <option value="Y">Y</option>
-                                                    <option value="N">N</option>
-                                                {/* {cell.render('Cell') == "N" ? (
+                                                    {/* <option value="Y">Y</option>
+                                                    <option value="N">N</option> */}
+                                                {dataList[ri].check_result == "N" ? (
                                                     <>
                                                         <option value="Y">Y</option>
                                                     </>
-                                                ) : (
+                                                ) : dataList[ri].check_result == "Y" ? (
                                                     <>
                                                         <option value="N">N</option>
                                                     </>
-                                                )} */}
+                                                ) : null}
                                             </select>)
-                                            :(<p>null</p>)
+                                            : (null)
                                         }
                                         </td>
                                     ) : index === row.cells.length - 3 ? ( // 드롭다운 생성 조건
                                     <td {...cell.getCellProps()}>
                                         
-                                        {cell.render('Cell')!=null ? ( 
+                                        {dataList[ri].check_reason ? ( 
                                         <select
                                             key={cell.render('Cell')} // 기존 데이터에 든 값
                                             defaultValue={cell.render('Cell')} // 기존 데이터에 든 값
@@ -204,7 +204,7 @@ export const Table = () => {
                                                     <option key={i}>{i+1}. {msg}</option>
                                                 ))}
                                         </select>)
-                                        :(<p>null</p>)
+                                        :(null)
                                     }
                                     </td>) : index === row.cells.length - 2 ? ( // 이미지
                                     <td {...cell.getCellProps()}>

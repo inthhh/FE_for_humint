@@ -31,7 +31,7 @@ function Home() {
   
   return (
     <div className="Home">
-          QA 자동화
+          <p style={{paddingLeft:"10px"}}>QA 자동화 화이팅~</p>
           <Provider store={store}>
             <Table/>
           </Provider>
