@@ -12,7 +12,6 @@ import store from '../redux/store';
 import { DateOption, SiteCodeOption, ResultOption } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 
-
 interface datalist {
     id: number;
     date: string;
@@ -31,6 +30,8 @@ interface datalist {
     updated_at: string;
   }
 
+  
+
 export const Table = () => {
     
     const [dataList, setDataList] = useState<datalist[]>([]);
@@ -38,6 +39,19 @@ export const Table = () => {
     const date = useSelector((state: any) => state.DateOption);
     const ct = useSelector((state: any) => state.SiteCodeOption);
     const result = useSelector((state: any) => state.ResultOption);
+    const GuideMsg: string[] = ["Guide: Unable to change font size",
+        "Guide: Unable to change font color",
+        "Guide: Unable to change fonts",
+        "Guide: 'Samsung' must be consistently written",
+        "Guide: Check for the insertion of periods",
+        "Guide: All words in titles cannot be written in uppercase, except 'Samsung'.",
+        "Guide: SKU cannot be included in text",
+        "Guide: Less than 25 characters",
+        "Guide: The badge's color guide was not followed.",
+        "Guide: Only can detect logo in image format with png, jpg and jpeg.",
+        "Guide: The Samsung logo cannot be used in duplicate within the dotcom image except for the GNB logo.",
+        "Guide: Background color must be transparent or #f4f4f4",
+        "Guide: Image is not detected."]
     
   
       const getAPI = async() => {
@@ -148,30 +162,46 @@ export const Table = () => {
                                     <React.Fragment key={index}>
                                         {index === row.cells.length - 4 ? ( // 드롭다운 생성 조건
                                         <td {...cell.getCellProps()}>
+                                            
+                                            {cell.render('Cell')!=null ? ( 
                                             <select
-                                                defaultValue={cell.render('Cell')}
-                                                value={cell.render('Cell')} // 기존 데이터에 든 값
+                                                key={cell.render('Cell')} // 기존 데이터에 든 값
+                                                defaultValue={cell.render('Cell')} // 기존 데이터에 든 값
                                                 onChange={(e) => handleDropdownChange(cell.render('Cell'))}
                                             >
-                                                <>
-                                                        <option value="N">N</option>
-                                                        <option value="Y">Y</option>
-                                                        <option>{cell.render('Cell')}</option>
-                                                </>
-                                                {/* {cell.render('Cell') == 'N' ? (
+                                                    <option>{cell.render('Cell')}</option>
+                                                    <option value="Y">Y</option>
+                                                    <option value="N">N</option>
+                                                {/* {cell.render('Cell') == "N" ? (
                                                     <>
                                                         <option value="Y">Y</option>
-                                                        <option value="N">N</option>
                                                     </>
                                                 ) : (
                                                     <>
                                                         <option value="N">N</option>
-                                                        <option value="Y">Y</option>
                                                     </>
                                                 )} */}
-                                            </select>
+                                            </select>)
+                                            :(<p>null</p>)
+                                        }
                                         </td>
-                                    ) :
+                                    ) : index === row.cells.length - 3 ? ( // 드롭다운 생성 조건
+                                    <td {...cell.getCellProps()}>
+                                        
+                                        {cell.render('Cell')!=null ? ( 
+                                        <select
+                                            key={cell.render('Cell')} // 기존 데이터에 든 값
+                                            defaultValue={cell.render('Cell')} // 기존 데이터에 든 값
+                                            onChange={(e) => handleDropdownChange(cell.render('Cell'))}
+                                        >
+                                                <option>{cell.render('Cell')}</option>
+                                                {GuideMsg.map((msg, i) => (
+                                                    <option key={i}>{i+1}. {msg}</option>
+                                                ))}
+                                        </select>)
+                                        :(<p>null</p>)
+                                    }
+                                    </td>) :
                                         index === row.cells.length - 1 ? ( // 마지막 열에 저장버튼
                                             <td>
                                                 <button onClick={() => handleButtonClick(row.original)}>저장</button>
