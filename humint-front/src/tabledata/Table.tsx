@@ -53,6 +53,7 @@ export const Table = () => {
       
 
       const handleFilter=()=>{
+        handleSetPageSize();
         console.log(date, ct, result);
         getAPI();
         
@@ -63,7 +64,6 @@ export const Table = () => {
     //   },[])
     
     const columns = useMemo(() => COLUMNS, []);
-    const data = dataList;
 
     const [filterDate, setFilterDate] = useState('');
     const [filterSiteCode, setFilterSiteCode] = useState('');
@@ -88,17 +88,24 @@ export const Table = () => {
     } = useTable({
             // @ts-ignore
             columns,
-            data,
+            data: dataList,
         },
         usePagination
     );
 
+    const {pageIndex, pageSize} = state
+    const handleSetPageSize=()=>{
+        setPageSize(1000);
+    }
+
     // const { pageIndex, pageSize } = state
 
-    const handleDropdownChange = (row: any, value: string) => {
+    const handleDropdownChange = (value: string) => {
         const selectedValue = value;
         console.log(selectedValue)
     };
+
+    const [selected, setSelected] = useState("");
 
     const handleButtonClick = (rowdata:any)=>{
         console.log(rowdata, "save");
@@ -128,7 +135,7 @@ export const Table = () => {
                     ))}
                 </thead>
 
-                {data && data.length > 0 ? (
+                {dataList && dataList.length > 0 ? (
                 <tbody {...getTableBodyProps()}>
                 
                 {page.map((row: any) => {
@@ -140,16 +147,28 @@ export const Table = () => {
                                 return (
                                     <React.Fragment key={index}>
                                         {index === row.cells.length - 4 ? ( // 드롭다운 생성 조건
-                                        <td>
+                                        <td {...cell.getCellProps()}>
                                             <select
-                                                value={cell.render('Cell')} // 기존 데이터에 든 값을 선택
-                                                onChange={(e) => handleDropdownChange(row, e.target.value)}
+                                                defaultValue={cell.render('Cell')}
+                                                value={cell.render('Cell')} // 기존 데이터에 든 값
+                                                onChange={(e) => handleDropdownChange(cell.render('Cell'))}
                                             >
-                                                {cell.render('Cell') === 'Y' ? (
-                                                    <option value="N">N</option>
+                                                <>
+                                                        <option value="N">N</option>
+                                                        <option value="Y">Y</option>
+                                                        <option>{cell.render('Cell')}</option>
+                                                </>
+                                                {/* {cell.render('Cell') == 'N' ? (
+                                                    <>
+                                                        <option value="Y">Y</option>
+                                                        <option value="N">N</option>
+                                                    </>
                                                 ) : (
-                                                    <option value="Y">Y</option>
-                                                )}
+                                                    <>
+                                                        <option value="N">N</option>
+                                                        <option value="Y">Y</option>
+                                                    </>
+                                                )} */}
                                             </select>
                                         </td>
                                     ) :
@@ -166,7 +185,7 @@ export const Table = () => {
                 })}
             </tbody>
             ) : (
-                <p>{date} & {ct} & {result} : 테이블 값이 없습니다</p>)}
+                <p>테이블 값이 없습니다</p>)}
             </table>
 
             </div>
