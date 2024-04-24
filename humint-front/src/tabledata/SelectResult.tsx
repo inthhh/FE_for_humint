@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ResultOption } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
+import './Table.css'
 
 function SelectResult() {
     const [isDropdownView, setDropdownView] = useState(false)
@@ -30,18 +31,18 @@ function SelectResult() {
     return (
       <div className="container" onBlur={handleBlurContainer}>
         <label onClick={handleClickContainer}>
-          <button>Check Result : {yn==''?('ALL'):(`${yn}`)} {isDropdownView ? '▲' : '▼'}</button>
+          <button className='filter-btn'>Check Result : {yn==''?('ALL'):(`${yn}`)} {isDropdownView ? '▲' : '▼'}</button>
         </label>
         {isDropdownView && (<ul style={{listStyle:'none',position: 'absolute', 
-        backgroundColor: 'lightgray',zIndex: 1,
+        zIndex: 1,
         margin: 0, padding: 0 }}>
-            <li style={{marginTop:"5px" }} onMouseDown={(e) => {
+            <li className='limenu' onMouseDown={(e) => {
                 e.preventDefault()
               }} onClick={() => onClickEvent("ALL")}>ALL</li>
-            <li style={{marginTop:"5px" }} onMouseDown={(e) => {
+            <li className='limenu' onMouseDown={(e) => {
                 e.preventDefault()
               }} onClick={() => onClickEvent('Y')}>Y</li>
-            <li style={{marginTop:"5px" }} onMouseDown={(e) => {
+            <li className='limenu' onMouseDown={(e) => {
                 e.preventDefault()
               }} onClick={() => onClickEvent('N')}>N</li>
 

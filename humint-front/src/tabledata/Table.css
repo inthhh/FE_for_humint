@@ -24,3 +24,30 @@ table th {
     background-color: #5182ca;
     color: white;
 }
+
+.container{
+    margin: 10px;
+}
+
+.filter-btn{
+    width: 300px;
+    height: 40px;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.limenu{
+    font-size: 16px;
+    cursor: pointer;
+    width: 300px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #c5d9f0;
+    border-bottom: 1px solid rgb(66, 66, 66);
+    border-right: 1px solid rgb(66, 66, 66);
+    border-left: 1px solid rgb(66, 66, 66);
+    /* style={{marginTop:"5px", cursor:"pointer" }} */
+}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SiteCodeOption } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
+import './Table.css'
 
 function SelectSiteCode() {
     const [isDropdownView, setDropdownView] = useState(false)
@@ -29,15 +30,15 @@ function SelectSiteCode() {
     return (
       <div className="container" onBlur={handleBlurContainer}>
         <label onClick={handleClickContainer}>
-          <button>Site Code : {ct} {isDropdownView ? '▲' : '▼'}</button>
+          <button className='filter-btn'>Site Code : {ct} {isDropdownView ? '▲' : '▼'}</button>
         </label>
         {isDropdownView && (<ul style={{listStyle:'none',position: 'absolute', 
-        backgroundColor: 'lightgray',zIndex: 1, 
+        zIndex: 1, 
         maxHeight: '300px', overflowY: 'auto',
         margin: 0, padding: 0 }}>
           {
             Country.map((ct, i) => (
-              <li style={{marginTop:"5px" }} onMouseDown={(e) => {
+              <li className='limenu' onMouseDown={(e) => {
                 e.preventDefault()
               }}  onClick={() => onClickEvent(i)}>{ct}</li>
             ))

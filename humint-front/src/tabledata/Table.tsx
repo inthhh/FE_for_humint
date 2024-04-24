@@ -119,11 +119,16 @@ export const Table = () => {
         console.log(selectedValue)
     };
 
+    const handleImgclick = (src:string)=>{
+        window.open(src);
+    }
+
     const [selected, setSelected] = useState("");
 
     const handleButtonClick = (rowdata:any)=>{
         console.log(rowdata, "save");
     }
+
 
     return (
         <div>
@@ -132,7 +137,7 @@ export const Table = () => {
                 <SelectDate/>
                 <SelectSiteCode/>
                 <SelectResult/>
-                <button onClick={() => handleFilter()}>테이블 보기</button>
+                <button className='filter-btn' style={{margin:"10px", backgroundColor:"yellow"}}onClick={() => handleFilter()}>테이블 보기</button>
             </div>
             </Provider>
         <div className="table">
@@ -152,7 +157,7 @@ export const Table = () => {
                 {dataList && dataList.length > 0 ? (
                 <tbody {...getTableBodyProps()}>
                 
-                {page.map((row: any) => {
+                {page.map((row: any, ri:number) => {
                     prepareRow(row);
                     return (
                         <tr {...row.getRowProps()}>
@@ -201,6 +206,17 @@ export const Table = () => {
                                         </select>)
                                         :(<p>null</p>)
                                     }
+                                    </td>) : index === row.cells.length - 2 ? ( // 이미지
+                                    <td {...cell.getCellProps()}>
+                                        
+                                        {/* contents가 https로 시작한다면 이미지 출력, 너비 고정 */}
+                                        
+                                        {dataList[ri].contents && dataList[ri].contents.startsWith("https:") ? (
+                                            <img src={dataList[ri].contents} alt="image" style={{ width: '300px', cursor:"pointer" }} 
+                                            onClick={()=>handleImgclick(dataList[ri].contents)} />
+                                        ) : (
+                                            null
+                                        )}
                                     </td>) :
                                         index === row.cells.length - 1 ? ( // 마지막 열에 저장버튼
                                             <td>

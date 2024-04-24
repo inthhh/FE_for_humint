@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { DateOption } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
+import './Table.css'
 
 function SelectDate() {
   const [isDropdownView, setDropdownView] = useState(false)
@@ -42,16 +43,16 @@ function SelectDate() {
     return (
       <div className="container" onBlur={handleBlurContainer}>
         <label onClick={handleClickContainer}>
-          <button>QA Date : {date}{isDropdownView ? '▲' : '▼'}</button>
+          <button className='filter-btn'>QA Date : {date}{isDropdownView ? '▲' : '▼'}</button>
         </label>
         {isDropdownView && (<ul style={{listStyle:'none', position: 'absolute', 
-        backgroundColor: 'lightgray',zIndex: 1,
+        zIndex: 1,
         margin: 0, padding: 0 }}>
           {
             Array(7).fill('').map((li, i) => (
               <li onMouseDown={(e) => {
                 e.preventDefault()
-              }} onClick={() => onClickEvent(i)} style={{marginTop:"5px" }} >{dateList[i]}</li>
+              }} onClick={() => onClickEvent(i)} className='limenu' >{dateList[i]}</li>
             ))
           }
         </ul>)}
