@@ -8,6 +8,15 @@ interface AppState {
   SiteCodeOption: string | null;
 }
 
+// 오늘 날짜를 가져오는 함수
+const getTodayDate = (): string => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 // 액션 타입 정의
 const SET_DATE = "SET_DATE";
 const SET_RESULT = "SET_RESULT";
@@ -25,18 +34,16 @@ export const ResultOption = (result: string | null): AnyAction => ({
 });
 
 export const SiteCodeOption = (code: string | null): AnyAction => ({
-  // 추가된 부분
   type: SET_SITECODE,
   payload: code,
 });
 
-
 // 리듀서 함수
 const reducer = (
   state: AppState = {
-    DateOption: null,
-    ResultOption: null,
-    SiteCodeOption: null,
+    DateOption: getTodayDate(), // 오늘 날짜로 초기화
+    ResultOption: "", // "Y"로 초기화
+    SiteCodeOption: "uk", // "uk"로 초기화
   },
   action: AnyAction
 ): AppState => {
@@ -51,12 +58,11 @@ const reducer = (
         ...state,
         ResultOption: action.payload,
       };
-    case SET_SITECODE: // 추가된 부분
+    case SET_SITECODE:
       return {
         ...state,
         SiteCodeOption: action.payload,
       };
-    
     default:
       return state;
   }

@@ -50,15 +50,17 @@ export const Table = () => {
           console.error('API 호출 에러:', e);
         }
       }
-      console.log(date, ct, result);
+      
 
       const handleFilter=()=>{
+        console.log(date, ct, result);
         getAPI();
+        
       }
 
-      useEffect(()=>{
-        getAPI();
-      },[])
+    //   useEffect(()=>{
+    //     getAPI();
+    //   },[])
     
     const columns = useMemo(() => COLUMNS, []);
     const data = dataList;
@@ -91,11 +93,17 @@ export const Table = () => {
         usePagination
     );
 
-    const { pageIndex, pageSize } = state
+    // const { pageIndex, pageSize } = state
+
+    const handleDropdownChange = (row: any, value: string) => {
+        const selectedValue = value;
+        console.log(selectedValue)
+    };
 
     const handleButtonClick = (rowdata:any)=>{
         console.log(rowdata, "save");
     }
+
     return (
         <div>
             <Provider store={store}>
@@ -120,27 +128,45 @@ export const Table = () => {
                     ))}
                 </thead>
 
+                {data && data.length > 0 ? (
                 <tbody {...getTableBodyProps()}>
-            {page.map((row: any) => {
-                prepareRow(row);
-                return (
-                    <tr {...row.getRowProps()}>
-                        {row.cells.map((cell: any, index: number) => {
+                
+                {page.map((row: any) => {
+                    prepareRow(row);
+                    return (
+                        <tr {...row.getRowProps()}>
+                            {row.cells.map((cell: any, index: number) => {
 
-                            return (
-                                <React.Fragment key={index}>
-                                    {index === row.cells.length - 1 ? ( // 마지막 열에 저장버튼
+                                return (
+                                    <React.Fragment key={index}>
+                                        {index === row.cells.length - 4 ? ( // 드롭다운 생성 조건
                                         <td>
-                                            <button onClick={() => handleButtonClick(row.original)}>저장</button>
+                                            <select
+                                                value={cell.render('Cell')} // 기존 데이터에 든 값을 선택
+                                                onChange={(e) => handleDropdownChange(row, e.target.value)}
+                                            >
+                                                {cell.render('Cell') === 'Y' ? (
+                                                    <option value="N">N</option>
+                                                ) : (
+                                                    <option value="Y">Y</option>
+                                                )}
+                                            </select>
                                         </td>
-                                    ):(<td {...cell.getCellProps()}>{cell.render('Cell')}</td>)}
-                                </React.Fragment>
-                            );
+                                    ) :
+                                        index === row.cells.length - 1 ? ( // 마지막 열에 저장버튼
+                                            <td>
+                                                <button onClick={() => handleButtonClick(row.original)}>저장</button>
+                                            </td>
+                                        ):(<td {...cell.getCellProps()}>{cell.render('Cell')}</td>)}
+                                    </React.Fragment>
+                                );
                         })}
-                    </tr>
-                );
-            })}
+                        </tr>
+                    );
+                })}
             </tbody>
+            ) : (
+                <p>{date} & {ct} & {result} : 테이블 값이 없습니다</p>)}
             </table>
 
             </div>

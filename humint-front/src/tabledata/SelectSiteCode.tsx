@@ -31,10 +31,15 @@ function SelectSiteCode() {
         <label onClick={handleClickContainer}>
           <button>Site Code : {ct} {isDropdownView ? '▲' : '▼'}</button>
         </label>
-        {isDropdownView && (<ul style={{listStyle:'none'}}>
+        {isDropdownView && (<ul style={{listStyle:'none',position: 'absolute', 
+        backgroundColor: 'lightgray',zIndex: 1, 
+        maxHeight: '300px', overflowY: 'auto',
+        margin: 0, padding: 0 }}>
           {
             Country.map((ct, i) => (
-              <li onClick={() => onClickEvent(i)}>{ct}</li>
+              <li style={{marginTop:"5px" }} onMouseDown={(e) => {
+                e.preventDefault()
+              }}  onClick={() => onClickEvent(i)}>{ct}</li>
             ))
           }
         </ul>)}
