@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { COLUMNS } from './Columns'
 // import MOCK_DATA from './mockdata.json'
 import { usePagination, useTable } from 'react-table'
@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 interface datalist {
     id: number;
+    key: string;
     date: string;
     rhq: string;
     subsidiary: string;
@@ -21,8 +22,9 @@ interface datalist {
     page_type: string;
     category: string;
     location: string;
+    area: string;
     title: string;
-    Description: string;
+    description: string;
     contents: string;
     check_result: string;
     check_reason: string;
@@ -51,8 +53,12 @@ export const Table = () => {
         "Guide: Only can detect logo in image format with png, jpg and jpeg.",
         "Guide: The Samsung logo cannot be used in duplicate within the dotcom image except for the GNB logo.",
         "Guide: Background color must be transparent or #f4f4f4",
-        "Guide: Image is not detected.","Pass"]
-    
+        "Guide: Image is not detected.","Pass"];
+    const [changeResult, setResult] = useState<string>('');
+    const [changeReason, setReason] = useState<string>('');
+
+    const [modalOpen, setModalOpen] = useState(false);
+    const modalBackground = useRef<HTMLDivElement>(null);
   
       const getAPI = async() => {
         try {
@@ -65,6 +71,19 @@ export const Table = () => {
         }
       }
       
+      const editAPI = async(id: number) => {
+        try {
+          const { data } = await axios.patch(`http://121.252.182.166:3000/api/v1/raw-data/${id}`,{
+            "checkResult": changeResult,
+            "checkReason": changeReason
+          });
+          console.log("저장 완료", changeResult, changeReason);
+          console.log(data);
+        } catch (e) {
+          console.error('API 호출 에러:', e);
+        }
+      }
+
 
       const handleFilter=()=>{
         handleSetPageSize();
@@ -73,9 +92,11 @@ export const Table = () => {
         
       }
 
-    //   useEffect(()=>{
-    //     getAPI();
-    //   },[])
+      const handleButtonClick = (id:number)=>{
+        editAPI(id);
+        getAPI();
+        setModalOpen(true);
+      }
     
     const columns = useMemo(() => COLUMNS, []);
 
@@ -112,11 +133,17 @@ export const Table = () => {
         setPageSize(1000);
     }
 
-    // const { pageIndex, pageSize } = state
+    const handleDropdownChangeResult = (value: string) => {
+        setResult(value)
+        console.log(value,"로 변경됨");
+        console.log("현재 상태 Result", changeResult);
 
-    const handleDropdownChange = (value: string) => {
-        const selectedValue = value;
-        console.log(selectedValue)
+    };
+
+    const handleDropdownChangeReason = (value: string) => {
+        setReason(value)
+        console.log(value,"로 변경됨");
+        console.log("현재 상태 Reason", changeReason);
     };
 
     const handleImgclick = (src:string)=>{
@@ -124,10 +151,6 @@ export const Table = () => {
     }
 
     const [selected, setSelected] = useState("");
-
-    const handleButtonClick = (rowdata:any)=>{
-        console.log(rowdata, "save");
-    }
 
 
     return (
@@ -142,10 +165,12 @@ export const Table = () => {
             </Provider>
         <div className="table">
             <table {...getTableProps()}>
+
+                {/* table head */}
                 <thead>
                     {headerGroups.map((headerGroup:any) => (                   
                         <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column:any) => (
+                            {headerGroup.headers.map((column:any, i:number) => (
                                 <th {...column.getHeaderProps()}>
                                     {column.render('Header')}
                                 </th>
@@ -157,6 +182,7 @@ export const Table = () => {
                 {dataList && dataList.length > 0 ? (
                 <tbody {...getTableBodyProps()}>
                 
+                {/* table body */}
                 {page.map((row: any, ri:number) => {
                     prepareRow(row);
                     return (
@@ -171,8 +197,8 @@ export const Table = () => {
                                             {dataList[ri].check_result ? ( 
                                             <select
                                                 key={cell.render('Cell')} // 기존 데이터에 든 값
-                                                defaultValue={cell.render('Cell')} // 기존 데이터에 든 값
-                                                onChange={(e) => handleDropdownChange(cell.render('Cell'))}
+                                                defaultValue={cell.render('Cell')}
+                                                onChange={(e) => handleDropdownChangeResult(e.target.value)}
                                             >
                                                     <option>{cell.render('Cell')}</option>
                                                     {/* <option value="Y">Y</option>
@@ -185,7 +211,10 @@ export const Table = () => {
                                                     <>
                                                         <option value="N">N</option>
                                                     </>
-                                                ) : null}
+                                                ) : <>
+                                                <option value="N">N</option>
+                                                <option value="Y">Y</option>
+                                                </>}
                                             </select>)
                                             : (null)
                                         }
@@ -197,11 +226,12 @@ export const Table = () => {
                                         <select
                                             key={cell.render('Cell')} // 기존 데이터에 든 값
                                             defaultValue={cell.render('Cell')} // 기존 데이터에 든 값
-                                            onChange={(e) => handleDropdownChange(cell.render('Cell'))}
+                                            onChange={(e) => handleDropdownChangeReason(e.target.value)}
                                         >
                                                 <option>{cell.render('Cell')}</option>
                                                 {GuideMsg.map((msg, i) => (
-                                                    <option key={i}>{i+1}. {msg}</option>
+                                                    <option key={i}>{msg}</option>
+                                                    // <option key={i}>{i+1}. {msg}</option>
                                                 ))}
                                         </select>)
                                         :(null)
@@ -219,11 +249,31 @@ export const Table = () => {
                                         )}
                                     </td>) :
                                         index === row.cells.length - 1 ? ( // 마지막 열에 저장버튼
+                                            <>
                                             <td>
-                                                <button onClick={() => handleButtonClick(row.original)}>저장</button>
+                                                <button onClick={() => handleButtonClick(dataList[ri].id)}>저장</button>
                                             </td>
+                                            {
+                                                modalOpen &&
+                                                <div className={'modal-container'} ref={modalBackground} onClick={e => {
+                                                  if (e.target === modalBackground.current) {
+                                                    setModalOpen(false);
+                                                  }
+                                                }}>
+                                                  <div className={'modal-content'}>
+                                                    <div>
+                                                    <p>저장되었습니다.</p>
+                                                    <button className={'modal-close-btn'} onClick={() => setModalOpen(false)}>
+                                                      닫기
+                                                    </button>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              }
+                                            </>
                                         ):(<td {...cell.getCellProps()}>{cell.render('Cell')}</td>)}
                                     </React.Fragment>
+                                    
                                 );
                         })}
                         </tr>

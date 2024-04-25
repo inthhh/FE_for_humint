@@ -5,10 +5,11 @@ import './Table.css'
 
 function SelectSiteCode() {
     const [isDropdownView, setDropdownView] = useState(false)
-    const Country: string[] = ['ca_fr', 'ca', 'mx', 'br', 'latin', 'latin_en', 'co', 'ar', 'py', 'uy', 'cl', 'pe', 'sg', 'au', 'nz', 'id', 'th', 'mm', 'vn', 'my', 'ph', 'sec', 'jp', 'cn', 'hk', 'hk_en',
-     'tw', 'uk', 'ie', 'de', 'at', 'ch', 'ch_fr', 'fr', 'it', 'gr', 'es', 'pt', 'be', 'be_fr', 'nl', 'se', 'dk', 'fi', 'no', 'pl', 'ro', 'bg', 'hu', 'cz', 'sk', 'ee', 'lv', 'lt', 'hr', 'rs', 'si', 'al', 
-     'mk', 'ba', 'ua', 'ru', 'az', 'ge', 'kz_ru', 'kz_kz', 'mn', 'uz_ru', 'uz_uz', 'in', 'bd', 'ae', 'ae_ar', 'il', 'ps', 'sa', 'sa_en', 'tr', 'iran', 'levant', 'levant_ar', 'iq_ar', 'iq_ku',
-      'lb', 'pk', 'eg', 'n_africa', 'africa_en', 'africa_fr', 'africa_pt', 'za', 'us']
+    const Country: string[] = ['al', 'ar', 'at', 'au', 'az', 'ba', 'bd', 'be', 'be_fr', 'bg', 'br', 'ca', 'ca_fr', 'ch', 'ch_fr', 
+    'cl', 'cn', 'co', 'cz', 'de', 'dk', 'ee', 'eg', 'es', 'fi', 'fr', 'ge', 'gr', 'hk', 'hk_en', 'hr', 'hu', 'id', 'ie', 'il', 'in', 'iran', 
+    'iq_ar', 'iq_ku', 'it', 'jp', 'kz_kz', 'kz_ru', 'lb', 'latin', 'latin_en', 'levant', 'levant_ar', 'lt', 'lu', 'lv', 'mk', 'mn', 
+    'mx', 'my', 'n_africa', 'nl', 'no', 'nz', 'pe', 'ph', 'pk', 'pl', 'pt', 'py', 'ro', 'rs', 'ru', 'sa', 'sa_en', 'sec', 'se', 
+    'sg', 'si', 'sk', 'th', 'tr', 'tw', 'ua', 'uz_ru', 'uz_uz', 'vn', 'za']
   
     const handleClickContainer = () => {
       setDropdownView(!isDropdownView)
