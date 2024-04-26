@@ -11,6 +11,8 @@ import { Provider } from 'react-redux';
 import store from '../redux/store';
 import { DateOption, SiteCodeOption, ResultOption } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
+import {Cookies} from 'react-cookie';
+import {setCookie, getCookie} from '../cookieUtils';
 
 interface datalist {
     id: number;
@@ -41,6 +43,8 @@ export const Table = () => {
     const date = useSelector((state: any) => state.DateOption);
     const ct = useSelector((state: any) => state.SiteCodeOption);
     const result = useSelector((state: any) => state.ResultOption);
+    const myname = useSelector((state: any) => state.myName);
+
     const GuideMsg: string[] = [
         "Guide: 'Samsung' must be consistently written",
     "Guide: Check for the insertion of periods",
@@ -65,6 +69,7 @@ export const Table = () => {
   
       const getAPI = async() => {
         try {
+            setName(getCookie('myName'));
           const { data } = await axios.get(`http://121.252.182.166:3000/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}`);
           setDataList(data.data);
           console.log(data.data);
@@ -100,13 +105,16 @@ export const Table = () => {
         getAPI();
         setModalOpen(true);
       }
-    
+
+    console.log("myname is ", myname);
+
     const columns = useMemo(() => COLUMNS, []);
 
     const [filterDate, setFilterDate] = useState('');
     const [filterSiteCode, setFilterSiteCode] = useState('');
     const [filterResult, setFilterResult] = useState('');
-
+    const [name, setName] = useState<string|null>('');
+    
     
     const { 
         getTableProps, 
@@ -164,8 +172,10 @@ export const Table = () => {
                 <SelectDate/>
                 <SelectSiteCode/>
                 <SelectResult/>
-                <button className='filter-btn' style={{margin:"10px", backgroundColor:"yellow"}}onClick={() => handleFilter()}>테이블 보기</button>
+                <button className='filter-btn' style={{margin:"20px 0 0 20px", backgroundColor:"yellow"}}onClick={() => handleFilter()}>테이블 보기</button>
+                <p style={{margin:"30px 0 0 20px"}}>✅ {getCookie('myName')} 님 환영합니다.</p>
             </div>
+            
             </Provider>
         <div className="table">
             <table {...getTableProps()}>

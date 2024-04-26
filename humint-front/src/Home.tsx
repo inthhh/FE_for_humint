@@ -7,6 +7,7 @@ import Table from './tabledata/Table';
 import { toHaveDescription } from '@testing-library/jest-dom/matchers';
 import store from './redux/store';
 import { Provider } from 'react-redux';
+import Login from './Login';
 
 interface datalist {
   id: number;
@@ -31,10 +32,8 @@ function Home() {
   
   return (
     <div className="Home">
-          <p style={{paddingLeft:"10px"}}>QA 자동화 화이팅~</p>
-          <Provider store={store}>
-            <Table/>
-          </Provider>
+          {/* <p style={{paddingLeft:"10px"}}>QA 자동화 화이팅~</p> */}
+            <Login/>
     </div>
   );
 }

@@ -6,6 +6,7 @@ interface AppState {
   DateOption: string | null;
   ResultOption: string | null;
   SiteCodeOption: string | null;
+  myName: string | null;
 }
 
 // 오늘 날짜를 가져오는 함수
@@ -21,6 +22,7 @@ const getTodayDate = (): string => {
 const SET_DATE = "SET_DATE";
 const SET_RESULT = "SET_RESULT";
 const SET_SITECODE = "SET_SITECODE";
+const SET_MYNAME = "SET_MYNAME";
 
 // 액션 생성자 함수
 export const DateOption = (date: string | null): AnyAction => ({
@@ -38,12 +40,18 @@ export const SiteCodeOption = (code: string | null): AnyAction => ({
   payload: code,
 });
 
+export const myName = (myname: string | null): AnyAction => ({
+  type: SET_MYNAME,
+  payload: myname,
+});
+
 // 리듀서 함수
 const reducer = (
   state: AppState = {
     DateOption: getTodayDate(), // 오늘 날짜로 초기화
     ResultOption: "", // "Y"로 초기화
     SiteCodeOption: "uk", // "uk"로 초기화
+    myName: "user1",
   },
   action: AnyAction
 ): AppState => {
@@ -62,6 +70,11 @@ const reducer = (
       return {
         ...state,
         SiteCodeOption: action.payload,
+      };
+      case SET_MYNAME:
+      return {
+        ...state,
+        myName: action.payload,
       };
     default:
       return state;
