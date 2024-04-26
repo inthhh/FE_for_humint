@@ -33,7 +33,10 @@ export const COLUMNS = [
     },
     {
         Header : 'Content',
-        accessor : 'contents'
+        accessor : 'contents',
+        maxSize: 400,
+        minSize: 140,
+        size: 200,
     },
     {
         Header : 'Check',

@@ -41,19 +41,22 @@ export const Table = () => {
     const date = useSelector((state: any) => state.DateOption);
     const ct = useSelector((state: any) => state.SiteCodeOption);
     const result = useSelector((state: any) => state.ResultOption);
-    const GuideMsg: string[] = ["Guide: Unable to change font size",
-        "Guide: Unable to change font color",
-        "Guide: Unable to change fonts",
+    const GuideMsg: string[] = [
         "Guide: 'Samsung' must be consistently written",
-        "Guide: Check for the insertion of periods",
-        "Guide: All words in titles cannot be written in uppercase, except 'Samsung'.",
-        "Guide: SKU cannot be included in text",
-        "Guide: Less than 25 characters",
-        "Guide: The badge's color guide was not followed.",
-        "Guide: Only can detect logo in image format with png, jpg and jpeg.",
-        "Guide: The Samsung logo cannot be used in duplicate within the dotcom image except for the GNB logo.",
-        "Guide: Background color must be transparent or #f4f4f4",
-        "Guide: Image is not detected.","Pass"];
+    "Guide: Check for the insertion of periods",
+    "Guide: All words in titles cannot be written in uppercase, except 'Samsung'.",
+	"Guide: SKU cannot be included in text",
+	"Guide: Less than 25 characters",
+	"Guide: CO05 can allow only '5 tiles(1-2-2)' or 3 tiles(1-1-1) Grid style",
+	"Guide: Small Tile's Description must be empty",
+	"Guide: The badge's color guide was not followed.",
+	"Guide: Badges can only contain the text New, Sale",
+	"Guide: 5 tiles(1-2-2) grid system can use badge up to 2",
+	"Guide: 3 tiles(1-1-1) grid system can use badge up to 1",
+	"Guide: Only can detect logo in image format with png, jpg and jpeg.",
+	"Guide: The Samsung logo cannot be used in duplicate within the dotcom image except for the GNB logo.",
+	"Guide: Background color must be transparent or #f4f4f4",
+	"Guide: Image is not detected.","Pass"];
     const [changeResult, setResult] = useState<string>('');
     const [changeReason, setReason] = useState<string>('');
 
@@ -84,10 +87,10 @@ export const Table = () => {
         }
       }
 
-
+      console.log(date, ct, result);
       const handleFilter=()=>{
         handleSetPageSize();
-        console.log(date, ct, result);
+        
         getAPI();
         
       }
@@ -125,7 +128,8 @@ export const Table = () => {
             columns,
             data: dataList,
         },
-        usePagination
+        usePagination,
+        
     );
 
     const {pageIndex, pageSize} = state
@@ -171,7 +175,7 @@ export const Table = () => {
                     {headerGroups.map((headerGroup:any) => (                   
                         <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map((column:any, i:number) => (
-                                <th {...column.getHeaderProps()}>
+                                <th {...column.getHeaderProps()} style={{width:"400px"}}>
                                     {column.render('Header')}
                                 </th>
                             ))}
