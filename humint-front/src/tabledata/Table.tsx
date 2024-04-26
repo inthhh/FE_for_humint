@@ -34,7 +34,6 @@ interface datalist {
     updated_at: string;
   }
 
-  
 
 export const Table = () => {
     
@@ -66,11 +65,12 @@ export const Table = () => {
 
     const [modalOpen, setModalOpen] = useState(false);
     const modalBackground = useRef<HTMLDivElement>(null);
-  
+    const apiUrl = process.env.REACT_APP_API_URL;
       const getAPI = async() => {
         try {
             setName(getCookie('myName'));
-          const { data } = await axios.get(`http://121.252.182.166:3000/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}`);
+            // console.log(apiUrl)
+          const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}`);
           setDataList(data.data);
           console.log(data.data);
           
@@ -81,7 +81,7 @@ export const Table = () => {
       
       const editAPI = async(id: number) => {
         try {
-          const { data } = await axios.patch(`http://121.252.182.166:3000/api/v1/raw-data/${id}`,{
+          const { data } = await axios.patch(`${apiUrl}/api/v1/raw-data/${id}`,{
             "checkResult": changeResult,
             "checkReason": changeReason
           });

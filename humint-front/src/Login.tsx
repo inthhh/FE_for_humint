@@ -18,6 +18,7 @@ const Login: React.FC = () => {
     const [pwd, setPassword] = useState('');
     const navigate = useNavigate();
     const [loginBTNtext, setBTNtext] = useState<string>('Login')
+    const rightPwd = process.env.REACT_APP_PWD;
  
     const handleHoverBTN=()=>{
         setHover("T");
@@ -27,7 +28,7 @@ const Login: React.FC = () => {
     const handleLogin = () => {
         // pwd
         console.log(userId);
-        if (pwd === 'iwannagohome12#4') {
+        if (pwd === rightPwd) {
             dispatch(myName(userId));
             setCookie('myName', userId, 1);
             navigate('/7u8i9o0p!@');
