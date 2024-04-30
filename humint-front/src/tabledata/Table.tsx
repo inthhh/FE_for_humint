@@ -245,10 +245,16 @@ export const Table = () => {
           });
           console.log("저장 완료", YN, combined);
           console.log(data);
+          dataList[ri].check_result = YN;
+          dataList[ri].check_reason = combined;
           setIsSaved(true); // API가 성공적으로 실행되면 상태를 true로 설정
           getAPI();
         } catch (e) {
           console.error('API 호출 에러:', e);
+          alert("[저장 실패]\n기존 값으로 다시 저장하거나 바른 형식으로 저장하세요.");
+        //   getAPI();
+        //   dataList[ri].check_result = YN;
+        // dataList[ri].check_reason = combined;
         }
       }
 
@@ -349,8 +355,8 @@ export const Table = () => {
         const combined = selectedValuesByRow[rowIndex] ? selectedValuesByRow[rowIndex].join('\n') : '';
         editAPI(id, rowIndex, combined, YN);
         // getAPI();
-        dataList[rowIndex].check_result = YN;
-        dataList[rowIndex].check_reason = combined;
+        // dataList[rowIndex].check_result = YN;
+        // dataList[rowIndex].check_reason = combined;
     };
 
     const handleImgclick = (src:string)=>{
