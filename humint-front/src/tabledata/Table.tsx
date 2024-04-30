@@ -48,6 +48,8 @@ export const Table = () => {
     const ct = useSelector((state: any) => state.SiteCodeOption);
     const result = useSelector((state: any) => state.ResultOption);
     const myname = useSelector((state: any) => state.myName);
+    const [isSaved, setIsSaved] = useState(false);
+    const [searchId, setSearchId] = useState<string>("");
 
     const guide_obj :any [] = [
         {
@@ -220,13 +222,22 @@ export const Table = () => {
         } catch (e) {
           console.error('API 호출 에러:', e);
         }
-      }
+    }
 
-      const [isSaved, setIsSaved] = useState(false);
+    const searchAPI = async()=>{
+        try{
+            console.log(searchId);
+            const {data} = await axios.get(`${apiUrl}/api/v1/raw-data/${searchId}`)
+            setDataList(data.data);
+        }catch (e) {
+            console.error('API 검색 에러:', e);
+          }
+    }
+
+      
 
     const editAPI = async(id: number, combined:string) => {
         try {
-            console.log("this is inner api method:", combined);
           const { data } = await axios.patch(`${apiUrl}/api/v1/raw-data/${id}`,{
             "checkResult": changeResult,
             "checkReason": combined
@@ -245,8 +256,6 @@ export const Table = () => {
 
     const handleDropdownChangeResult = (value: string) => {
         setResult(value)
-        console.log(value,"로 변경됨");
-        console.log("현재 상태 Result", changeResult);
     };
 
 
@@ -265,46 +274,68 @@ export const Table = () => {
             updatedValues[index] = splitValues;
         });
         setSelectedValuesByRow(updatedValues);
+        // selectedToKorean();
     };
+    // console.log(ByRowKorean);
     
     // dataList 변경시마다 리셋
     useEffect(() => {
         resetSelectedValuesByRow();
+        // selectedToKorean();
     }, [dataList]);
 
     // 한글로 변환
     const selectedToKorean=()=>{
-        const updatedValues: { [key: number]: string } = {};
+        const updatedValues: { [key: number]: string[] } = {};
+
         for (const [key, value] of Object.entries(selectedValuesByRow)) {
             const index = parseInt(key);
-            guide_obj.forEach((obj: any) => {
-                if (obj.contents.eng === value) {
-                    updatedValues[index] = obj.contents.kor;
+            updatedValues[index] = [];
+    
+            value.forEach((engValue) => {
+                // guide_obj에서 engValue와 일치하는 항목을 찾아서 kor 값을 가져옴
+                const guideItem = guide_obj.find((obj) => obj.contents.some((content:any) => content.eng === engValue));
+                if (guideItem) {
+                    const korValue = guideItem.contents.find((content:any) => content.eng === engValue)?.kor;
+                    // console.log(korValue)
+                    if (korValue) {
+                        updatedValues[index].push(korValue);
+                    }
                 }
             });
         }
-        // setByRowKorean(updatedValues);
+        setByRowKorean(updatedValues);
     };
-
+    // console.log(ByRowKorean)
     // 선택한 값 추가 함수
 
     const handleDropdownChangeReason = (rowIndex:number, selectedValue: string) => {
         setSelectedValuesByRow(prevState => {
             const updatedRow = [...(prevState[rowIndex] || []), selectedValue];
-            console.log(selectedValue, "추가됨");
-            console.log("byrow =", {...prevState, [rowIndex]: updatedRow});
+            // console.log("byrow =", {...prevState, [rowIndex]: updatedRow});
             return {...prevState, [rowIndex]: updatedRow};
         });
     }
 
     // 선택한 값 제거 함수
     const handleRemoveValue = (rowIndex: number, valueToRemove: string) => {
+        
+        // console.log("삭제 진입, ",rowIndex, valueToRemove)
+        // setByRowKorean(prevState => ({
+        //     ...prevState,
+        //     [rowIndex]: ByRowKorean[rowIndex].filter((value: any) => value !== valueToRemove)
+        // }));
         setSelectedValuesByRow({
             ...selectedValuesByRow,
             [rowIndex]: selectedValuesByRow[rowIndex].filter((value: any) => value !== valueToRemove)
         });
         console.log("삭제됨");
     };
+    console.log("selected ", selectedValuesByRow);
+    // useEffect(() => {
+    //     selectedToKorean();
+    //     console.log("한글변환완료")
+    // }, [selectedValuesByRow]);
 
     const combineValuesToString = (id:number, rowIndex:number) => { // guide 리스트를 string으로 결합
         
@@ -334,16 +365,6 @@ export const Table = () => {
         // setModalOpen(true);
     }
 
-    // const handleList = (ri:number) => {
-    //     const reasonsArray = dataList[ri].check_reason.split('\n');
-    // // selectedValuesByRow에 저장
-    //     setSelectedValuesByRow({
-    //         ...selectedValuesByRow,
-    //         [ri]: reasonsArray
-    //     });
-    // };
-
-
     return (
         <div>
             <Provider store={store}>
@@ -352,6 +373,25 @@ export const Table = () => {
                 <SelectSiteCode/>
                 <SelectResult/>
                 <button className='filter-btn' style={{margin:"20px 0 0 20px", backgroundColor:"yellow"}}onClick={() => handleFilter()}>테이블 보기</button>
+                <div style={{display: 'flex', height:"60px"}}>
+                    {/* 검색 입력창 */}
+                    <input
+                        type="text"
+                        value={searchId}
+                        onChange={(e) => setSearchId(e.target.value)}
+                        placeholder="ID로 검색하기"
+                        style={{margin:"20px 0 0 20px"}}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                searchAPI();
+                            }
+                        }}
+                    />
+                    
+                    <button onClick={()=>searchAPI()} style={{width:"100px", margin:"20px 0 0 10px"}}>검색</button>
+                    
+                </div>
+                
                 <p style={{margin:"30px 0 0 20px"}}>✅ {getCookie('myName')} 님 환영합니다.</p>
             </div>
             
@@ -431,10 +471,6 @@ export const Table = () => {
 
                                         {dataList[ri].check_reason ? ( 
                                             <>
-
-                                        {/* <p> */}
-                                        {/* {updateSelectedValuesByRow(ri, dataList[ri].check_reason)} */}
-                                        {/* </p> */}
                                             <select
                                                 key={cell.render('Cell')}
                                                 defaultValue={cell.render('Cell')}
