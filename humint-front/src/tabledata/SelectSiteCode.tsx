@@ -41,7 +41,7 @@ function SelectSiteCode() {
         </label>
         {isDropdownView && (<ul style={{listStyle:'none',position: 'absolute', 
         zIndex: 1, 
-        maxHeight: '300px', overflowY: 'auto',
+        maxHeight: '500px', overflowY: 'auto',
         margin: 0, padding: 0 }}>
           {
             Country.map((ct, i) => (
