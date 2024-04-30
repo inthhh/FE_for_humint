@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { COLUMNS } from './Columns'
 // import MOCK_DATA from './mockdata.json'
 import { usePagination, useTable } from 'react-table'
@@ -34,79 +34,140 @@ interface datalist {
     updated_at: string;
   }
 
+  interface Guideline {
+    eng: string
+    kor: string
+  }
 
 export const Table = () => {
     
     const [dataList, setDataList] = useState<datalist[]>([]);
+    
     const dispatch = useDispatch();
     const date = useSelector((state: any) => state.DateOption);
     const ct = useSelector((state: any) => state.SiteCodeOption);
     const result = useSelector((state: any) => state.ResultOption);
     const myname = useSelector((state: any) => state.myName);
 
-    const GuideMsg: string[] = [
-        "Guide: 'Samsung' must be consistently written",
-    "Guide: Check for the insertion of periods",
-    "Guide: All words in titles cannot be written in uppercase, except 'Samsung'.",
-	"Guide: SKU cannot be included in text",
-	"Guide: Less than 25 characters",
-	"Guide: CO05 can allow only '5 tiles(1-2-2)' or 3 tiles(1-1-1) Grid style",
-	"Guide: Small Tile's Description must be empty",
-	"Guide: The badge's color guide was not followed.",
-	"Guide: Badges can only contain the text New, Sale",
-	"Guide: 5 tiles(1-2-2) grid system can use badge up to 2",
-	"Guide: 3 tiles(1-1-1) grid system can use badge up to 1",
-	"Guide: Only can detect logo in image format with png, jpg and jpeg.",
-	"Guide: The Samsung logo cannot be used in duplicate within the dotcom image except for the GNB logo.",
-	"Guide: Background color must be transparent or #f4f4f4",
-	"Guide: Image is not detected.","Pass"];
-    const [changeResult, setResult] = useState<string>('');
-    const [changeReason, setReason] = useState<string>('');
+    const guide_obj :any [] = [
+        {
+            subject: "Tile",
+            contents: [{
+                eng:"Guide: CO05 can allow only '5 tiles(1-2-2)' or 3 tiles(1-1-1) Grid style",
+                kor: "[Tile 1] LSSSS, LLL  2개 타입만 허용"
+            },{
+                eng:"Guide: 5 tiles(1-2-2) grid system can use badge up to 2",
+                kor:"[Tile 2] LSSSS : 2개까지 허용 / LLL : 1개까지 허용"
+            },
+            {
+                eng:"Pass",
+                kor:"Pass"
+            }]
+        },
 
+        {
+            subject : "Badge",
+            contents : [{
+                eng:"Guide: Badges can only contain the text New, Sale",
+                kor:"[Badge 1] \"New\", \"Sale\" 두개의 뱃지만 허용"
+            },
+            {
+                eng:"Guide: The badge's color guide was not followed.",
+                kor:"[Badge 2] New-blue, Sale-red 조합만 가능"
+            },
+            {
+                eng:"Pass",
+                kor:"Pass"
+            }]
+        },
+
+        {
+            subject: "CTA",
+            contents: [{
+                eng:"Guide: Less than 25 characters",
+                kor:"[CTA 1] CTA 문구는 25자를 넘어가면 안됨",
+            },
+            {
+                eng:"Pass",
+                kor:"Pass"
+            }]
+        },
+
+        {
+            subject: "Text",
+            contents: [{ // text
+                eng:"Guide: SKU cannot be included in text",
+                kor:"SKU 사용불가",
+            },{
+                eng:"Guide: Check for the insertion of periods",
+                kor:"문구 마지막에 온점 사용 불가"
+            },{
+                eng:"Guide: All words in titles cannot be written in uppercase, except 'Samsung'.",
+                kor:"대문자 사용불가"
+            },{
+                eng:"Guide: Samsung' must be consistently written",
+                kor:"\"Samsung\"으로만 표기"
+            },{
+                eng:"Guide: Unable to change font size",
+                kor:"font-size 변경 불가"
+            },{
+                eng:"Guide: Unable to change font color",
+                kor:"font-color 변경 불가"
+            },{
+                eng:"Guide: Unable to change fonts",
+                kor:"font-family 변경 불가"
+            },{
+                eng:"Guide: Make sure there are no ellipsis (…) at the copy’s end.",
+                kor:"ellipsis 불가"
+            },{
+                eng:"Guide: The text in the small tiles should be a maximum of two lines.",
+                kor:"small Tile에서 최대 2줄까지만 허용"
+            },{
+                eng:"Guide: Small Tile's Description must be empty",
+                kor:"small Tile에서 Description 사용 불가"
+            },
+            {
+                eng:"Pass",
+                kor:"Pass"
+            }]
+        },
+
+        {
+            subject: "BG Image",
+            contents: [{ // image
+                eng:"Guide: Background color must be transparent or #f4f4f4",
+                kor:"Background Color Only #f4f4f4"
+            },{
+                eng:"Guide: The Samsung logo cannot be used in duplicate within the dotcom image except for the GNB logo.",
+                kor:"Logo 사용불가"
+            },{
+                eng:"Guide: Tiles should show products only.",
+                kor:"제품 이미지만 사용 가능"
+            },
+            {
+                eng:"Guide: Use the new grid system to showcase multiple products in the big tile.",
+                kor:"Big Tile 그리드 시스템에 따라 여러 제품 가능"
+            },{
+                eng:"Guide: Small tiles should show only one product. For multiple products (up to four), use the big tiles.",
+                kor:"small Tile은 제품 1개만 가능"
+            },{
+                eng:"Guide: Image is not detected.",
+                kor:"Image 없음"
+            },
+            {
+                eng:"Pass",
+                kor:"Pass"
+            }]
+        }
+    ]
+    
+
+    const [changeResult, setResult] = useState<string>('N');
+    // const [changeReason, setReason] = useState<string>('');
     const [modalOpen, setModalOpen] = useState(false);
     const modalBackground = useRef<HTMLDivElement>(null);
+
     const apiUrl = process.env.REACT_APP_API_URL;
-      const getAPI = async() => {
-        try {
-            setName(getCookie('myName'));
-            // console.log(apiUrl)
-          const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}`);
-          setDataList(data.data);
-          console.log(data.data);
-          
-        } catch (e) {
-          console.error('API 호출 에러:', e);
-        }
-      }
-      
-      const editAPI = async(id: number) => {
-        try {
-          const { data } = await axios.patch(`${apiUrl}/api/v1/raw-data/${id}`,{
-            "checkResult": changeResult,
-            "checkReason": changeReason
-          });
-          console.log("저장 완료", changeResult, changeReason);
-          console.log(data);
-        } catch (e) {
-          console.error('API 호출 에러:', e);
-        }
-      }
-
-      console.log(date, ct, result);
-      const handleFilter=()=>{
-        handleSetPageSize();
-        
-        getAPI();
-        
-      }
-
-      const handleButtonClick = (id:number)=>{
-        editAPI(id);
-        getAPI();
-        setModalOpen(true);
-      }
-
-    console.log("myname is ", myname);
 
     const columns = useMemo(() => COLUMNS, []);
 
@@ -114,6 +175,9 @@ export const Table = () => {
     const [filterSiteCode, setFilterSiteCode] = useState('');
     const [filterResult, setFilterResult] = useState('');
     const [name, setName] = useState<string|null>('');
+    
+    const [selected, setSelected] = useState("");
+
     
     
     const { 
@@ -145,24 +209,139 @@ export const Table = () => {
         setPageSize(1000);
     }
 
+    const getAPI = async() => {
+        try {
+            setName(getCookie('myName'));
+            // console.log(apiUrl)
+          const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}`);
+          setDataList(data.data);
+          console.log(data.data);
+          
+        } catch (e) {
+          console.error('API 호출 에러:', e);
+        }
+      }
+
+      const [isSaved, setIsSaved] = useState(false);
+
+    const editAPI = async(id: number, combined:string) => {
+        try {
+            console.log("this is inner api method:", combined);
+          const { data } = await axios.patch(`${apiUrl}/api/v1/raw-data/${id}`,{
+            "checkResult": changeResult,
+            "checkReason": combined
+          });
+          console.log("저장 완료", changeResult, combined);
+          console.log(data);
+          setIsSaved(true); // API가 성공적으로 실행되면 상태를 true로 설정
+        } catch (e) {
+          console.error('API 호출 에러:', e);
+        }
+      }
+
+      const closeModal = () => {
+        setIsSaved(false); // 모달이 닫힐 때 상태를 false로 설정
+    };
+
     const handleDropdownChangeResult = (value: string) => {
         setResult(value)
         console.log(value,"로 변경됨");
         console.log("현재 상태 Result", changeResult);
-
     };
 
-    const handleDropdownChangeReason = (value: string) => {
-        setReason(value)
-        console.log(value,"로 변경됨");
-        console.log("현재 상태 Reason", changeReason);
+
+    
+    const [selectedValuesByRow, setSelectedValuesByRow] = useState<{[key: number]: string[]}>({});
+    const [ByRowKorean, setByRowKorean] = useState<{[key: number]: string[]}>({});
+
+
+    // 가이드 값 초기화
+    const resetSelectedValuesByRow = () => {
+
+        const updatedValues: {[key: number]: string[]} = {};
+
+        dataList.forEach((item, index) => {
+            const splitValues = item.check_reason.split('\n').filter(Boolean);
+            updatedValues[index] = splitValues;
+        });
+        setSelectedValuesByRow(updatedValues);
+    };
+    
+    // dataList 변경시마다 리셋
+    useEffect(() => {
+        resetSelectedValuesByRow();
+    }, [dataList]);
+
+    // 한글로 변환
+    const selectedToKorean=()=>{
+        const updatedValues: { [key: number]: string } = {};
+        for (const [key, value] of Object.entries(selectedValuesByRow)) {
+            const index = parseInt(key);
+            guide_obj.forEach((obj: any) => {
+                if (obj.contents.eng === value) {
+                    updatedValues[index] = obj.contents.kor;
+                }
+            });
+        }
+        // setByRowKorean(updatedValues);
+    };
+
+    // 선택한 값 추가 함수
+
+    const handleDropdownChangeReason = (rowIndex:number, selectedValue: string) => {
+        setSelectedValuesByRow(prevState => {
+            const updatedRow = [...(prevState[rowIndex] || []), selectedValue];
+            console.log(selectedValue, "추가됨");
+            console.log("byrow =", {...prevState, [rowIndex]: updatedRow});
+            return {...prevState, [rowIndex]: updatedRow};
+        });
+    }
+
+    // 선택한 값 제거 함수
+    const handleRemoveValue = (rowIndex: number, valueToRemove: string) => {
+        setSelectedValuesByRow({
+            ...selectedValuesByRow,
+            [rowIndex]: selectedValuesByRow[rowIndex].filter((value: any) => value !== valueToRemove)
+        });
+        console.log("삭제됨");
+    };
+
+    const combineValuesToString = (id:number, rowIndex:number) => { // guide 리스트를 string으로 결합
+        
+        const combined = selectedValuesByRow[rowIndex] ? selectedValuesByRow[rowIndex].join('\n') : '';
+        // setCombinedValues(combined);
+        console.log("문자열 결합", combined);
+        editAPI(id, combined);
     };
 
     const handleImgclick = (src:string)=>{
         window.open(src);
+    
     }
 
-    const [selected, setSelected] = useState("");
+    const handleFilter=()=>{
+        handleSetPageSize();
+        getAPI();
+    }
+
+    // 저장 버튼 클릭 이벤트
+    const handleButtonClick = (ri:number, id:number)=>{
+        console.log(selectedValuesByRow);
+        // console.log("click reasons : ", combinedValues);
+        console.log(date, ct, result);
+        console.log(changeResult);
+        combineValuesToString(id, ri);
+        // setModalOpen(true);
+    }
+
+    // const handleList = (ri:number) => {
+    //     const reasonsArray = dataList[ri].check_reason.split('\n');
+    // // selectedValuesByRow에 저장
+    //     setSelectedValuesByRow({
+    //         ...selectedValuesByRow,
+    //         [ri]: reasonsArray
+    //     });
+    // };
 
 
     return (
@@ -205,7 +384,14 @@ export const Table = () => {
 
                                 return (
                                     <React.Fragment key={index}>
-                                        {index === row.cells.length - 4 ? ( // 드롭다운 생성 조건
+                                        {/* {index === row.cells.length - 5 ? (
+                                        <td {...cell.getCellProps()}>
+                                            <div style={{width:"300px"}}>
+                                            {cell.render('Cell')}
+                                            </div>
+                                        </td>
+                                    ) : */}
+                                        {index === row.cells.length - 4 ? ( // Check 드롭다운 생성
                                         <td {...cell.getCellProps()}>
                                             
                                             {dataList[ri].check_result ? ( 
@@ -233,23 +419,53 @@ export const Table = () => {
                                             : (null)
                                         }
                                         </td>
-                                    ) : index === row.cells.length - 3 ? ( // 드롭다운 생성 조건
+                                    ) : index === row.cells.length - 3 ? ( // 가이드 드롭다운 생성
                                     <td {...cell.getCellProps()}>
                                         
+                                        {selectedValuesByRow[ri] && selectedValuesByRow[ri].map((m, i) => (
+                                            <div style={{display:"flex"}}>
+                                                <p key={i} style={{width:"400px"}}>{m}</p>
+                                                <button onClick={()=>handleRemoveValue(ri, m)} style={{marginLeft:"2px",width:"50px", height:"30px"}}>삭제</button>
+                                            </div>
+                                        ))}
+
                                         {dataList[ri].check_reason ? ( 
-                                        <select
-                                            key={cell.render('Cell')} // 기존 데이터에 든 값
-                                            defaultValue={cell.render('Cell')} // 기존 데이터에 든 값
-                                            onChange={(e) => handleDropdownChangeReason(e.target.value)}
-                                        >
-                                                <option>{cell.render('Cell')}</option>
-                                                {GuideMsg.map((msg, i) => (
-                                                    <option key={i}>{msg}</option>
-                                                    // <option key={i}>{i+1}. {msg}</option>
-                                                ))}
-                                        </select>)
-                                        :(null)
-                                    }
+                                            <>
+
+                                        {/* <p> */}
+                                        {/* {updateSelectedValuesByRow(ri, dataList[ri].check_reason)} */}
+                                        {/* </p> */}
+                                            <select
+                                                key={cell.render('Cell')}
+                                                defaultValue={cell.render('Cell')}
+                                                onChange={(e) => handleDropdownChangeReason(ri, e.target.value)}
+                                            >
+                                                {/* <option>{cell.render('Cell')}</option> */}
+                                                <option>추가하기</option>
+
+                                                {guide_obj.map((obj: any, key: number) => {
+                                                    if (
+                                                        (dataList[ri].title === "Headline Text" ||
+                                                        dataList[ri].title === "Description Text" ||
+                                                        dataList[ri].title === "Title" ||
+                                                        dataList[ri].title === "Description") &&
+                                                        obj.subject === "Text"
+                                                    ) {
+                                                        return obj.contents && obj.contents.map((guide_msg: any, key: number) => (
+                                                            <option value={guide_msg.eng} key={key} id={obj.subject}>{guide_msg.kor}</option>
+                                                        ));
+                                                    } else if (dataList[ri].title === obj.subject && obj.contents) {
+                                                        return obj.contents.map((guide_msg: any, key: number) => (
+                                                            <option value={guide_msg.eng} key={key} id={obj.subject}>{guide_msg.kor}</option>
+                                                        ));
+                                                    }
+                                                    return null;
+                                                })}
+                                                
+                                            </select>
+                                            </>)
+                                            :(null)
+                                        }
                                     </td>) : index === row.cells.length - 2 ? ( // 이미지
                                     <td {...cell.getCellProps()}>
                                         
@@ -265,21 +481,21 @@ export const Table = () => {
                                         index === row.cells.length - 1 ? ( // 마지막 열에 저장버튼
                                             <>
                                             <td>
-                                                <button onClick={() => handleButtonClick(dataList[ri].id)}>저장</button>
+                                                <button onClick={() => handleButtonClick(ri, dataList[ri].id)}>저장</button>
                                             </td>
                                             {
-                                                modalOpen &&
+                                                isSaved &&
                                                 <div className={'modal-container'} ref={modalBackground} onClick={e => {
                                                   if (e.target === modalBackground.current) {
-                                                    setModalOpen(false);
+                                                    closeModal();
                                                   }
                                                 }}>
                                                   <div className={'modal-content'}>
-                                                    <div>
-                                                    <p>저장되었습니다.</p>
-                                                    <button className={'modal-close-btn'} onClick={() => setModalOpen(false)}>
-                                                      닫기
-                                                    </button>
+                                                  <div>
+                                                        <p>저장되었습니다.</p>
+                                                        <button className={'modal-close-btn'} onClick={closeModal}>
+                                                            닫기
+                                                        </button>
                                                     </div>
                                                   </div>
                                                 </div>
