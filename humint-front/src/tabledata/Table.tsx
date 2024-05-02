@@ -85,7 +85,7 @@ export const Table = () => {
         try {
             const { data } = await axios.get(`${apiUrl}/api/v1/raw-data-category/check-reason`);
             setGuideObj(data.data);
-            console.log(data.data);
+            console.log("get guide : ",data.data);
         } catch (e) {
             console.error('API 호출 에러:', e);
         }
@@ -334,7 +334,7 @@ export const Table = () => {
                     
                 </div>
                 
-                <p className="text-type">✅ {getCookie('myName')} 님 환영합니다.</p>
+                <p className="text-type">☑️ {getCookie('myName')} 님 환영합니다.</p>
             </header>
             
             </Provider>
@@ -353,7 +353,7 @@ export const Table = () => {
                         <col />
                         <col />
                         <col />
-                        <col />
+                        <col style={{width:'200px'}}/>
                         <col style={{width:'400px'}}/>
                         <col />
                 </colgroup>
@@ -439,16 +439,16 @@ export const Table = () => {
                                                         (dataList[ri].title === "Headline Text" ||
                                                         dataList[ri].title === "Description Text" ||
                                                         dataList[ri].title === "Title" ||
-                                                        dataList[ri].title === "Description") &&
-                                                        obj.subject === "Text"
+                                                        dataList[ri].title === "Description")
+                                                        && obj.reason_subject == "Text"
                                                     ) {
-                                                        return obj.contents && obj.contents.map((guide_msg: any, key: number) => (
-                                                            <option value={guide_msg.eng} key={key} id={obj.subject}>{guide_msg.kor}</option>
-                                                        ));
-                                                    } else if (dataList[ri].title === obj.subject && obj.contents) {
-                                                        return obj.contents.map((guide_msg: any, key: number) => (
-                                                            <option value={guide_msg.eng} key={key} id={obj.subject}>{guide_msg.kor}</option>
-                                                        ));
+                                                        return (
+                                                            <option value={obj.reason_value_eng} key={key} id={obj.id}>{obj.reason_value_kor}</option>
+                                                        )
+                                                    } else if (dataList[ri].title === obj.reason_subject && obj) {
+                                                        return (
+                                                            <option value={obj.reason_value_eng} key={key} id={obj.id}>{obj.reason_value_kor}</option>
+                                                        );
                                                     }
                                                     return null;
                                                 })}

@@ -298,9 +298,11 @@ input::-webkit-search-results-decoration {
   background-color: #fff;
 }
 
-.check-box { display: inline-block; min-width:50px; margin-left:10px; text-align: left; }
+.guide-wrap +.guide-wrap{margin-top:10px;}
 
-.check-box:first-child { margin-left: 0; }
+.check-box { display: inline-block; min-width:50px; margin-top:10px; text-align: left; }
+
+.check-box:first-child { margin-top: 0; }
 
 .check-box input[type="checkbox"], .check-box input[type="radio"] { display: none; }
 
