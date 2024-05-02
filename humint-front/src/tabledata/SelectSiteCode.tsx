@@ -30,9 +30,9 @@ function SelectSiteCode() {
     const dispatch = useDispatch();
     const ct = useSelector((state: any) => state.SiteCodeOption);
     const onClickEvent=(i:number)=>{
+      setDropdownView(false);
       dispatch(SiteCodeOption(Country[i]));
     };
-    console.log(ct);
   
     return (
       <div className="container" onBlur={handleBlurContainer}>

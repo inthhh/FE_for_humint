@@ -20,13 +20,12 @@ function SelectResult() {
     const dispatch = useDispatch();
     const yn = useSelector((state: any) => state.ResultOption);
     const onClickEvent=(i:string)=>{
+      setDropdownView(false);
       if(i=="ALL") {
         dispatch(ResultOption(''))
-
       }
       else dispatch(ResultOption(i)); // Y or N
     };
-    console.log(yn);
 
     return (
       <div className="container" onBlur={handleBlurContainer}>

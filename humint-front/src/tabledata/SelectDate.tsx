@@ -16,12 +16,6 @@ function SelectDate() {
     const handleClickContainer = () => {
       setDropdownView(!isDropdownView)
     }
-  
-    // const handleBlurContainer = () => {
-    //   setTimeout(() => {
-    //     setDropdownView(false)
-    //   }, 200);
-    // }
 
     const handleBlurContainer = (e: React.FocusEvent<HTMLDivElement>) => {
       if (!e.currentTarget.contains(e.relatedTarget as Node)) {
@@ -36,8 +30,8 @@ function SelectDate() {
     const date = useSelector((state: any) => state.DateOption);
     
     const onClickEvent=(i:number)=>{
-      console.log(i);
       dispatch(DateOption(dateList[i]));
+      setDropdownView(false);
     };
 
     return (
