@@ -38,21 +38,13 @@ export const Table = () => {
     const modalBackground = useRef<HTMLDivElement>(null);
 
     const apiUrl = process.env.REACT_APP_API_URL;
-
     const columns = useMemo(() => COLUMNS, []);
-
-    // const [filterDate, setFilterDate] = useState('');
-    // const [filterSiteCode, setFilterSiteCode] = useState('');
-    // const [filterResult, setFilterResult] = useState('');
     const [name, setName] = useState<string|null>('');
-    
-    // const [selected, setSelected] = useState("");
     
     const [apiReason, setApiReason] = useState([]);
 
     
-    
-    const { 
+    const { // Table 기본 요소들
         getTableProps, 
         getTableBodyProps, 
         headerGroups, 
@@ -77,17 +69,19 @@ export const Table = () => {
     );
 
     const {pageIndex, pageSize} = state
+    // 한 페이지의 테이블 길이
     const handleSetPageSize=()=>{
         setPageSize(1000);
     }
 
+    // 가이드 API
     const getGuideAPI = async () => {
         try {
             const { data } = await axios.get(`${apiUrl}/api/v1/raw-data-category/check-reason`);
             setGuideObj(data.data);
             console.log("get guide : ",data.data);
         } catch (e) {
-            console.error('API 호출 에러:', e);
+            console.error('guide API 호출 에러:', e);
         }
     }
     
@@ -95,10 +89,10 @@ export const Table = () => {
         getGuideAPI();
     },[])
 
+    // Table Data 받아오는 API
     const getAPI = async() => {
         try {
             setName(getCookie('myName'));
-            // console.log(apiUrl)
           const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}`);
           setDataList([...data.data]);
           console.log(data.data);
@@ -108,6 +102,7 @@ export const Table = () => {
         }
     }
 
+    // ID 검색 API
     const searchAPI = async()=>{
         try{
             console.log(searchId);
@@ -119,8 +114,10 @@ export const Table = () => {
           }
     }
 
+    // 편집 후 저장 API
     const editAPI = async(id: number, ri:number, combined:string) => {
         try {
+            console.log("edit go ", combined);
             const YN = selectedResult[ri];
 
             if(!checkSync(YN, combined)){ // 예외처리
@@ -142,7 +139,6 @@ export const Table = () => {
             });
             setDataBackup(prevDataBackup => {
                 const newDataBackup = [...prevDataBackup];
-                // newDataBackup[ri].check_result = YN;
                 newDataBackup[ri].check_reason = combined;
                 return newDataBackup;
             });
@@ -150,7 +146,7 @@ export const Table = () => {
 
         } catch (e) {
              console.error('API 호출 에러:', e);
-            alert("[저장 실패]\n기존 값으로 다시 저장하거나 바른 형식으로 저장하세요.");
+            alert("[저장 실패]\n바른 형식으로 저장해주세요.");
             
             setSelectedResult(prevDataList => {
                 const newDataList = [...prevDataList];
@@ -169,11 +165,12 @@ export const Table = () => {
         }
       }
 
+      // 저장 예외처리
       const checkSync=(YN:string, combined:string)=>{
         if(YN==='N' && combined.startsWith('Pass')) return false;
         if(YN==='Y' && combined.startsWith('Guide')) return false;
         if(YN==='Y' && !combined.endsWith('Pass')) return false;
-        if(YN==='N' && combined.endsWith('Pass')) return false;
+        if(YN==='N' && combined.includes('Pass')) return false;
         if(combined == null) return false;
         if(YN == null) return false;
         return true;
@@ -192,10 +189,9 @@ export const Table = () => {
     const [selectedValuesByRow, setSelectedValuesByRow] = useState<{[key: number]: string[]}>({});
     const [ByRowKorean, setByRowKorean] = useState<{[key: number]: string[]}>({});
 
+    // Check 값 초기화
     const resetSelectedResult = () => {
-
         const updatedValues: string[] = [];
-
         dataList.forEach((item, index) => {
             updatedValues[index] = dataList[index].check_result;
         });
@@ -207,81 +203,80 @@ export const Table = () => {
     const resetSelectedValuesByRow = () => {
 
         const updatedValues: {[key: number]: string[]} = {};
+        const koreans: { [key: number]: string[] } = {};
 
         dataList.forEach((item, index) => {
             const splitValues = item.check_reason.split('\n').filter(Boolean);
             updatedValues[index] = splitValues;
+            const uniqueKoreans: Set<string> = new Set();
+            splitValues.forEach((splitValue) => {
+                guideObj.forEach((obj) => {
+                    if (obj.reason_value_eng === splitValue) {
+                        uniqueKoreans.add(obj.reason_value_kor);
+                    } else if(splitValue.includes('#f4f4f4')){
+                        uniqueKoreans.add(guideObj[20].reason_value_kor);
+                    }
+                });
+            });
+    
+            // Set을 다시 배열로 변환하여 koreans에 할당
+            koreans[index] = Array.from(uniqueKoreans);
         });
-        setSelectedValuesByRow(updatedValues);
-        // selectedToKorean();
+
+        console.log("reset guide : ",koreans);
+        setByRowKorean(koreans);
     };
-    // console.log(ByRowKorean);
 
     // dataList 변경시마다 리셋
     useEffect(() => {
         resetSelectedResult();
         resetSelectedValuesByRow();
-        // selectedToKorean();
     }, [dataList]);
 
-    // 한글로 변환
-    const selectedToKorean=()=>{
-        // const updatedValues: { [key: number]: string[] } = {};
-
-        // for (const [key, value] of Object.entries(selectedValuesByRow)) {
-        //     const index = parseInt(key);
-        //     updatedValues[index] = [];
-    
-        //     value.forEach((engValue) => {
-        //         // guide_obj에서 engValue와 일치하는 항목을 찾아서 kor 값을 가져옴
-        //         const guideItem = guideObj.find((obj) => obj.contents.some((content:any) => content.eng === engValue));
-        //         if (guideItem) {
-        //             const korValue = guideItem.contents.find((content:any) => content.eng === engValue)?.kor;
-        //             // console.log(korValue)
-        //             if (korValue) {
-        //                 updatedValues[index].push(korValue);
-        //             }
-        //         }
-        //     });
-        // }
-        // setByRowKorean(updatedValues);
-    };
-    // console.log(ByRowKorean)
-
     // 선택한 값 추가 함수
-    const handleDropdownChangeReason = (rowIndex:number, selectedValue: string) => {
-        setSelectedValuesByRow(prevState => {
-            const updatedRow = [...(prevState[rowIndex] || [])];
-            // 중복된 값이 없으면 추가
-            if (!updatedRow.includes(selectedValue)) {
-                updatedRow.push(selectedValue);
+    const handleDropdownChangeReason = (ri:number, selectedValue: number) => {
+        const korValue = guideObj[selectedValue-1].reason_value_kor;
+
+        setByRowKorean(prevState => {
+            const updatedRow = [...(prevState[ri] || [])];
+            if (!updatedRow.includes(korValue)) {
+                updatedRow.push(korValue);
             }
-            return {...prevState, [rowIndex]: updatedRow};
+            return {...prevState, [ri]: updatedRow};
         });
     }
 
     // 선택한 값 제거 함수
-    const handleRemoveValue = (rowIndex: number, valueToRemove: string) => {
-        setSelectedValuesByRow({
-            ...selectedValuesByRow,
-            [rowIndex]: selectedValuesByRow[rowIndex].filter((value: any) => value !== valueToRemove)
+    const handleRemoveValue = (rowIndex: number, m:string) => {
+        setByRowKorean({
+            ...ByRowKorean,
+            [rowIndex]: ByRowKorean[rowIndex].filter((value: any) => value !== m)
         });
-        console.log("삭제됨");
+        console.log("삭제됨", ByRowKorean);
     };
-    // console.log("selected ", selectedValuesByRow);
-    // useEffect(() => {
-    //     selectedToKorean();
-    //     console.log("한글변환완료")
-    // }, [selectedValuesByRow]);
 
-    const combineValuesToString = (id:number, rowIndex:number) => { // guide 리스트를 string으로 결합
-        const combined = selectedValuesByRow[rowIndex] ? selectedValuesByRow[rowIndex].join('\n') : '';
-        editAPI(id, rowIndex, combined);
+    // 가이드 목록을 문자열로 통합 후 editAPI로 보냄
+    const combineValuesToString = (id: number, rowIndex: number) => {
+        let combined: string[] = [];
+        if (ByRowKorean[rowIndex]) {
+            combined = ByRowKorean[rowIndex].map(koreanValueToEng);
+        }
+        editAPI(id, rowIndex, Array.isArray(combined) ? combined.join('\n') : ''); 
+    };
+    
+    // 한국어 값을 영어로 변환하는 함수
+    const koreanValueToEng = (koreanValue: string) => {
+        // Guide: Background color must be transparent or #f4f4f4 - dynamic 값 예외처리
+        if(koreanValue.includes('#f4f4f4')){
+            return guideObj[20].reason_value_eng;
+        }
+        const guideItem = guideObj.find((obj) => obj.reason_value_kor === koreanValue);
+        console.log("영어변환값 : ",guideItem?.reason_value_eng);
+        return guideItem ? guideItem.reason_value_eng : koreanValue; // 해당하는 항목이 있으면 영어 값 반환, 없으면 그대로 반환
     };
 
     const handleImgclick = (src:string)=>{
         window.open(src);
-    
     }
 
     const handleFilter=()=>{
@@ -296,7 +291,6 @@ export const Table = () => {
             newDataList[ri] = value;
             return newDataList;
         });
-        // setChangeResult(value);
         console.log(value);
         console.log("datalist ri result : ", dataList[ri].check_result);
         console.log("백업 ri result : ", dataBackup[ri].check_result);
@@ -417,7 +411,7 @@ export const Table = () => {
                                         </td>
                                     ) : index === row.cells.length - 3 ? ( // 가이드 드롭다운 생성
                                     <td {...cell.getCellProps()}>
-                                        {selectedValuesByRow[ri] && selectedValuesByRow[ri].map((m, i) => (
+                                        {ByRowKorean[ri] && ByRowKorean[ri].map((m, i) => (
                                             <div className="guide-wrap">
                                                 <span key={i} >{m}</span>
                                                 <button onClick={()=>handleRemoveValue(ri, m)} className="btn-type btn-delete">삭제</button>
@@ -429,7 +423,7 @@ export const Table = () => {
                                             <select
                                                 key={cell.render('Cell')}
                                                 defaultValue={cell.render('Cell')}
-                                                onChange={(e) => handleDropdownChangeReason(ri, e.target.value)}
+                                                onChange={(e) => handleDropdownChangeReason(ri, Number(e.target.value))}
                                             >
                                                 <option>{cell.render('Cell')}</option>
                                                 {/* <option>추가하기</option> */}
@@ -443,11 +437,11 @@ export const Table = () => {
                                                         && obj.reason_subject == "Text"
                                                     ) {
                                                         return (
-                                                            <option value={obj.reason_value_eng} key={key} id={obj.id}>{obj.reason_value_kor}</option>
+                                                            <option value={obj.id} id={obj.id}>{obj.reason_value_kor}</option>
                                                         )
                                                     } else if (dataList[ri].title === obj.reason_subject && obj) {
                                                         return (
-                                                            <option value={obj.reason_value_eng} key={key} id={obj.id}>{obj.reason_value_kor}</option>
+                                                            <option value={obj.id} id={obj.id}>{obj.reason_value_kor}</option>
                                                         );
                                                     }
                                                     return null;
@@ -482,7 +476,7 @@ export const Table = () => {
                                                   }
                                                 }}>
                                                   <div className={'modal-content'}>
-                                                  <div>
+                                                  <div className={'modal-sub'}>
                                                         <p>저장되었습니다.</p>
                                                         <button className={'modal-close-btn'} onClick={closeModal}>
                                                             닫기
