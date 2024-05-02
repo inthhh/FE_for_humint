@@ -1,17 +1,38 @@
+
+  
+.header-wrap{
+    display:flex;
+    padding:20px;
+    align-items:center;
+    justify-content: space-around;
+}
+.btn-filter{margin-left:0;}
+.header-wrap .btn-type{padding:0 20px;}
+.header-wrap  input[type='text']{margin-bottom:0;}
 .table {
     margin: 20px 0;
 }
+.search-wrap{
+    display:flex;
+    align-items:center;
+}
+.guide-wrap{
+    display:flex;
+    justify-content:space-between;align-items:center;
+}
+.table-wrap .btn-type{font-size:12px;line-height:30px;height:30px;min-width:50px;}
+.guide-wrap+select{margin-top:10px;}
 table {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
-    width: 2000px;
+    width:100%;table-layout:fixed;
     font-size: 12px;
 }
 table td, table th {
     border: 1px solid #ddd;
     padding: 8px;
-    width: 300px; /*적용안됨*/
 }
+table .img-wrap{width:400px;}
 table tr:nth-child(even){
     background-color: #f2f2f2;
 }
@@ -22,14 +43,13 @@ table th {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
-    background-color: #5182ca;
-    color: white;
-    width: 300px; /*적용안됨*/
+    background-color: #000;
+    color: #fff;
 }
 
-.container{
-    margin: 10px;
-}
+.no-data{padding:100px 0;text-align:center;}
+
+
 
 .filter-btn{
     width: 250px;
@@ -37,7 +57,6 @@ table th {
     padding: 5px;
     cursor: pointer;
     font-size: 16px;
-    margin-top: 10px;
     color: #000000;
     border: 1px solid black;
     border-radius: 5px;

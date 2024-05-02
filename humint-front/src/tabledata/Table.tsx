@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {Cookies} from 'react-cookie';
 import {setCookie, getCookie} from '../cookieUtils';
 import { guide_obj } from './guideData';
+import './base.css'
 
 interface datalist {
     id: number;
@@ -65,12 +66,14 @@ export const Table = () => {
 
     const columns = useMemo(() => COLUMNS, []);
 
-    const [filterDate, setFilterDate] = useState('');
-    const [filterSiteCode, setFilterSiteCode] = useState('');
-    const [filterResult, setFilterResult] = useState('');
+    // const [filterDate, setFilterDate] = useState('');
+    // const [filterSiteCode, setFilterSiteCode] = useState('');
+    // const [filterResult, setFilterResult] = useState('');
     const [name, setName] = useState<string|null>('');
     
-    const [selected, setSelected] = useState("");
+    // const [selected, setSelected] = useState("");
+    
+    const [apiReason, setApiReason] = useState([]);
 
     
     
@@ -127,19 +130,21 @@ export const Table = () => {
           }
     }
 
-      
-
     const editAPI = async(id: number, ri:number, combined:string) => {
         try {
             const YN = selectedResult[ri];
+
+            if(!checkSync(YN, combined)){ // 예외처리
+                throw new Error("Result와 Guide 싱크가 맞지 않습니다.");
+            }
+
             const { data } = await axios.patch(`${apiUrl}/api/v1/raw-data/${id}`,{
               "checkResult": YN,
               "checkReason": combined
             });
             console.log("저장 완료", YN, combined);
             console.log(data);
-            // dataList[ri].check_result = YN;
-            // dataList[ri].check_reason = combined;
+
             setDataList(prevDataList => {
                 const newDataList = [...prevDataList];
                 newDataList[ri].check_result = YN;
@@ -153,11 +158,16 @@ export const Table = () => {
                 return newDataBackup;
             });
             setIsSaved(true);
-            // getAPI();
+
         } catch (e) {
              console.error('API 호출 에러:', e);
             alert("[저장 실패]\n기존 값으로 다시 저장하거나 바른 형식으로 저장하세요.");
             
+            setSelectedResult(prevDataList => {
+                const newDataList = [...prevDataList];
+                newDataList[ri] = dataBackup[ri].check_result;
+                return newDataList;
+            });
             setDataList(prevDataList => {
                 const newDataList = [...prevDataList];
                 newDataList[ri].check_result = dataBackup[ri]?.check_result;
@@ -170,9 +180,19 @@ export const Table = () => {
         }
       }
 
+      const checkSync=(YN:string, combined:string)=>{
+        if(YN==='N' && combined.startsWith('Pass')) return false;
+        if(YN==='Y' && combined.startsWith('Guide')) return false;
+        if(YN==='Y' && !combined.endsWith('Pass')) return false;
+        if(YN==='N' && combined.endsWith('Pass')) return false;
+        if(combined == null) return false;
+        if(YN == null) return false;
+        return true;
+      }
+
       const closeModal = () => {
         setIsSaved(false); // 모달이 닫힐 때 상태를 false로 설정
-    };
+      };
 
     const handleDropdownChangeResult = (ri:number, value: string) => {
         // selectedResult[ri] = value;
@@ -238,11 +258,15 @@ export const Table = () => {
         setByRowKorean(updatedValues);
     };
     // console.log(ByRowKorean)
-    // 선택한 값 추가 함수
 
+    // 선택한 값 추가 함수
     const handleDropdownChangeReason = (rowIndex:number, selectedValue: string) => {
         setSelectedValuesByRow(prevState => {
-            const updatedRow = [...(prevState[rowIndex] || []), selectedValue];
+            const updatedRow = [...(prevState[rowIndex] || [])];
+            // 중복된 값이 없으면 추가
+            if (!updatedRow.includes(selectedValue)) {
+                updatedRow.push(selectedValue);
+            }
             return {...prevState, [rowIndex]: updatedRow};
         });
     }
@@ -298,19 +322,18 @@ export const Table = () => {
     return (
         <div>
             <Provider store={store}>
-            <div style={{display: 'flex'}}>
+            <header className="header-wrap">
                 <SelectDate/>
                 <SelectSiteCode/>
                 <SelectResult/>
-                <button className='filter-btn' style={{margin:"20px 0 0 20px", backgroundColor:"yellow"}}onClick={() => handleFilter()}>테이블 보기</button>
-                <div style={{display: 'flex', height:"60px"}}>
+                <button className='btn-type btn-filter' onClick={() => handleFilter()}>테이블 보기</button>
+                <div className="search-wrap">
                     {/* 검색 입력창 */}
                     <input
                         type="text"
                         value={searchId}
                         onChange={(e) => setSearchId(e.target.value)}
                         placeholder="ID로 검색하기"
-                        style={{margin:"20px 0 0 20px"}}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
                                 searchAPI();
@@ -318,23 +341,38 @@ export const Table = () => {
                         }}
                     />
                     
-                    <button onClick={()=>searchAPI()} style={{width:"100px", margin:"20px 0 0 10px"}}>검색</button>
+                    <button onClick={()=>searchAPI()}  className='btn-type btn-search'>검색</button>
                     
                 </div>
                 
-                <p style={{margin:"30px 0 0 20px"}}>✅ {getCookie('myName')} 님 환영합니다.</p>
-            </div>
+                <p className="text-type">✅ {getCookie('myName')} 님 환영합니다.</p>
+            </header>
             
             </Provider>
-        <div className="table">
-            <table {...getTableProps()} style={{fontSize:"12px"}}>
+            <div className="table-wrap">
+            <table {...getTableProps()} >
 
                 {/* table head */}
+                <colgroup>
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col />
+                        <col style={{width:'400px'}}/>
+                        <col />
+                </colgroup>
                 <thead>
                     {headerGroups.map((headerGroup:any) => (                   
                         <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map((column:any, i:number) => (
-                                <th {...column.getHeaderProps()} style={{width:"400px"}}>
+                                <th {...column.getHeaderProps()} >
                                     {column.render('Header')}
                                 </th>
                             ))}
@@ -355,7 +393,7 @@ export const Table = () => {
                                 return (
                                     <React.Fragment key={index}>
                                         {index === row.cells.length - 4 ? ( // Check 드롭다운 생성
-                                        <td {...cell.getCellProps()} style={{fontSize:"15px"}}>
+                                        <td {...cell.getCellProps()}>
                                             
                                             {dataList[ri].check_result ? ( 
                                                 <>
@@ -382,18 +420,16 @@ export const Table = () => {
                                         </td>
                                     ) : index === row.cells.length - 3 ? ( // 가이드 드롭다운 생성
                                     <td {...cell.getCellProps()}>
-                                        
                                         {selectedValuesByRow[ri] && selectedValuesByRow[ri].map((m, i) => (
-                                            <div style={{display:"flex"}}>
-                                                <p key={i} style={{width:"400px"}}>{m}</p>
-                                                <button onClick={()=>handleRemoveValue(ri, m)} style={{marginLeft:"2px",width:"50px", height:"30px"}}>삭제</button>
+                                            <div className="guide-wrap">
+                                                <span key={i} >{m}</span>
+                                                <button onClick={()=>handleRemoveValue(ri, m)} className="btn-type btn-delete">삭제</button>
                                             </div>
                                         ))}
 
                                         {dataList[ri].check_reason ? ( 
                                             <>
                                             <select
-                                                style={{fontSize:"15px"}}
                                                 key={cell.render('Cell')}
                                                 defaultValue={cell.render('Cell')}
                                                 onChange={(e) => handleDropdownChangeReason(ri, e.target.value)}
@@ -425,7 +461,7 @@ export const Table = () => {
                                             :(null)
                                         }
                                     </td>) : index === row.cells.length - 2 ? ( // 이미지
-                                    <td {...cell.getCellProps()}>
+                                    <td {...cell.getCellProps()} className="img-wrap">
                                         
                                         {/* contents가 https로 시작한다면 이미지 출력, 너비 고정 */}
                                         
@@ -439,7 +475,7 @@ export const Table = () => {
                                         index === row.cells.length - 1 ? ( // 마지막 열에 저장버튼
                                             <>
                                             <td>
-                                                <button onClick={() => handleButtonClick(ri, dataList[ri].id)}>저장</button>
+                                                <button onClick={() => handleButtonClick(ri, dataList[ri].id)} className="btn-type btn-save">저장</button>
                                             </td>
                                             {
                                                 isSaved &&
@@ -469,7 +505,12 @@ export const Table = () => {
                 })}
             </tbody>
             ) : (
-                <p>테이블 값이 없습니다</p>)}
+                <tbody>
+                    <tr>
+                        <td colSpan={13}><div className="no-data">테이블 값이 없습니다</div></td>
+                    </tr>
+                </tbody>
+                )}
             </table>
 
             </div>
