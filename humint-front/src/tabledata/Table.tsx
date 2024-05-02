@@ -467,8 +467,7 @@ export const Table = () => {
                                             <>
                                             <td>
                                                 <button onClick={() => handleButtonClick(ri, dataList[ri].id)} className="btn-type btn-save">저장</button>
-                                            </td>
-                                            {
+                                                {
                                                 isSaved &&
                                                 <div className={'modal-container'} ref={modalBackground} onClick={e => {
                                                   if (e.target === modalBackground.current) {
@@ -485,6 +484,8 @@ export const Table = () => {
                                                   </div>
                                                 </div>
                                               }
+                                            </td>
+                                            
                                             </>
                                         ):(<td {...cell.getCellProps()}>{cell.render('Cell')}</td>)}
                                     </React.Fragment>
