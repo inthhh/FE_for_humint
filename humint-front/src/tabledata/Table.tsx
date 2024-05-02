@@ -13,33 +13,9 @@ import { DateOption, SiteCodeOption, ResultOption } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import {Cookies} from 'react-cookie';
 import {setCookie, getCookie} from '../cookieUtils';
-import { guide_obj } from './guideData';
+import { Guide, datalist, Guideline } from './interfaces';
 import './base.css'
 
-interface datalist {
-    id: number;
-    key: string;
-    date: string;
-    rhq: string;
-    subsidiary: string;
-    site_code: string;
-    page_type: string;
-    category: string;
-    location: string;
-    area: string;
-    title: string;
-    description: string;
-    contents: string;
-    check_result: string;
-    check_reason: string;
-    created_at: string;
-    updated_at: string;
-  }
-
-  interface Guideline {
-    eng: string
-    kor: string
-  }
 
 export const Table = () => {
     
@@ -54,8 +30,7 @@ export const Table = () => {
     const [isSaved, setIsSaved] = useState(false);
     const [searchId, setSearchId] = useState<string>("");
 
-    const guideObj :any [] = guide_obj;
-    
+    const [guideObj, setGuideObj] = useState<Guide[]>([]);
 
     const [changeResult, setChangeResult] = useState<string>('N');
     // const [changeReason, setReason] = useState<string>('');
@@ -105,6 +80,20 @@ export const Table = () => {
     const handleSetPageSize=()=>{
         setPageSize(1000);
     }
+
+    const getGuideAPI = async () => {
+        try {
+            const { data } = await axios.get(`${apiUrl}/api/v1/raw-data-category/check-reason`);
+            setGuideObj(data.data);
+            console.log(data.data);
+        } catch (e) {
+            console.error('API 호출 에러:', e);
+        }
+    }
+    
+    useEffect(()=>{
+        getGuideAPI();
+    },[])
 
     const getAPI = async() => {
         try {
@@ -237,25 +226,25 @@ export const Table = () => {
 
     // 한글로 변환
     const selectedToKorean=()=>{
-        const updatedValues: { [key: number]: string[] } = {};
+        // const updatedValues: { [key: number]: string[] } = {};
 
-        for (const [key, value] of Object.entries(selectedValuesByRow)) {
-            const index = parseInt(key);
-            updatedValues[index] = [];
+        // for (const [key, value] of Object.entries(selectedValuesByRow)) {
+        //     const index = parseInt(key);
+        //     updatedValues[index] = [];
     
-            value.forEach((engValue) => {
-                // guide_obj에서 engValue와 일치하는 항목을 찾아서 kor 값을 가져옴
-                const guideItem = guideObj.find((obj) => obj.contents.some((content:any) => content.eng === engValue));
-                if (guideItem) {
-                    const korValue = guideItem.contents.find((content:any) => content.eng === engValue)?.kor;
-                    // console.log(korValue)
-                    if (korValue) {
-                        updatedValues[index].push(korValue);
-                    }
-                }
-            });
-        }
-        setByRowKorean(updatedValues);
+        //     value.forEach((engValue) => {
+        //         // guide_obj에서 engValue와 일치하는 항목을 찾아서 kor 값을 가져옴
+        //         const guideItem = guideObj.find((obj) => obj.contents.some((content:any) => content.eng === engValue));
+        //         if (guideItem) {
+        //             const korValue = guideItem.contents.find((content:any) => content.eng === engValue)?.kor;
+        //             // console.log(korValue)
+        //             if (korValue) {
+        //                 updatedValues[index].push(korValue);
+        //             }
+        //         }
+        //     });
+        // }
+        // setByRowKorean(updatedValues);
     };
     // console.log(ByRowKorean)
 
@@ -397,22 +386,30 @@ export const Table = () => {
                                             
                                             {dataList[ri].check_result ? ( 
                                                 <>
-                                                <input
-                                                    type="radio"
-                                                    id={`${ri}-N`}
-                                                    value="N"
-                                                    checked={selectedResult[ri] === "N"}
-                                                    onChange={(e) => handleRadioChange(ri, e.target.value)}
-                                                />
-                                                <label htmlFor={`${ri}-N`}>N</label>
-                                                <input
-                                                    type="radio"
-                                                    id={`${ri}-Y`}
-                                                    value="Y"
-                                                    checked={selectedResult[ri] === "Y"}
-                                                    onChange={(e) => handleRadioChange(ri, e.target.value)}
-                                                />
-                                                <label htmlFor={`${ri}-Y`}>Y</label>
+                                                <div className="check-wrap">
+                                                    <div className="check-box">
+                                                        <input
+                                                            type="radio"
+                                                            id={`${ri}-N`}
+                                                            value="N"
+                                                            name={`${ri}`}
+                                                            checked={selectedResult[ri] === "N"}
+                                                            onChange={(e) => handleRadioChange(ri, e.target.value)}
+                                                        />
+                                                        <label htmlFor={`${ri}-N`} className="checkbox"><span>N</span></label>
+                                                    </div>
+                                                    <div className="check-box">
+                                                        <input
+                                                            type="radio"
+                                                            id={`${ri}-Y`}
+                                                            value="Y"
+                                                            name={`${ri}`}
+                                                            checked={selectedResult[ri] === "Y"}
+                                                            onChange={(e) => handleRadioChange(ri, e.target.value)}
+                                                        />
+                                                        <label htmlFor={`${ri}-Y`} className="checkbox"><span>Y</span></label>
+                                                    </div>
+                                                </div>
                                             </>
                                         )
                                             : (null)

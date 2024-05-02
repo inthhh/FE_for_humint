@@ -297,3 +297,33 @@ input::-webkit-search-results-decoration {
   color: #000;
   background-color: #fff;
 }
+
+.check-box { display: inline-block; min-width:50px; margin-left:10px; text-align: left; }
+
+.check-box:first-child { margin-left: 0; }
+
+.check-box input[type="checkbox"], .check-box input[type="radio"] { display: none; }
+
+.check-box label { vertical-align: middle; font-size:16px; }
+
+.check-box label > strong { margin-left: 4px; color: #999; font-weight: 500; }
+
+.check-box .checkbox { display: inline-block; position: relative; width: 34px; height: 34px; line-height:30px;margin-right: 7px; border: 1px solid #d7d7d7; background-color: #fff; }
+.check-box .checkbox span{display:inline-block;vertical-align:middle; margin-left:35px;}
+.check-box input[type="checkbox"] + .checkbox:after { content: ""; position: absolute; top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); width: 34px; height: 34px; background-image: url("../styles/icon/check.svg"); background-size: cover; }
+
+.check-box input[type="checkbox"]:checked ~ .checkbox { border-color: #000; }
+
+.check-box input[type="checkbox"]:checked ~ .checkbox:after { background-image: url("../styles/icon/check_b.svg"); }
+
+.check-box input[type="radio"] + .checkbox { width: 30px; height: 30px; border-radius: 50%; }
+
+.check-box input[type="radio"] + .checkbox:after { content: ""; position: absolute; top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%) scale(1); transform: translate(-50%, -50%) scale(1); width: 10px; height: 10px; background-color: #000; border-radius: 50%; -webkit-transform: translate(-50%, -50%) scale(0); transform: translate(-50%, -50%) scale(0); -webkit-transition: .3s; transition: .3s; }
+
+.check-box input[type="radio"]:checked ~ .checkbox:after { -webkit-transform: translate(-50%, -50%) scale(1); transform: translate(-50%, -50%) scale(1); }
+
+.check-box.selected input[type="radio"] + .checkbox:after { -webkit-transform: translate(-50%, -50%) scale(1); transform: translate(-50%, -50%) scale(1); }
+
+.check-box.invalid .checkbox { border-color: #f73636; }
+
+.check-box.invalid .checkbox { border-color: #f73636; }
