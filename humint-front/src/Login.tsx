@@ -7,6 +7,7 @@ import { myName } from "./redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import {setCookie, getCookie} from './cookieUtils';
 import './Login.css'
+import ptkbg from './styles/ptkbackground.jpg'
 
 
 const Login: React.FC = () => {
@@ -45,7 +46,7 @@ const Login: React.FC = () => {
   return (
     <div className='loginbody'>
         <div>
-      <h2>QA Login</h2>
+      <h2>humint QA Login</h2>
       <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
         <div>
           <label className="loginLabel" htmlFor="id">ID:</label>
