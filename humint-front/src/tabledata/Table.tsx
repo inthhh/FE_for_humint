@@ -109,8 +109,9 @@ export const Table = () => {
         try{
             console.log(searchId);
             const {data} = await axios.get(`${apiUrl}/api/v1/raw-data/${searchId}`)
-            setDataList(data.data);
+            setDataList([...data.data]);
             console.log(data.data);
+            setDataBackup([...data.data]);
         }catch (e) {
             console.error('API 검색 에러:', e);
           }
@@ -121,7 +122,7 @@ export const Table = () => {
         try {
             console.log("edit go ", combined);
             const YN = selectedResult[ri];
-
+            
             if(!checkSync(YN, combined)){ // 예외처리
                 throw new Error("Result와 Guide 싱크가 맞지 않습니다.");
             }
@@ -289,6 +290,7 @@ export const Table = () => {
         console.log(value);
         console.log("datalist ri result : ", dataList[ri].check_result);
         console.log("백업 ri result : ", dataBackup[ri].check_result);
+
     };
 
     // 저장 버튼 클릭 이벤트
