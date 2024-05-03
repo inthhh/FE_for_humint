@@ -1,5 +1,5 @@
 // Login.tsx
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store';
@@ -20,6 +20,11 @@ const Login: React.FC = () => {
     const [loginBTNtext, setBTNtext] = useState<string>('Login')
     const rightPwd = process.env.REACT_APP_PWD;
 
+    const [isShowPwChecked, setShowPwChecked] = useState(false);
+    const passwordRef = useRef(null);
+    const [pwdType, setPwdType] = useState("password");
+
+    
     const handleHoverBTN=()=>{
         setHover("T");
         setBTNtext("즐거운 하루 되세요");
@@ -54,12 +59,13 @@ const Login: React.FC = () => {
         <div>
           <label className="loginLabel" htmlFor="pwd">Password:</label>
           <input
-            type="pwd"
+            type={pwdType}
             id="pwd"
-            value={pwd}
+            value= {pwd}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+
         <button className="loginBtn" type="submit" onMouseEnter={handleHoverBTN} onMouseLeave={()=>setBTNtext('Login')}>{loginBTNtext}</button>
       </form>
       </div>

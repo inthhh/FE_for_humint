@@ -141,6 +141,7 @@ select{
 }
 input[type="text"],
 input[type="submit"],
+input[type="pwd"],
 input[type="password"],
 input[type="search"],
 input[type="number"],

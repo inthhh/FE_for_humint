@@ -1,6 +1,5 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { COLUMNS } from './Columns'
-// import MOCK_DATA from './mockdata.json'
 import { usePagination, useTable } from 'react-table'
 import './Table.css'
 import SelectDate from './SelectDate';
@@ -18,32 +17,11 @@ import './base.css'
 
 
 export const Table = () => {
-    
+
     const [dataList, setDataList] = useState<datalist[]>([]);
     const [dataBackup, setDataBackup] = useState<datalist[]>([]);
-    
-    const dispatch = useDispatch();
-    const date = useSelector((state: any) => state.DateOption);
-    const ct = useSelector((state: any) => state.SiteCodeOption);
-    const result = useSelector((state: any) => state.ResultOption);
-    const myname = useSelector((state: any) => state.myName);
-    const [isSaved, setIsSaved] = useState(false);
-    const [searchId, setSearchId] = useState<string>("");
-
-    const [guideObj, setGuideObj] = useState<Guide[]>([]);
-
-    const [changeResult, setChangeResult] = useState<string>('N');
-    // const [changeReason, setReason] = useState<string>('');
-    const [modalOpen, setModalOpen] = useState(false);
-    const modalBackground = useRef<HTMLDivElement>(null);
-
-    const apiUrl = process.env.REACT_APP_API_URL;
     const columns = useMemo(() => COLUMNS, []);
-    const [name, setName] = useState<string|null>('');
-    
-    const [apiReason, setApiReason] = useState([]);
 
-    
     const { // Table 기본 요소들
         getTableProps, 
         getTableBodyProps, 
@@ -67,19 +45,43 @@ export const Table = () => {
         usePagination,
         
     );
+    
+    // redux data
+    const dispatch = useDispatch();
+    const date = useSelector((state: any) => state.DateOption);
+    const ct = useSelector((state: any) => state.SiteCodeOption);
+    const result = useSelector((state: any) => state.ResultOption);
+    const myname = useSelector((state: any) => state.myName);
+    
+    const [isSaved, setIsSaved] = useState(false);
+    const [searchId, setSearchId] = useState<string>("");
+    // 가이드 목록
+    const [guideObj, setGuideObj] = useState<Guide[]>([]);
+
+    const modalBackground = useRef<HTMLDivElement>(null);
+
+    const apiUrl = process.env.REACT_APP_API_URL;
+    
+    const [name, setName] = useState<string|null>('');
+
+    // check_result, check_reason 저장 변수
+    const [selectedResult, setSelectedResult] = useState<string[]>([]);
+    const [selectedValuesByRow, setSelectedValuesByRow] = useState<{[key: number]: string[]}>({});
+    const [ByRowKorean, setByRowKorean] = useState<{[key: number]: string[]}>({});
 
     const {pageIndex, pageSize} = state
+    
     // 한 페이지의 테이블 길이
     const handleSetPageSize=()=>{
         setPageSize(1000);
     }
 
-    // 가이드 API
+    // 가이드 목록 받아오는 API
     const getGuideAPI = async () => {
         try {
             const { data } = await axios.get(`${apiUrl}/api/v1/raw-data-category/check-reason`);
             setGuideObj(data.data);
-            console.log("get guide : ",data.data);
+            console.log("get guide : ", data.data);
         } catch (e) {
             console.error('guide API 호출 에러:', e);
         }
@@ -180,15 +182,6 @@ export const Table = () => {
         setIsSaved(false); // 모달이 닫힐 때 상태를 false로 설정
       };
 
-    const handleDropdownChangeResult = (ri:number, value: string) => {
-        // selectedResult[ri] = value;
-        setChangeResult(value);
-    };
-    
-    const [selectedResult, setSelectedResult] = useState<string[]>([]);
-    const [selectedValuesByRow, setSelectedValuesByRow] = useState<{[key: number]: string[]}>({});
-    const [ByRowKorean, setByRowKorean] = useState<{[key: number]: string[]}>({});
-
     // Check 값 초기화
     const resetSelectedResult = () => {
         const updatedValues: string[] = [];
@@ -235,6 +228,7 @@ export const Table = () => {
 
     // 선택한 값 추가 함수
     const handleDropdownChangeReason = (ri:number, selectedValue: number) => {
+        if(selectedValue<=0) return;
         const korValue = guideObj[selectedValue-1].reason_value_kor;
 
         setByRowKorean(prevState => {
@@ -275,6 +269,7 @@ export const Table = () => {
         return guideItem ? guideItem.reason_value_eng : koreanValue; // 해당하는 항목이 있으면 영어 값 반환, 없으면 그대로 반환
     };
 
+    // 이미지 클릭 시 링크 열기
     const handleImgclick = (src:string)=>{
         window.open(src);
     }
@@ -425,7 +420,7 @@ export const Table = () => {
                                                 defaultValue={cell.render('Cell')}
                                                 onChange={(e) => handleDropdownChangeReason(ri, Number(e.target.value))}
                                             >
-                                                <option>{cell.render('Cell')}</option>
+                                                {/* <option>{cell.render('Cell')}</option> */}
                                                 {/* <option>추가하기</option> */}
 
                                                 {guideObj.map((obj: any, key: number) => {
@@ -439,7 +434,7 @@ export const Table = () => {
                                                         return (
                                                             <option value={obj.id} id={obj.id}>{obj.reason_value_kor}</option>
                                                         )
-                                                    } else if (dataList[ri].title === obj.reason_subject && obj) {
+                                                    } else if (obj.id && dataList[ri].title === obj.reason_subject) {
                                                         return (
                                                             <option value={obj.id} id={obj.id}>{obj.reason_value_kor}</option>
                                                         );
