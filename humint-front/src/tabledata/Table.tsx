@@ -129,7 +129,8 @@ export const Table = () => {
 
             const { data } = await axios.patch(`${apiUrl}/api/v1/raw-data/${id}`,{
               "checkResult": YN,
-              "checkReason": combined
+              "checkReason": combined,
+              "user": myname
             });
             console.log("저장 완료", YN, combined);
             console.log(data);
@@ -142,6 +143,7 @@ export const Table = () => {
             });
             setDataBackup(prevDataBackup => {
                 const newDataBackup = [...prevDataBackup];
+                newDataBackup[ri].check_result = YN; // 5/3 배포 후 추가
                 newDataBackup[ri].check_reason = combined;
                 return newDataBackup;
             });
@@ -229,6 +231,7 @@ export const Table = () => {
 
     // 선택한 값 추가 함수
     const handleDropdownChangeReason = (ri:number, selectedValue: number) => {
+        console.log("select what - ", selectedValue)
         if(selectedValue<=0) return;
         const korValue = guideObj[selectedValue-1].reason_value_kor;
 
@@ -337,15 +340,15 @@ export const Table = () => {
                         <col />
                         <col />
                         <col />
-                        <col />
-                        <col />
-                        <col />
+                        <col style={{width:'50px'}}/>
                         <col />
                         <col />
                         <col />
                         <col />
                         <col style={{width:'200px'}}/>
-                        <col style={{width:'400px'}}/>
+                        <col style={{width:'100px'}}/>
+                        <col style={{width:'200px'}}/>
+                        <col style={{width:'350px'}}/>
                         <col />
                 </colgroup>
                 <thead>
@@ -419,11 +422,10 @@ export const Table = () => {
                                             <>
                                             <select
                                                 key={cell.render('Cell')}
-                                                defaultValue={cell.render('Cell')}
+                                                // defaultValue={cell.render('Cell')}
                                                 onChange={(e) => handleDropdownChangeReason(ri, Number(e.target.value))}
                                             >
-                                                {/* <option>{cell.render('Cell')}</option> */}
-                                                {/* <option>추가하기</option> */}
+                                                <option value={-1}>추가하기</option>  // 5/3 배포 후 추가
 
                                                 {guideObj.map((obj: any, key: number) => {
                                                     if (
