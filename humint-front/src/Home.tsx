@@ -3,36 +3,16 @@ import logo from './logo.svg';
 import { useState, useEffect } from 'react';
 import './Home.css';
 import axios from 'axios';
-import Table from './tabledata/Table';
+import Table from './TableData/Table';
 import { toHaveDescription } from '@testing-library/jest-dom/matchers';
 import store from './redux/store';
 import { Provider } from 'react-redux';
-import Login from './Login';
-
-interface datalist {
-  id: number;
-  date: string;
-  rhq: string;
-  subsidiary: string;
-  site_code: string;
-  page_type: string;
-  category: string;
-  location: string;
-  title: string;
-  Description: string;
-  contents: string;
-  check_result: string;
-  check_reason: string;
-  created_at: string;
-  updated_at: string;
-}
+import Login from './LoginData/Login';
 
 function Home() {
-
   
   return (
     <div className="Home">
-          {/* <p style={{paddingLeft:"10px"}}>QA 자동화 화이팅~</p> */}
             <Login/>
     </div>
   );
