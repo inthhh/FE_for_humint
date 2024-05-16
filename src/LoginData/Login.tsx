@@ -19,8 +19,9 @@ const Login: React.FC = () => {
     const [pwd, setPassword] = useState('');
     const navigate = useNavigate();
     const [loginBTNtext, setBTNtext] = useState<string>('Login')
-    const rightPwd = process.env.REACT_APP_PWD;
-
+    // const rightPwd = process.env.REACT_APP_PWD;
+    const rightPwd = "neptunepulse@@";
+    
     const [isShowPwChecked, setShowPwChecked] = useState(false);
     const passwordRef = useRef(null);
     const [pwdType, setPwdType] = useState("password");

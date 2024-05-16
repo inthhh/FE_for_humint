@@ -13,7 +13,9 @@ function SelectDate() {
   //   const formatDate = date.toISOString().split('T')[0];
   //   dateList.push(formatDate);
   // }
-  const apiUrl = process.env.REACT_APP_API_URL;
+  // const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = "http://121.252.183.23:8080"
+  
   const [apiDate, setApiDate] = useState([]);
 
   const dateAPI = async()=>{

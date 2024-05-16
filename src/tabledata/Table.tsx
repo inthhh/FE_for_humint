@@ -66,7 +66,8 @@ export const Table = () => {
     // 모달 뒤의 배경(배경 클릭 시 모달창이 꺼짐)
     const modalBackground = useRef<HTMLDivElement>(null);
     // API 도메인
-    const apiUrl = process.env.REACT_APP_API_URL;
+    // const apiUrl = process.env.REACT_APP_API_URL;
+    const apiUrl = "http://121.252.183.23:8080"
     // 유저 네임
     const [name, setName] = useState<string|null>('');
 
@@ -89,7 +90,7 @@ export const Table = () => {
         try {
             const { data } = await axios.get(`${apiUrl}/api/v1/raw-data-category/check-reason`);
             setGuideObj(data.data);
-            console.log("get guide : ", data.data);
+            // console.log("get guide : ", data.data);
         } catch (e) {
             console.error('guide API 호출 에러:', e);
         }
@@ -228,7 +229,7 @@ export const Table = () => {
             koreans[index] = Array.from(uniqueKoreans);
         });
 
-        console.log("reset guide : ",koreans);
+        // console.log("reset guide : ",koreans);
         setByRowKorean(koreans);
     };
 
@@ -242,7 +243,13 @@ export const Table = () => {
     const handleDropdownChangeReason = (ri:number, selectedValue: number) => {
         console.log("select what - ", selectedValue)
         if(selectedValue<=0) return;
-        const korValue = guideObj[selectedValue-1].reason_value_kor;
+        // const korValue = guideObj[selectedValue-1].reason_value_kor;
+        const selectedItem = guideObj.find(item => item.id === selectedValue);
+
+        let korValue = "";
+        if (selectedItem) {
+            korValue = selectedItem.reason_value_kor;
+        }
 
         setByRowKorean(prevState => {
             const updatedRow = [...(prevState[ri] || [])];
@@ -259,7 +266,7 @@ export const Table = () => {
             ...ByRowKorean,
             [rowIndex]: ByRowKorean[rowIndex].filter((value: any) => value !== m)
         });
-        console.log("삭제됨", ByRowKorean);
+        // console.log("삭제됨", ByRowKorean);
     };
 
     // 이미지 클릭 시 링크 열기
@@ -281,8 +288,8 @@ export const Table = () => {
             return newDataList;
         });
         console.log(value);
-        console.log("datalist ri result : ", dataList[ri].check_result);
-        console.log("백업 ri result : ", dataBackup[ri].check_result);
+        // console.log("datalist ri result : ", dataList[ri].check_result);
+        // console.log("백업 ri result : ", dataBackup[ri].check_result);
 
     };
 
@@ -310,7 +317,7 @@ export const Table = () => {
 
     // 저장 버튼 클릭 이벤트
     const handleButtonClick = (ri:number, id:number)=>{
-        console.log("check : ",selectedResult ," / guide : ",selectedValuesByRow);
+        // console.log("check : ",selectedResult ," / guide : ",selectedValuesByRow);
         // 가이드 목록을 문자열로 통합하는 함수로 이동
         combineValuesToString(id, ri);
     }
@@ -437,8 +444,8 @@ export const Table = () => {
                                                 key={cell.render('Cell')}
                                                 onChange={(e) => handleDropdownChangeReason(ri, Number(e.target.value))}
                                             >
-                                                <option value={-1}>추가하기</option>  // 5/3 배포 후 추가
-
+                                                <option value={-1}>추가하기</option>
+                                                <option value={1}>Pass</option>
                                                 {guideObj.map((obj: any, key: number) => {
                                                     if (
                                                         (dataList[ri].title === "Headline Text" ||
