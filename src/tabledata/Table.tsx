@@ -119,7 +119,7 @@ export const Table = () => {
             console.log(searchId);
             const {data} = await axios.get(`${apiUrl}/api/v1/raw-data/${searchId}`)
             setDataList([...data.data]);
-            console.log(data.data);
+            console.log("data : ",data.data);
             setDataBackup([...data.data]);
         }catch (e) {
             console.error('API 검색 에러:', e);
@@ -139,7 +139,7 @@ export const Table = () => {
 
             const { data } = await axios.patch(`${apiUrl}/api/v1/raw-data/${id}`,{
               "checkResult": YN,
-              "checkReason": combined,
+              "checkReason": combined, // id값의 배열로 변경 예정
               "user": myname
             });
             console.log("저장 완료", YN, combined);
@@ -207,7 +207,7 @@ export const Table = () => {
 
     // 가이드 값을 저장해둔 배열을 초기화, 갱신
     const resetSelectedValuesByRow = () => {
-
+        setByRowKorean([]);
         const updatedValues: {[key: number]: string[]} = {};
         const koreans: { [key: number]: string[] } = {};
 
@@ -219,8 +219,6 @@ export const Table = () => {
                 guideObj.forEach((obj) => {
                     if (obj.reason_value_eng === splitValue) {
                         uniqueKoreans.add(obj.reason_value_kor);
-                    } else if(splitValue.includes('#f4f4f4')){
-                        uniqueKoreans.add(guideObj[20].reason_value_kor);
                     }
                 });
             });
@@ -245,7 +243,7 @@ export const Table = () => {
         if(selectedValue<=0) return;
         // const korValue = guideObj[selectedValue-1].reason_value_kor;
         const selectedItem = guideObj.find(item => item.id === selectedValue);
-
+        console.log("item all : ", selectedItem)
         let korValue = "";
         if (selectedItem) {
             korValue = selectedItem.reason_value_kor;
@@ -259,6 +257,8 @@ export const Table = () => {
             return {...prevState, [ri]: updatedRow};
         });
     }
+
+    // console.log("byrowkorean", ByRowKorean)
 
     // 가이드 목록에서 선택한 값을 삭제, 가이드 배열에서 제거
     const handleRemoveValue = (rowIndex: number, m:string) => {
@@ -296,8 +296,10 @@ export const Table = () => {
     // 가이드 목록을 문자열로 통합
     const combineValuesToString = (id: number, rowIndex: number) => {
         let combined: string[] = [];
+        
         if (ByRowKorean[rowIndex]) {
             combined = ByRowKorean[rowIndex].map(koreanValueToEng);
+            console.log(combined,rowIndex)
         }
         // 수정된 값을 저장하는 API로 이동
         editAPI(id, rowIndex, Array.isArray(combined) ? combined.join('\n') : ''); 
@@ -306,9 +308,9 @@ export const Table = () => {
     // 한국어 값을 영어로 변환하는 함수
     const koreanValueToEng = (koreanValue: string) => {
         // Guide: Background color must be transparent or #f4f4f4 - dynamic 값 예외처리
-        if(koreanValue.includes('#f4f4f4')){
-            return guideObj[20].reason_value_eng;
-        }
+        // if(koreanValue.includes('#f4f4f4')){
+        //     return guideObj[20].reason_value_eng;
+        // }
         const guideItem = guideObj.find((obj) => obj.reason_value_kor === koreanValue);
         console.log("영어변환값 : ",guideItem?.reason_value_eng);
         // 영어 변환값에 해당하는 항목이 있으면 영어 값을 반환, 없으면 그대로 반환
@@ -319,6 +321,7 @@ export const Table = () => {
     const handleButtonClick = (ri:number, id:number)=>{
         // console.log("check : ",selectedResult ," / guide : ",selectedValuesByRow);
         // 가이드 목록을 문자열로 통합하는 함수로 이동
+        console.log(id, " : id / ri : ",ri)
         combineValuesToString(id, ri);
     }
 
