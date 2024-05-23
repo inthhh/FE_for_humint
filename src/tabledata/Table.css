@@ -52,7 +52,7 @@ table th {
 
 
 .filter-btn{
-    width: 250px;
+    width: 200px;
     height: 40px;
     padding: 5px;
     cursor: pointer;
@@ -65,7 +65,7 @@ table th {
 .limenu{
     font-size: 16px;
     cursor: pointer;
-    width: 250px;
+    width: 200px;
     height: 40px;
     display: flex;
     align-items: center;
@@ -75,6 +75,19 @@ table th {
     border-right: 1px solid rgb(66, 66, 66);
     border-left: 1px solid rgb(66, 66, 66);
     /* style={{marginTop:"5px", cursor:"pointer" }} */
+}
+
+.container ul::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+.container ul::-webkit-scrollbar-track {
+    background: #b3b3b3; /* 스크롤바 배경색 */
+}
+
+.container ul::-webkit-scrollbar-thumb {
+    background-color: #5e8abd; /* 스크롤바 색상 */
+    border-radius: 4px;
 }
 
 .btn-wrapper {

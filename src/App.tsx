@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from './Home';
+import Home from './components/Home';
 import Table from './tabledata/Table';
 import { Provider } from 'react-redux';
 import store from './redux/store';

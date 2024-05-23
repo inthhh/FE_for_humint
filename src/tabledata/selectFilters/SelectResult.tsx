@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ResultOption } from "../redux/store";
+import { ResultOption } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import './Table.css'
+import '../Table.css'
 
 function SelectResult() {
     const [isDropdownView, setDropdownView] = useState(false)

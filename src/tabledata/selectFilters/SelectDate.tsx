@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { DateOption } from "../redux/store";
+import { DateOption } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import './Table.css'
+import '../Table.css'
 import axios from 'axios';
 
 function SelectDate() {
@@ -20,7 +20,7 @@ function SelectDate() {
         console.log(data.data)
         setApiDate(sortedData);
     } catch(e){
-        console.error('dateReasonAPI 호출 에러:', e);
+        console.error('dateAPI 호출 에러:', e);
     }
   }
 

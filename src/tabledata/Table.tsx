@@ -2,16 +2,17 @@ import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 're
 import { COLUMNS } from './Columns';
 import { usePagination, useTable } from 'react-table';
 import './Table.css';
-import SelectDate from './SelectDate';
-import SelectResult from './SelectResult';
-import SelectSiteCode from './SelectSiteCode';
+import SelectDate from './selectFilters/SelectDate';
+import SelectResult from './selectFilters/SelectResult';
+import SelectSiteCode from './selectFilters/SelectSiteCode';
+import SelectPage from './selectFilters/SelectPage';
 import axios from 'axios';
 import { Provider } from 'react-redux';
 import store from '../redux/store';
 import { DateOption, SiteCodeOption, ResultOption } from "../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import {Cookies} from 'react-cookie';
-import {setCookie, getCookie} from '../cookieUtils';
+import {setCookie, getCookie} from '../utils/cookieUtils';
 import { Guide, datalist, Guideline } from './interfaces';
 import './base.css'
 
@@ -333,6 +334,7 @@ export const Table = () => {
                 <SelectDate/>
                 <SelectSiteCode/>
                 <SelectResult/>
+                <SelectPage/>
                 <button className='btn-type btn-filter' onClick={() => handleFilter()}>테이블 보기</button>
                 {/* 검색 입력창 및 '검색' 버튼 */}
                 <div className="search-wrap">
