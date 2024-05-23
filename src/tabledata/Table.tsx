@@ -57,6 +57,7 @@ export const Table = () => {
     const ct = useSelector((state: any) => state.SiteCodeOption);
     const result = useSelector((state: any) => state.ResultOption);
     const myname = useSelector((state: any) => state.myName);
+    const pagetype = useSelector((state:any) => state.PageTypeOption);
     
     // 검색 ID
     const [searchId, setSearchId] = useState<string>("");
@@ -105,7 +106,7 @@ export const Table = () => {
     const getAPI = async() => {
         try {
             setName(getCookie('myName'));
-          const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}`);
+          const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}&page-type=${pagetype}`);
           setDataList([...data.data]);
           console.log(data.data);
           setDataBackup([...data.data]);
@@ -228,7 +229,6 @@ export const Table = () => {
             koreans[index] = Array.from(uniqueKoreans);
         });
 
-        // console.log("reset guide : ",koreans);
         setByRowKorean(koreans);
     };
 
@@ -259,15 +259,12 @@ export const Table = () => {
         });
     }
 
-    // console.log("byrowkorean", ByRowKorean)
-
     // 가이드 목록에서 선택한 값을 삭제, 가이드 배열에서 제거
     const handleRemoveValue = (rowIndex: number, m:string) => {
         setByRowKorean({
             ...ByRowKorean,
             [rowIndex]: ByRowKorean[rowIndex].filter((value: any) => value !== m)
         });
-        // console.log("삭제됨", ByRowKorean);
     };
 
     // 이미지 클릭 시 링크 열기
@@ -289,9 +286,6 @@ export const Table = () => {
             return newDataList;
         });
         console.log(value);
-        // console.log("datalist ri result : ", dataList[ri].check_result);
-        // console.log("백업 ri result : ", dataBackup[ri].check_result);
-
     };
 
     // 가이드 목록을 문자열로 통합
@@ -308,10 +302,6 @@ export const Table = () => {
     
     // 한국어 값을 영어로 변환하는 함수
     const koreanValueToEng = (koreanValue: string) => {
-        // Guide: Background color must be transparent or #f4f4f4 - dynamic 값 예외처리
-        // if(koreanValue.includes('#f4f4f4')){
-        //     return guideObj[20].reason_value_eng;
-        // }
         const guideItem = guideObj.find((obj) => obj.reason_value_kor === koreanValue);
         console.log("영어변환값 : ",guideItem?.reason_value_eng);
         // 영어 변환값에 해당하는 항목이 있으면 영어 값을 반환, 없으면 그대로 반환
@@ -320,7 +310,6 @@ export const Table = () => {
 
     // 저장 버튼 클릭 이벤트
     const handleButtonClick = (ri:number, id:number)=>{
-        // console.log("check : ",selectedResult ," / guide : ",selectedValuesByRow);
         // 가이드 목록을 문자열로 통합하는 함수로 이동
         console.log(id, " : id / ri : ",ri)
         combineValuesToString(id, ri);
