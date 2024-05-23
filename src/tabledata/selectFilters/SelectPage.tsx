@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ResultOption } from "../../redux/store";
+import { PageTypeOption } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import '../Table.css'
 import axios from 'axios';
@@ -36,15 +36,14 @@ function SelectPage() {
     }
   
     const dispatch = useDispatch();
-    const pageType = "";
-    useSelector((state: any) => state.ResultOption);
+    const pageType = useSelector((state: any) => state.PageTypeOption);
 
     const onClickEvent=(i:string)=>{
       setDropdownView(false);
       if(i=="ALL") {
-        // dispatch(ResultOption(''))
+        dispatch(PageTypeOption(''))
       }
-      // else dispatch(ResultOption(i)); // home or offer
+      else dispatch(PageTypeOption(i)); // home or offer
     };
 
     return (

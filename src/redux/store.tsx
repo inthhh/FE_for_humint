@@ -6,6 +6,7 @@ interface AppState {
   DateOption: string | null;
   ResultOption: string | null;
   SiteCodeOption: string | null;
+  PageTypeOption: string | null;
   myName: string | null;
 }
 
@@ -23,6 +24,7 @@ const SET_DATE = "SET_DATE";
 const SET_RESULT = "SET_RESULT";
 const SET_SITECODE = "SET_SITECODE";
 const SET_MYNAME = "SET_MYNAME";
+const SET_PAGETYPE = "SET_PAGETYPE"
 
 // 액션 생성자 함수
 export const DateOption = (date: string | null): AnyAction => ({
@@ -45,13 +47,19 @@ export const myName = (myname: string | null): AnyAction => ({
   payload: myname,
 });
 
+export const PageTypeOption = (page: string | null): AnyAction => ({
+  type: SET_PAGETYPE,
+  payload: page,
+});
+
 // 리듀서 함수
 const reducer = (
   state: AppState = {
     DateOption: getTodayDate(), // 오늘 날짜로 초기화
-    ResultOption: "", // "Y"로 초기화
+    ResultOption: "", // "ALL"로 초기화
     SiteCodeOption: "uk", // "uk"로 초기화
     myName: "user1",
+    PageTypeOption : ""
   },
   action: AnyAction
 ): AppState => {
@@ -71,11 +79,16 @@ const reducer = (
         ...state,
         SiteCodeOption: action.payload,
       };
-      case SET_MYNAME:
+    case SET_MYNAME:
       return {
         ...state,
         myName: action.payload,
       };
+      case SET_PAGETYPE:
+        return {
+          ...state,
+          PageTypeOption: action.payload,
+        };
     default:
       return state;
   }
