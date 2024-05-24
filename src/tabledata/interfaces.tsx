@@ -24,7 +24,7 @@ export interface datalist {
     description: string;
     contents: string;
     check_result: string;
-    check_reason: string;
+    check_reason: number[];
     created_at: string;
     updated_at: string;
   }

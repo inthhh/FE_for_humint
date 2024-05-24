@@ -58,7 +58,7 @@ const reducer = (
     DateOption: getTodayDate(), // 오늘 날짜로 초기화
     ResultOption: "", // "ALL"로 초기화
     SiteCodeOption: "uk", // "uk"로 초기화
-    myName: "user1",
+    myName: "",
     PageTypeOption : ""
   },
   action: AnyAction

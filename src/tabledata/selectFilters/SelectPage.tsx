@@ -59,8 +59,8 @@ function SelectPage() {
           margin: 0,
           padding: 0
         }}>
-          {apiPage.map((item: { pagetype: string }, i: number) => (
-            <li key={i} onMouseDown={(e) => { e.preventDefault() }} onClick={() => onClickEvent(item.pagetype)} className='limenu'>{item.pagetype}</li>
+          {apiPage.map((item: { page_type: string }, i: number) => (
+            <li key={i} onMouseDown={(e) => { e.preventDefault() }} onClick={() => onClickEvent(item.page_type)} className='limenu'>{item.page_type}</li>
           ))}
         </ul>)}
       </div>

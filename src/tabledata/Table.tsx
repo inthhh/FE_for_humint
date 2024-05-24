@@ -69,14 +69,15 @@ export const Table = () => {
     const modalBackground = useRef<HTMLDivElement>(null);
     // API 도메인
     // const apiUrl = process.env.REACT_APP_API_URL;
-    const apiUrl = "http://121.252.183.23:8080"
+    // const apiUrl = "http://121.252.183.23:8080"
+    const apiUrl = "http://121.252.182.166:3005";
     // 유저 네임
     const [name, setName] = useState<string|null>('');
 
     // check_result 저장
     const [selectedResult, setSelectedResult] = useState<string[]>([]);
-    // check_reason 저장
-    const [selectedValuesByRow, setSelectedValuesByRow] = useState<{[key: number]: string[]}>({});
+    // check_reason 영어 저장
+    // const [selectedValuesByRow, setSelectedValuesByRow] = useState<{[key: number]: string[]}>({});
     // check_reason 한글로 저장
     const [ByRowKorean, setByRowKorean] = useState<{[key: number]: string[]}>({});
     // 페이지 인덱싱
@@ -106,16 +107,16 @@ export const Table = () => {
     const getAPI = async() => {
         try {
             setName(getCookie('myName'));
-          const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}&page-type=${pagetype}`);
+          const { data } = await axios.get(`${apiUrl}/api/v2/raw-data?date=${date}&site-code=${ct}&check-result=${result}&page-type=${pagetype}`);
           setDataList([...data.data]);
-          console.log(data.data);
+          console.log("data", data.data);
           setDataBackup([...data.data]);
         } catch (e) {
           console.error('API 호출 에러:', e);
         }
     }
 
-    // ID 검색 결과를 받아오는 API
+    // product ID 검색 결과를 받아오는 API
     const searchAPI = async()=>{
         try{
             console.log(searchId);
@@ -129,34 +130,35 @@ export const Table = () => {
     }
 
     // Check 결과&가이드 값 수정 후 저장하는 API
-    const editAPI = async(id: number, ri:number, combined:string) => {
+    const editAPI = async(id: number, ri:number, idlist:number[]) => {
         try {
-            console.log("edit go ", combined);
+            console.log("edit go ", idlist);
             const YN = selectedResult[ri];
             
             // 예외처리. 조건에 맞지 않는 저장을 시도할 때
-            if(!checkSync(YN, combined)){
+            if(!checkSync(YN, idlist)){
                 throw new Error("Result와 Guide 싱크가 맞지 않습니다.");
             }
+            if(!myname) setName(getCookie('myName'));
 
             const { data } = await axios.patch(`${apiUrl}/api/v1/raw-data/${id}`,{
               "checkResult": YN,
-              "checkReason": combined, // id값의 배열로 변경 예정
+              "checkReason": idlist, // id값의 배열
               "user": myname
             });
-            console.log("저장 완료", YN, combined);
+            console.log("저장 완료", YN, idlist);
             console.log(data);
 
             setDataList(prevDataList => {
                 const newDataList = [...prevDataList];
                 newDataList[ri].check_result = YN;
-                newDataList[ri].check_reason = combined;
+                newDataList[ri].check_reason = idlist;
                 return newDataList;
             });
             setDataBackup(prevDataBackup => {
                 const newDataBackup = [...prevDataBackup];
                 newDataBackup[ri].check_result = YN;
-                newDataBackup[ri].check_reason = combined;
+                newDataBackup[ri].check_reason = idlist;
                 return newDataBackup;
             });
             setIsSaved(true);
@@ -183,11 +185,13 @@ export const Table = () => {
     }
 
     // Check 결과&가이드 저장 예외처리
-    const checkSync=(YN:string, combined:string)=>{
-        if(YN==='N' && combined.startsWith('Pass')) return false;
-        if(YN==='Y' && combined.startsWith('Guide')) return false;
-        if(YN==='Y' && !combined.endsWith('Pass')) return false;
-        if(YN==='N' && combined.includes('Pass')) return false;
+    const checkSync=(YN:string, combined:number[])=>{
+        combined = combined.map(Number);
+        if(YN==='N') if(combined.includes(1)) return false;
+        if(YN==='Y'){
+            if(!combined.includes(1)) return false;
+            if(combined.length != 1) return false;
+        }
         if(combined == null) return false;
         if(YN == null) return false;
         return true;
@@ -207,35 +211,36 @@ export const Table = () => {
         setSelectedResult(updatedValues);
     };
 
-    // 가이드 값을 저장해둔 배열을 초기화, 갱신
-    const resetSelectedValuesByRow = () => {
+    // 가이드 id 배열 -> 한글 배열로 초기화, 갱신
+    const resetSelectedGuides = () => {
         setByRowKorean([]);
-        const updatedValues: {[key: number]: string[]} = {};
         const koreans: { [key: number]: string[] } = {};
 
-        dataList.forEach((item, index) => {
-            const splitValues = item.check_reason.split('\n').filter(Boolean);
-            updatedValues[index] = splitValues;
+        dataList?.forEach((item, index) => {
+            const guideIds = item.check_reason;
+            // console.log("guideIds:", guideIds);
             const uniqueKoreans: Set<string> = new Set();
-            splitValues.forEach((splitValue) => {
-                guideObj.forEach((obj) => {
-                    if (obj.reason_value_eng === splitValue) {
-                        uniqueKoreans.add(obj.reason_value_kor);
-                    }
+            if (Array.isArray(guideIds)) {
+                guideIds.forEach((guideId) => {
+                    guideObj.forEach((obj) => {
+                        if (obj.id === guideId) {
+                            // console.log("match", obj.id, obj.reason_value_kor)
+                            uniqueKoreans.add(obj.reason_value_kor);
+                        }
+                    });
                 });
-            });
-    
+            }
             // Set을 다시 배열로 변환하여 koreans에 할당
             koreans[index] = Array.from(uniqueKoreans);
         });
-
+        // console.log("kor:", koreans);
         setByRowKorean(koreans);
     };
 
     // dataList(전체 데이터)가 변경될때마다 결과 및 가이드 배열을 갱신
     useEffect(() => {
         resetSelectedResult();
-        resetSelectedValuesByRow();
+        resetSelectedGuides();
     }, [dataList]);
 
     // 가이드 드롭다운에서 선택한 값을 가이드 배열에 추가
@@ -288,31 +293,31 @@ export const Table = () => {
         console.log(value);
     };
 
-    // 가이드 목록을 문자열로 통합
-    const combineValuesToString = (id: number, rowIndex: number) => {
-        let combined: string[] = [];
-        
+    // 한국어 값을 id로 변환하는 함수
+    const koreanValueToId = (koreanValue: string) => {
+        const guideItem = guideObj.find((obj) => obj.reason_value_kor === koreanValue);
+        console.log("id변환값 : ",guideItem?.id);
+        // 변환값에 해당하는 항목이 있으면 id 값을 반환, 없으면 -1 반환
+        return guideItem ? guideItem.id : -1;
+    };
+
+    // 가이드 목록을 id 배열로 변환
+    const combineGuidesToId = (id: number, rowIndex: number) => {
+        let idlist: number[] = [];
+        console.log(ByRowKorean[rowIndex])
         if (ByRowKorean[rowIndex]) {
-            combined = ByRowKorean[rowIndex].map(koreanValueToEng);
-            console.log(combined,rowIndex)
+            idlist = ByRowKorean[rowIndex].map(koreanValueToId);
+            console.log(idlist,rowIndex)
         }
         // 수정된 값을 저장하는 API로 이동
-        editAPI(id, rowIndex, Array.isArray(combined) ? combined.join('\n') : ''); 
-    };
-    
-    // 한국어 값을 영어로 변환하는 함수
-    const koreanValueToEng = (koreanValue: string) => {
-        const guideItem = guideObj.find((obj) => obj.reason_value_kor === koreanValue);
-        console.log("영어변환값 : ",guideItem?.reason_value_eng);
-        // 영어 변환값에 해당하는 항목이 있으면 영어 값을 반환, 없으면 그대로 반환
-        return guideItem ? guideItem.reason_value_eng : koreanValue;
+        editAPI(id, rowIndex, idlist);
     };
 
     // 저장 버튼 클릭 이벤트
     const handleButtonClick = (ri:number, id:number)=>{
         // 가이드 목록을 문자열로 통합하는 함수로 이동
         console.log(id, " : id / ri : ",ri)
-        combineValuesToString(id, ri);
+        combineGuidesToId(id, ri);
     }
 
     return (
