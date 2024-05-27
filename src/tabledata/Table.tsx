@@ -16,6 +16,8 @@ import {setCookie, getCookie} from '../utils/cookieUtils';
 import { Guide, datalist, Guideline } from './interfaces';
 import './base.css'
 
+import { getAPI } from './tableApi';
+
 
 export const Table = () => {
 
@@ -69,8 +71,9 @@ export const Table = () => {
     const modalBackground = useRef<HTMLDivElement>(null);
     // API 도메인
     // const apiUrl = process.env.REACT_APP_API_URL;
-    // const apiUrl = "http://121.252.183.23:8080"
-    const apiUrl = "http://121.252.182.166:3005";
+    const apiUrl = "http://121.252.183.23:8080"
+    // test api
+    // const apiUrl = "http://121.252.182.166:3005";
     // 유저 네임
     const [name, setName] = useState<string|null>('');
 
@@ -98,6 +101,16 @@ export const Table = () => {
             console.error('guide API 호출 에러:', e);
         }
     }
+
+    // useEffect(() => {
+    //     const loadApiData = async () => {
+    //         const tableData = await getAPI(apiUrl, date, ct, result, pagetype);
+    //         setDataList(tableData);
+    //         setDataBackup(tableData);
+    //     };
+
+    //     loadApiData();
+    // }, [apiUrl]);
     
     useEffect(()=>{
         getGuideAPI();
@@ -107,10 +120,27 @@ export const Table = () => {
     const getAPI = async() => {
         try {
             setName(getCookie('myName'));
-          const { data } = await axios.get(`${apiUrl}/api/v2/raw-data?date=${date}&site-code=${ct}&check-result=${result}&page-type=${pagetype}`);
-          setDataList([...data.data]);
-          console.log("data", data.data);
-          setDataBackup([...data.data]);
+            
+            if(pagetype && result){
+                const {data} = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}&page-type=${pagetype}`);
+                setDataList([...data.data]);
+                setDataBackup([...data.data]);
+            }
+            else if(result){
+                const {data} = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}`);
+                setDataList([...data.data]);
+                setDataBackup([...data.data]);
+            }
+            else if(pagetype){
+                const {data} = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&page-type=${pagetype}`);
+                setDataList([...data.data]);
+                setDataBackup([...data.data]);
+            }
+            else{
+                const {data} = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}`);
+                setDataList([...data.data]);
+                setDataBackup([...data.data]);
+            }
         } catch (e) {
           console.error('API 호출 에러:', e);
         }
@@ -139,13 +169,14 @@ export const Table = () => {
             if(!checkSync(YN, idlist)){
                 throw new Error("Result와 Guide 싱크가 맞지 않습니다.");
             }
-            if(!myname) setName(getCookie('myName'));
-
+            console.log(name)
             const { data } = await axios.patch(`${apiUrl}/api/v1/raw-data/${id}`,{
               "checkResult": YN,
               "checkReason": idlist, // id값의 배열
-              "user": myname
-            });
+              "user": (name? name : '')
+            },
+            // { withCredentials: true }
+            );
             console.log("저장 완료", YN, idlist);
             console.log(data);
 

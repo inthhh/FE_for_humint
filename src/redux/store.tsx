@@ -1,5 +1,6 @@
 // store.ts
 import { legacy_createStore as createStore, Action, AnyAction } from "redux";
+import { getCookie } from "../utils/cookieUtils";
 
 // 초기 상태
 interface AppState {
@@ -58,7 +59,7 @@ const reducer = (
     DateOption: getTodayDate(), // 오늘 날짜로 초기화
     ResultOption: "", // "ALL"로 초기화
     SiteCodeOption: "uk", // "uk"로 초기화
-    myName: "",
+    myName: getCookie('myName'),
     PageTypeOption : ""
   },
   action: AnyAction
