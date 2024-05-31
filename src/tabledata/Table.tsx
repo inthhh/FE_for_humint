@@ -6,6 +6,7 @@ import SelectDate from './selectFilters/SelectDate';
 import SelectResult from './selectFilters/SelectResult';
 import SelectSiteCode from './selectFilters/SelectSiteCode';
 import SelectPage from './selectFilters/SelectPage';
+import ScrollToTopBtn from '../components/ScrollToTopBtn';
 import axios from 'axios';
 import { Provider } from 'react-redux';
 import store from '../redux/store';
@@ -552,6 +553,7 @@ export const Table = () => {
             </table>
 
             </div>
+            <ScrollToTopBtn />
         </div>
     );
 }
