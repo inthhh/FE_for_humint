@@ -17,7 +17,7 @@ import {setCookie, getCookie} from '../utils/cookieUtils';
 import { Guide, datalist, Guideline } from './interfaces';
 import './base.css'
 
-import { getAPI } from './tableApi';
+import { getAPI, searchAPI, editAPI, getGuideAPI } from './tableApi';
 
 
 export const Table = () => {
@@ -73,15 +73,11 @@ export const Table = () => {
     // API 도메인
     // const apiUrl = process.env.REACT_APP_API_URL;
     const apiUrl = "http://121.252.183.23:8080"
-    // test api
-    // const apiUrl = "http://121.252.182.166:3005";
     // 유저 네임
     const [name, setName] = useState<string|null>('');
 
     // check_result 저장
     const [selectedResult, setSelectedResult] = useState<string[]>([]);
-    // check_reason 영어 저장
-    // const [selectedValuesByRow, setSelectedValuesByRow] = useState<{[key: number]: string[]}>({});
     // check_reason 한글로 저장
     const [ByRowKorean, setByRowKorean] = useState<{[key: number]: string[]}>({});
     // 페이지 인덱싱
@@ -92,76 +88,43 @@ export const Table = () => {
         setPageSize(1000);
     }
 
-    // 각 행의 Title에 맞는 가이드 목록을 받아오는 API
-    const getGuideAPI = async () => {
-        try {
-            const { data } = await axios.get(`${apiUrl}/api/v1/raw-data-category/check-reason`);
-            setGuideObj(data.data);
-            // console.log("get guide : ", data.data);
-        } catch (e) {
-            console.error('guide API 호출 에러:', e);
+    // Table Data 전체를 받아오는 API
+    const getAPI_ = async () => {
+        setName(getCookie('myName'));
+        const tableData = await getAPI(apiUrl, date, ct, result, pagetype);
+        if(tableData!="error"){
+            setDataList(tableData);
+            setDataBackup(tableData);
         }
+    };
+
+    useEffect(() => {
+        getAPI_();
+    }, []);
+    
+    // 각 행의 Title에 맞는 가이드 목록을 받아오는 API
+    const getGuideAPI_ = async () => {
+        const guideData = await getGuideAPI(apiUrl);
+        if(guideData!="error") setGuideObj(guideData);
     }
 
-    // useEffect(() => {
-    //     const loadApiData = async () => {
-    //         const tableData = await getAPI(apiUrl, date, ct, result, pagetype);
-    //         setDataList(tableData);
-    //         setDataBackup(tableData);
-    //     };
-
-    //     loadApiData();
-    // }, [apiUrl]);
-    
     useEffect(()=>{
-        getGuideAPI();
+        getGuideAPI_();
     },[])
 
-    // Table Data 전체를 받아오는 API
-    const getAPI = async() => {
-        try {
-            setName(getCookie('myName'));
-            
-            if(pagetype && result){
-                const {data} = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}&page-type=${pagetype}`);
-                setDataList([...data.data]);
-                setDataBackup([...data.data]);
-            }
-            else if(result){
-                const {data} = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}`);
-                setDataList([...data.data]);
-                setDataBackup([...data.data]);
-            }
-            else if(pagetype){
-                const {data} = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&page-type=${pagetype}`);
-                setDataList([...data.data]);
-                setDataBackup([...data.data]);
-            }
-            else{
-                const {data} = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}`);
-                setDataList([...data.data]);
-                setDataBackup([...data.data]);
-            }
-        } catch (e) {
-          console.error('API 호출 에러:', e);
-        }
-    }
-
     // product ID 검색 결과를 받아오는 API
-    const searchAPI = async()=>{
-        try{
-            console.log(searchId);
-            const {data} = await axios.get(`${apiUrl}/api/v1/raw-data/${searchId}`)
-            setDataList([...data.data]);
-            console.log("data : ",data.data);
-            setDataBackup([...data.data]);
-        }catch (e) {
-            console.error('API 검색 에러:', e);
-          }
+    const searchAPI_ = async()=>{
+        if(Number(searchId) > 0){
+            const tableData = await searchAPI(searchId, apiUrl);
+            if(tableData!="error"){
+                setDataList(tableData);
+                setDataBackup(tableData);
+            }
+        }
     }
 
     // Check 결과&가이드 값 수정 후 저장하는 API
-    const editAPI = async(id: number, ri:number, idlist:number[]) => {
+    const editAPI_ = async(id: number, ri:number, idlist:number[]) => {
         try {
             console.log("edit go ", idlist);
             const YN = selectedResult[ri];
@@ -171,29 +134,25 @@ export const Table = () => {
                 throw new Error("Result와 Guide 싱크가 맞지 않습니다.");
             }
             console.log(name)
-            const { data } = await axios.patch(`${apiUrl}/api/v1/raw-data/${id}`,{
-              "checkResult": YN,
-              "checkReason": idlist, // id값의 배열
-              "user": (name? name : '')
-            },
-            // { withCredentials: true }
-            );
-            console.log("저장 완료", YN, idlist);
-            console.log(data);
+            const editData = await editAPI(apiUrl, YN, name, id, ri, idlist);
+            if(editData!="error"){
+                console.log("저장 완료", YN, idlist);
+                console.log(editData);
 
-            setDataList(prevDataList => {
-                const newDataList = [...prevDataList];
-                newDataList[ri].check_result = YN;
-                newDataList[ri].check_reason = idlist;
-                return newDataList;
-            });
-            setDataBackup(prevDataBackup => {
-                const newDataBackup = [...prevDataBackup];
-                newDataBackup[ri].check_result = YN;
-                newDataBackup[ri].check_reason = idlist;
-                return newDataBackup;
-            });
-            setIsSaved(true);
+                setDataList(prevDataList => {
+                    const newDataList = [...prevDataList];
+                    newDataList[ri].check_result = YN;
+                    newDataList[ri].check_reason = idlist;
+                    return newDataList;
+                });
+                setDataBackup(prevDataBackup => {
+                    const newDataBackup = [...prevDataBackup];
+                    newDataBackup[ri].check_result = YN;
+                    newDataBackup[ri].check_reason = idlist;
+                    return newDataBackup;
+                });
+                setIsSaved(true);
+            }
 
         } catch (e) {
              console.error('API 호출 에러:', e);
@@ -224,7 +183,7 @@ export const Table = () => {
             if(!combined.includes(1)) return false;
             if(combined.length != 1) return false;
         }
-        if(combined == null) return false;
+        if(combined == null || combined.length < 1) return false;
         if(YN == null) return false;
         return true;
     }
@@ -250,13 +209,11 @@ export const Table = () => {
 
         dataList?.forEach((item, index) => {
             const guideIds = item.check_reason;
-            // console.log("guideIds:", guideIds);
             const uniqueKoreans: Set<string> = new Set();
             if (Array.isArray(guideIds)) {
                 guideIds.forEach((guideId) => {
                     guideObj.forEach((obj) => {
                         if (obj.id === guideId) {
-                            // console.log("match", obj.id, obj.reason_value_kor)
                             uniqueKoreans.add(obj.reason_value_kor);
                         }
                     });
@@ -312,7 +269,7 @@ export const Table = () => {
     // 필터 선택 후 '테이블 보기' 버튼 클릭 시 테이블을 보여주는 이벤트
     const handleFilter=()=>{
         handleSetPageSize();
-        getAPI();
+        getAPI_();
     }
 
     // Result 라디오 버튼 선택 이벤트, dataList 상태를 업데이트하여 선택된 값으로 변경
@@ -342,7 +299,7 @@ export const Table = () => {
             console.log(idlist,rowIndex)
         }
         // 수정된 값을 저장하는 API로 이동
-        editAPI(id, rowIndex, idlist);
+        editAPI_(id, rowIndex, idlist);
     };
 
     // 저장 버튼 클릭 이벤트
@@ -371,11 +328,11 @@ export const Table = () => {
                         placeholder="ID로 검색하기"
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                                searchAPI();
+                                searchAPI_();
                             }
                         }}
                     />
-                    <button onClick={()=>searchAPI()}  className='btn-type btn-search'>검색</button>
+                    <button onClick={()=>searchAPI_()}  className='btn-type btn-search'>검색</button>
                 </div>
                 
                 <p className="text-type">☑️ {getCookie('myName')} 님 환영합니다.</p>
