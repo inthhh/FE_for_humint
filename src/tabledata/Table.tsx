@@ -19,7 +19,8 @@ import './base.css'
 
 import { getAPI_, searchAPI_, editAPI_, getGuideAPI_ } from './tableApi';
 import saveEdit from './saveEditData';
-
+import {CheckReasonColumns} from './reasonColumn';
+import {CheckResultColumns} from './resultColumn';
 
 export const Table = () => {
 
@@ -367,80 +368,26 @@ export const Table = () => {
                                 return (
                                     <React.Fragment key={index}>
                                         {index === row.cells.length - 4 ? ( // Check 열에 라디오 버튼 생성
-                                        <td {...cell.getCellProps()}>
-                                            
-                                            {dataList[ri].check_result ? ( 
-                                                <>
-                                                <div className="check-wrap">
-                                                    <div className="check-box">
-                                                        <input
-                                                            type="radio"
-                                                            id={`${ri}-N`}
-                                                            value="N"
-                                                            name={`${ri}`}
-                                                            checked={selectedResult[ri] === "N"}
-                                                            onChange={(e) => handleRadioChange(ri, e.target.value)}
-                                                        />
-                                                        <label htmlFor={`${ri}-N`} className="checkbox"><span>N</span></label>
-                                                    </div>
-                                                    <div className="check-box">
-                                                        <input
-                                                            type="radio"
-                                                            id={`${ri}-Y`}
-                                                            value="Y"
-                                                            name={`${ri}`}
-                                                            checked={selectedResult[ri] === "Y"}
-                                                            onChange={(e) => handleRadioChange(ri, e.target.value)}
-                                                        />
-                                                        <label htmlFor={`${ri}-Y`} className="checkbox"><span>Y</span></label>
-                                                    </div>
-                                                </div>
-                                            </>
-                                        )
-                                            : (null)
-                                        }
-                                        </td>
-                                    ) : index === row.cells.length - 3 ? ( // Guide 열에 드롭다운 생성
-                                    <td {...cell.getCellProps()}>
-                                        {ByRowKorean[ri] && ByRowKorean[ri].map((m, i) => (
-                                            <div className="guide-wrap">
-                                                <span key={i} >{m}</span>
-                                                <button onClick={()=>handleRemoveValue(ri, m)} className="btn-type btn-delete">삭제</button>
-                                            </div>
-                                        ))}
+                                        
+                                        <CheckResultColumns
+                                            ri={ri}
+                                            dataList={dataList}
+                                            selectedResult={selectedResult}
+                                            handleRadioChange={handleRadioChange}
+                                        />
 
-                                        {dataList[ri].check_reason ? ( 
-                                            <>
-                                            <select
-                                                key={cell.render('Cell')}
-                                                onChange={(e) => handleDropdownChangeReason(ri, Number(e.target.value))}
-                                            >
-                                                <option value={-1}>추가하기</option>
-                                                <option value={1}>Pass</option>
-                                                {guideObj.map((obj: any, key: number) => {
-                                                    if (
-                                                        (dataList[ri].title === "Headline Text" ||
-                                                        dataList[ri].title === "Description Text" ||
-                                                        dataList[ri].title === "Title" ||
-                                                        dataList[ri].title === "Description")
-                                                        && obj.reason_subject == "Text"
-                                                    ) {
-                                                        return (
-                                                            <option value={obj.id} id={obj.id}>{obj.reason_value_kor}</option>
-                                                        )
-                                                    } else if (obj.id && dataList[ri].title === obj.reason_subject) {
-                                                        return (
-                                                            <option value={obj.id} id={obj.id}>{obj.reason_value_kor}</option>
-                                                        );
-                                                    }
-                                                    return null;
-                                                })}
-                                                
-                                            </select>
-                                            </>)
-                                            :(null)
-                                        }
-                                    </td>) : index === row.cells.length - 2 ? ( // Image 열에 이미지를 보여줌
+                                    ) : index === row.cells.length - 3 ? ( // Guide 열에 드롭다운 생성
+                                    
+                                        <CheckReasonColumns
+                                            ri={ri}
+                                            dataList={dataList}
+                                            guideObj={guideObj}
+                                            ByRowKorean={ByRowKorean}
+                                            handleRemoveValue={handleRemoveValue}
+                                            handleDropdownChangeReason={handleDropdownChangeReason}
+                                        />
+                                    
+                                    ) : index === row.cells.length - 2 ? ( // Image 열에 이미지를 보여줌
                                     <td {...cell.getCellProps()} className="img-wrap">
                                         {/* contents가 https로 시작한다면 이미지 출력, 너비 고정 */}
                                         {dataList[ri].contents && dataList[ri].contents.startsWith("https:") ? (
