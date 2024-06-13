@@ -21,6 +21,7 @@ import { getAPI_, searchAPI_, editAPI_, getGuideAPI_ } from './tableApi';
 import saveEdit from './saveEditData';
 import {CheckReasonColumns} from './reasonColumn';
 import {CheckResultColumns} from './resultColumn';
+import {ColGroup} from './colGroup';
 
 export const Table = () => {
 
@@ -327,22 +328,7 @@ export const Table = () => {
             <table {...getTableProps()} >
 
                 {/* table head */}
-                <colgroup>
-                {/* 각 열의 스타일 설정 */}
-                        <col />
-                        <col />
-                        <col />
-                        <col style={{width:'50px'}}/>
-                        <col />
-                        <col />
-                        <col />
-                        <col />
-                        <col style={{width:'200px'}}/>
-                        <col style={{width:'100px'}}/>
-                        <col style={{width:'200px'}}/>
-                        <col style={{width:'350px'}}/>
-                        <col />
-                </colgroup>
+                <ColGroup/>
                 <thead>
                     {headerGroups.map((headerGroup:any) => (                   
                         <tr {...headerGroup.getHeaderGroupProps()}>
