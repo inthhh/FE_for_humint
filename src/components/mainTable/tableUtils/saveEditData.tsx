@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Guide, datalist, Guideline } from './interfaces';
+import { Guide, datalist, Guideline } from '../interfaces';
 
 class SaveEdit {
     public guideObj_: Guide[] = [];

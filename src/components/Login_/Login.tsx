@@ -2,10 +2,10 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import store from '../redux/store';
-import { myName } from "../redux/store";
+import store from '../../redux/store';
+import { myName } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import {setCookie, getCookie} from '../utils/cookieUtils';
+import {setCookie, getCookie} from '../../utils/cookieUtils';
 import './Login.css'
 import ptkbg from './styles/ptkbackground.jpg'
 

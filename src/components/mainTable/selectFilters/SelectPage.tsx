@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PageTypeOption } from "../../redux/store";
+import { PageTypeOption } from "../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import '../Table.css'
 import axios from 'axios';

@@ -6,22 +6,22 @@ import SelectDate from './selectFilters/SelectDate';
 import SelectResult from './selectFilters/SelectResult';
 import SelectSiteCode from './selectFilters/SelectSiteCode';
 import SelectPage from './selectFilters/SelectPage';
-import ScrollToTopBtn from '../components/ScrollToTopBtn';
+import ScrollToTopBtn from './ScrollToTopBtn';
 import axios from 'axios';
 import { Provider } from 'react-redux';
-import store from '../redux/store';
-import { DateOption, SiteCodeOption, ResultOption } from "../redux/store";
+import store from '../../redux/store';
+import { DateOption, SiteCodeOption, ResultOption } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import {Cookies} from 'react-cookie';
-import {setCookie, getCookie} from '../utils/cookieUtils';
+import {setCookie, getCookie} from '../../utils/cookieUtils';
 import { Guide, datalist, Guideline } from './interfaces';
 import './base.css'
 
-import { getAPI_, searchAPI_, editAPI_, getGuideAPI_ } from './tableApi';
-import saveEdit from './saveEditData';
-import {CheckReasonColumns} from './reasonColumn';
-import {CheckResultColumns} from './resultColumn';
-import {ColGroup} from './colGroup';
+import { getAPI_, searchAPI_, editAPI_, getGuideAPI_ } from './tableUtils/tableApi';
+import saveEdit from './tableUtils/saveEditData';
+import {CheckReasonColumns} from './tableUtils/reasonColumn';
+import {CheckResultColumns} from './tableUtils/resultColumn';
+import {ColGroup} from './tableUtils/colGroup';
 
 export const Table = () => {
 
@@ -341,10 +341,11 @@ export const Table = () => {
                     ))}
                 </thead>
 
+            {/* table body */}
                 {dataList && dataList.length > 0 ? (
+
                 <tbody {...getTableBodyProps()}>
                 
-                {/* table body */}
                 {page.map((row: any, ri:number) => {
                     prepareRow(row);
                     return (

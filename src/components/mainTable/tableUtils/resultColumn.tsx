@@ -1,5 +1,5 @@
 import React from 'react';
-import { Guide, datalist, Guideline } from './interfaces';
+import { Guide, datalist, Guideline } from '../interfaces';
 
 interface checkResultProps {
   ri: number;
