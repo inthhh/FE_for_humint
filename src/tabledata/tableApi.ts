@@ -2,7 +2,7 @@ import axios from 'axios';
 import exp from 'constants';
 
 // Table Data 전체를 받아오는 API
-export const getAPI = async (apiUrl:string, date:number, ct:string, result:string, pagetype:string) => {
+export const getAPI_ = async (apiUrl:string, date:number, ct:string, result:string, pagetype:string) => {
     try {
       if(pagetype && result){
           const {data} = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}&page-type=${pagetype}`);
@@ -27,7 +27,7 @@ export const getAPI = async (apiUrl:string, date:number, ct:string, result:strin
 };
 
 // product ID 검색 결과를 받아오는 API
-export const searchAPI = async(searchId: string, apiUrl:string)=>{
+export const searchAPI_ = async(searchId: string, apiUrl:string)=>{
     try{
         console.log(searchId);
         const {data} = await axios.get(`${apiUrl}/api/v1/raw-data/${searchId}`)
@@ -41,7 +41,7 @@ export const searchAPI = async(searchId: string, apiUrl:string)=>{
 
 
 // Check 결과&가이드 값 수정 후 저장하는 API
-export const editAPI = async(apiUrl:string, YN:string, name:string|null, id: number, ri:number, idlist:number[]) => {
+export const editAPI_ = async(apiUrl:string, YN:string, name:string|null, id: number, ri:number, idlist:number[]) => {
     try {
         console.log("edit go ", idlist);
         
@@ -65,7 +65,7 @@ export const editAPI = async(apiUrl:string, YN:string, name:string|null, id: num
 }
 
 // 각 행의 Title에 맞는 가이드 목록을 받아오는 API
-export const getGuideAPI = async (apiUrl:string) => {
+export const getGuideAPI_ = async (apiUrl:string) => {
     try {
         const { data } = await axios.get(`${apiUrl}/api/v1/raw-data-category/check-reason`);
         return data.data;

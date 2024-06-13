@@ -17,7 +17,8 @@ import {setCookie, getCookie} from '../utils/cookieUtils';
 import { Guide, datalist, Guideline } from './interfaces';
 import './base.css'
 
-import { getAPI, searchAPI, editAPI, getGuideAPI } from './tableApi';
+import { getAPI_, searchAPI_, editAPI_, getGuideAPI_ } from './tableApi';
+import saveEdit from './saveEditData';
 
 
 export const Table = () => {
@@ -89,9 +90,9 @@ export const Table = () => {
     }
 
     // Table Data 전체를 받아오는 API
-    const getAPI_ = async () => {
+    const getAPI = async () => {
         setName(getCookie('myName'));
-        const tableData = await getAPI(apiUrl, date, ct, result, pagetype);
+        const tableData = await getAPI_(apiUrl, date, ct, result, pagetype);
         if(tableData!="error"){
             setDataList(tableData);
             setDataBackup(tableData);
@@ -99,23 +100,23 @@ export const Table = () => {
     };
 
     useEffect(() => {
-        getAPI_();
+        getAPI();
     }, []);
     
     // 각 행의 Title에 맞는 가이드 목록을 받아오는 API
-    const getGuideAPI_ = async () => {
-        const guideData = await getGuideAPI(apiUrl);
+    const getGuideAPI = async () => {
+        const guideData = await getGuideAPI_(apiUrl);
         if(guideData!="error") setGuideObj(guideData);
     }
 
     useEffect(()=>{
-        getGuideAPI_();
-    },[])
+        getGuideAPI();
+    }, [])
 
     // product ID 검색 결과를 받아오는 API
-    const searchAPI_ = async()=>{
+    const searchAPI = async()=>{
         if(Number(searchId) > 0){
-            const tableData = await searchAPI(searchId, apiUrl);
+            const tableData = await searchAPI_(searchId, apiUrl);
             if(tableData!="error"){
                 setDataList(tableData);
                 setDataBackup(tableData);
@@ -124,7 +125,7 @@ export const Table = () => {
     }
 
     // Check 결과&가이드 값 수정 후 저장하는 API
-    const editAPI_ = async(id: number, ri:number, idlist:number[]) => {
+    const editAPI = async(id: number, ri:number, idlist:number[]) => {
         try {
             console.log("edit go ", idlist);
             const YN = selectedResult[ri];
@@ -134,7 +135,7 @@ export const Table = () => {
                 throw new Error("Result와 Guide 싱크가 맞지 않습니다.");
             }
             console.log(name)
-            const editData = await editAPI(apiUrl, YN, name, id, ri, idlist);
+            const editData = await editAPI_(apiUrl, YN, name, id, ri, idlist);
             if(editData!="error"){
                 console.log("저장 완료", YN, idlist);
                 console.log(editData);
@@ -269,7 +270,7 @@ export const Table = () => {
     // 필터 선택 후 '테이블 보기' 버튼 클릭 시 테이블을 보여주는 이벤트
     const handleFilter=()=>{
         handleSetPageSize();
-        getAPI_();
+        getAPI();
     }
 
     // Result 라디오 버튼 선택 이벤트, dataList 상태를 업데이트하여 선택된 값으로 변경
@@ -282,31 +283,13 @@ export const Table = () => {
         console.log(value);
     };
 
-    // 한국어 값을 id로 변환하는 함수
-    const koreanValueToId = (koreanValue: string) => {
-        const guideItem = guideObj.find((obj) => obj.reason_value_kor === koreanValue);
-        console.log("id변환값 : ",guideItem?.id);
-        // 변환값에 해당하는 항목이 있으면 id 값을 반환, 없으면 -1 반환
-        return guideItem ? guideItem.id : -1;
-    };
-
-    // 가이드 목록을 id 배열로 변환
-    const combineGuidesToId = (id: number, rowIndex: number) => {
-        let idlist: number[] = [];
-        console.log(ByRowKorean[rowIndex])
-        if (ByRowKorean[rowIndex]) {
-            idlist = ByRowKorean[rowIndex].map(koreanValueToId);
-            console.log(idlist,rowIndex)
-        }
-        // 수정된 값을 저장하는 API로 이동
-        editAPI_(id, rowIndex, idlist);
-    };
-
     // 저장 버튼 클릭 이벤트
     const handleButtonClick = (ri:number, id:number)=>{
         // 가이드 목록을 문자열로 통합하는 함수로 이동
         console.log(id, " : id / ri : ",ri)
-        combineGuidesToId(id, ri);
+        const SaveEdit = new saveEdit();
+        let idlist: number[] = SaveEdit.combineGuidesToId_(guideObj, ByRowKorean, id, ri);
+        editAPI(id, ri, idlist);
     }
 
     return (
@@ -328,11 +311,11 @@ export const Table = () => {
                         placeholder="ID로 검색하기"
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                                searchAPI_();
+                                searchAPI();
                             }
                         }}
                     />
-                    <button onClick={()=>searchAPI_()}  className='btn-type btn-search'>검색</button>
+                    <button onClick={()=>searchAPI()}  className='btn-type btn-search'>검색</button>
                 </div>
                 
                 <p className="text-type">☑️ {getCookie('myName')} 님 환영합니다.</p>
