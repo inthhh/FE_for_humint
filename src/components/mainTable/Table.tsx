@@ -73,12 +73,10 @@ export const Table = () => {
     const [isSaved, setIsSaved] = useState(false);
     // 모달 뒤의 배경(배경 클릭 시 모달창이 꺼짐)
     const modalBackground = useRef<HTMLDivElement>(null);
-    // API 도메인
-    // const apiUrl = process.env.REACT_APP_API_URL;
+    // API 도메인 // const apiUrl = process.env.REACT_APP_API_URL;
     const apiUrl = "http://121.252.183.23:8080"
     // 유저 네임
     const [name, setName] = useState<string|null>('');
-
     // check_result 저장
     const [selectedResult, setSelectedResult] = useState<string[]>([]);
     // check_reason 한글로 저장
@@ -101,9 +99,7 @@ export const Table = () => {
         }
     };
 
-    useEffect(() => {
-        getAPI();
-    }, []);
+    useEffect(() => { getAPI(); }, []);
     
     // 각 행의 Title에 맞는 가이드 목록을 받아오는 API
     const getGuideAPI = async () => {
@@ -111,9 +107,7 @@ export const Table = () => {
         if(guideData!="error") setGuideObj(guideData);
     }
 
-    useEffect(()=>{
-        getGuideAPI();
-    }, [])
+    useEffect(()=>{ getGuideAPI(); }, [])
 
     // product ID 검색 결과를 받아오는 API
     const searchAPI = async()=>{
@@ -129,7 +123,6 @@ export const Table = () => {
     // Check 결과&가이드 값 수정 후 저장하는 API
     const editAPI = async(id: number, ri:number, idlist:number[]) => {
         try {
-            console.log("edit go ", idlist);
             const YN = selectedResult[ri];
             
             // 예외처리. 조건에 맞지 않는 저장을 시도할 때
@@ -140,7 +133,6 @@ export const Table = () => {
             const editData = await editAPI_(apiUrl, YN, name, id, ri, idlist);
             if(editData!="error"){
                 console.log("저장 완료", YN, idlist);
-                console.log(editData);
 
                 setDataList(prevDataList => {
                     const newDataList = [...prevDataList];
@@ -173,7 +165,6 @@ export const Table = () => {
                 return newDataList;
             });
             
-            console.log("기존 result ", dataBackup[ri].check_result);
             console.log("기존 reason ", dataBackup[ri]?.check_reason);
         }
     }
@@ -225,7 +216,6 @@ export const Table = () => {
             // Set을 다시 배열로 변환하여 koreans에 할당
             koreans[index] = Array.from(uniqueKoreans);
         });
-        // console.log("kor:", koreans);
         setByRowKorean(koreans);
     };
 
@@ -237,9 +227,7 @@ export const Table = () => {
 
     // 가이드 드롭다운에서 선택한 값을 가이드 배열에 추가
     const handleDropdownChangeReason = (ri:number, selectedValue: number) => {
-        console.log("select what - ", selectedValue)
         if(selectedValue<=0) return;
-        // const korValue = guideObj[selectedValue-1].reason_value_kor;
         const selectedItem = guideObj.find(item => item.id === selectedValue);
         console.log("item all : ", selectedItem)
         let korValue = "";
@@ -288,7 +276,6 @@ export const Table = () => {
     // 저장 버튼 클릭 이벤트
     const handleButtonClick = (ri:number, id:number)=>{
         // 가이드 목록을 문자열로 통합하는 함수로 이동
-        console.log(id, " : id / ri : ",ri)
         const SaveEdit = new saveEdit();
         let idlist: number[] = SaveEdit.combineGuidesToId_(guideObj, ByRowKorean, id, ri);
         editAPI(id, ri, idlist);
@@ -297,6 +284,7 @@ export const Table = () => {
     return (
         <div>
             <Provider store={store}>
+            {/* 테이블 위 Header */}
             <header className="header-wrap">
                 {/* 필터 선택 및 '테이블 보기' 버튼 */}
                 <SelectDate/>
@@ -319,7 +307,6 @@ export const Table = () => {
                     />
                     <button onClick={()=>searchAPI()}  className='btn-type btn-search'>검색</button>
                 </div>
-                
                 <p className="text-type">☑️ {getCookie('myName')} 님 환영합니다.</p>
             </header>
             
@@ -362,7 +349,6 @@ export const Table = () => {
                                             selectedResult={selectedResult}
                                             handleRadioChange={handleRadioChange}
                                         />
-
                                     ) : index === row.cells.length - 3 ? ( // Guide 열에 드롭다운 생성
                                     
                                         <CheckReasonColumns
@@ -373,8 +359,8 @@ export const Table = () => {
                                             handleRemoveValue={handleRemoveValue}
                                             handleDropdownChangeReason={handleDropdownChangeReason}
                                         />
-                                    
                                     ) : index === row.cells.length - 2 ? ( // Image 열에 이미지를 보여줌
+
                                     <td {...cell.getCellProps()} className="img-wrap">
                                         {/* contents가 https로 시작한다면 이미지 출력, 너비 고정 */}
                                         {dataList[ri].contents && dataList[ri].contents.startsWith("https:") ? (
@@ -406,11 +392,9 @@ export const Table = () => {
                                                 </div>
                                               }
                                             </td>
-                                            
                                             </>
                                         ):(<td {...cell.getCellProps()}>{cell.render('Cell')}</td>)}
                                     </React.Fragment>
-                                    
                                 );
                         })}
                         </tr>
@@ -425,7 +409,6 @@ export const Table = () => {
                 </tbody>
                 )}
             </table>
-
             </div>
             <ScrollToTopBtn />
         </div>
