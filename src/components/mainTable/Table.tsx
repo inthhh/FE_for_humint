@@ -22,6 +22,7 @@ import saveEdit from './tableUtils/saveEditData';
 import {CheckReasonColumns} from './tableUtils/reasonColumn';
 import {CheckResultColumns} from './tableUtils/resultColumn';
 import {ColGroup} from './tableUtils/colGroup';
+import ImgIframe from './tableUtils/imgIframe';
 
 export const Table = () => {
 
@@ -83,6 +84,8 @@ export const Table = () => {
     const [ByRowKorean, setByRowKorean] = useState<{[key: number]: string[]}>({});
     // 페이지 인덱싱
     const {pageIndex, pageSize} = state
+    // 이미지 클릭 시 띄울 iframe
+    const [iframeSrcs, setIframeSrcs] = useState<{ src1: string, src2: string } | null>(null);
     
     // 한 페이지의 테이블 길이
     const handleSetPageSize=()=>{
@@ -254,7 +257,9 @@ export const Table = () => {
 
     // 이미지 클릭 시 링크 열기
     const handleImgclick = (src:string)=>{
-        window.open(src);
+        // const guideSrc = "https://cdn.inflearn.com/public/files/blogs/35722e4a-e052-49cb-a621-2a9b63c7666c/%EA%B3%A0%EC%96%91%EC%9D%B4.png";
+        const guideSrc = "";
+        setIframeSrcs({ src1: src, src2: guideSrc });
     }
 
     // 필터 선택 후 '테이블 보기' 버튼 클릭 시 테이블을 보여주는 이벤트
@@ -280,6 +285,10 @@ export const Table = () => {
         let idlist: number[] = SaveEdit.combineGuidesToId_(guideObj, ByRowKorean, id, ri);
         editAPI(id, ri, idlist);
     }
+
+    const handleIframeClose = () => {
+        setIframeSrcs(null);
+      };
 
     return (
         <div>
@@ -364,8 +373,11 @@ export const Table = () => {
                                     <td {...cell.getCellProps()} className="img-wrap">
                                         {/* contents가 https로 시작한다면 이미지 출력, 너비 고정 */}
                                         {dataList[ri].contents && dataList[ri].contents.startsWith("https:") ? (
-                                            <img src={dataList[ri].contents} alt="image" style={{ width: '300px', cursor:"pointer" }} 
-                                            onClick={()=>handleImgclick(dataList[ri].contents)} />
+                                            <div>
+                                                <img src={dataList[ri].contents} alt="image" style={{ width: '300px', cursor:"pointer" }} 
+                                                onClick={()=>handleImgclick(dataList[ri].contents)} />
+                                                {iframeSrcs && <ImgIframe src={iframeSrcs.src1} guideSrc={iframeSrcs.src2} onClose={handleIframeClose} />}
+                                            </div>
                                         ) : (
                                             null
                                         )}
@@ -376,16 +388,16 @@ export const Table = () => {
                                                 <button onClick={() => handleButtonClick(ri, dataList[ri].id)} className="btn-type btn-save">저장</button>
                                                 {
                                                 isSaved &&
-                                                <div className={'modal-container'} ref={modalBackground} onClick={e => {
-                                                  if (e.target === modalBackground.current) {
-                                                    closeModal();
-                                                  }
-                                                }}>
-                                                  <div className={'modal-content'}>
-                                                  <div className={'modal-sub'}>
+                                                <div className="modal-container" ref={modalBackground} onClick={e => {
+                                                    if (e.target === modalBackground.current) {
+                                                      closeModal();
+                                                    }
+                                                  }}>
+                                                    <div className="modal-content">
+                                                      <div className="modal-sub">
                                                         <p>저장되었습니다.</p>
-                                                        <button className={'modal-close-btn'} onClick={closeModal}>
-                                                            닫기
+                                                        <button className="modal-close-btn" onClick={closeModal}>
+                                                          닫기
                                                         </button>
                                                     </div>
                                                   </div>
