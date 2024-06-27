@@ -13,8 +13,8 @@ export const ColGroup: React.FC =()=>{
                 <col />
                 <col />
                 <col style={{width:'200px'}}/>
-                <col style={{width:'100px'}}/>
-                <col style={{width:'200px'}}/>
+                <col style={{width:'100px', backgroundColor:'#f3f3fd'}}/>
+                <col style={{width:'200px', backgroundColor:'#f3f3fd'}}/>
                 <col style={{width:'350px'}}/>
                 <col />
         </colgroup>

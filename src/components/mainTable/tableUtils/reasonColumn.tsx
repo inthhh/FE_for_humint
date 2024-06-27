@@ -1,5 +1,6 @@
 import React from 'react';
 import { Guide, datalist, Guideline } from '../interfaces';
+import '../Table.css'
 
 interface checkReasonProps {
   ri: number;
@@ -17,7 +18,7 @@ export const CheckReasonColumns: React.FC<checkReasonProps> = ({ ri, dataList, g
       {ByRowKorean[ri] && ByRowKorean[ri].map((m, i) => (
           <div className="guide-wrap">
               <span key={i} >{m}</span>
-              <button onClick={()=>handleRemoveValue(ri, m)} className="btn-type btn-delete">삭제</button>
+              <button onClick={()=>handleRemoveValue(ri, m)} className="btn-type btn-delete" style={{zIndex: '2'}}>삭제</button>
           </div>
       ))}
       {dataList[ri].check_reason ? ( 

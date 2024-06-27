@@ -57,7 +57,7 @@ function SelectDate() {
         {isDropdownView && (<ul style={{
           listStyle: 'none',
           position: 'absolute',
-          zIndex: 1, 
+          zIndex: 9, 
           maxHeight: '300px', overflowY: 'auto',
           margin: 0,
           padding: 0

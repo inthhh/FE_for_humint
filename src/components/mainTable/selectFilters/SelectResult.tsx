@@ -33,7 +33,7 @@ function SelectResult() {
           <button className='filter-btn'>Check Result : {yn==''?('ALL'):(`${yn}`)} {isDropdownView ? '▲' : '▼'}</button>
         </label>
         {isDropdownView && (<ul style={{listStyle:'none',position: 'absolute', 
-        zIndex: 1,
+        zIndex: 9,
         margin: 0, padding: 0 }}>
             <li className='limenu' onMouseDown={(e) => {
                 e.preventDefault()

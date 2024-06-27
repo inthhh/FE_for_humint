@@ -307,7 +307,7 @@ export const Table = () => {
                         type="text"
                         value={searchId}
                         onChange={(e) => setSearchId(e.target.value)}
-                        placeholder="ID로 검색하기"
+                        placeholder="Search for ID"
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
                                 searchAPI();
@@ -326,13 +326,24 @@ export const Table = () => {
                 {/* table head */}
                 <ColGroup/>
                 <thead>
-                    {headerGroups.map((headerGroup:any) => (                   
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map((column:any, i:number) => (
-                                <th {...column.getHeaderProps()} >
-                                    {column.render('Header')}
-                                </th>
-                            ))}
+                    {headerGroups.map((headerGroup: any, headerGroupIndex: number) => (
+                        <tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
+                        {headerGroup.headers.map((column: any, columnIndex: number) => {
+                            const thProps = column.getHeaderProps();
+                            const isSpecialColumn = headerGroupIndex === 0 && (columnIndex === 9 || columnIndex === 10); // 10번째와 11번째 인덱스
+
+                            return (
+                            <th
+                                {...thProps}
+                                key={columnIndex}
+                                style={{
+                                backgroundColor: isSpecialColumn ? '#587cfe' : '#424242',
+                                }}
+                            >
+                                {column.render('Header')}
+                            </th>
+                            );
+                        })}
                         </tr>
                     ))}
                 </thead>
