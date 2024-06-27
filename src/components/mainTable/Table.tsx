@@ -123,6 +123,11 @@ export const Table = () => {
         }
     }
 
+    // 모달이 닫힐 때 isSaved 상태를 false로 설정
+    const closeModal = () => {
+        setIsSaved(false);
+    };
+
     // Check 결과&가이드 값 수정 후 저장하는 API
     const editAPI = async(id: number, ri:number, idlist:number[]) => {
         try {
@@ -184,11 +189,6 @@ export const Table = () => {
         if(YN == null) return false;
         return true;
     }
-
-    // 모달이 닫힐 때 isSaved 상태를 false로 설정
-    const closeModal = () => {
-        setIsSaved(false);
-    };
 
     // Check 값을 저장해둔 배열을 초기화, 갱신
     const resetSelectedResult = () => {
