@@ -102,7 +102,7 @@ export const Table = () => {
         }
     };
 
-    useEffect(() => { getAPI(); }, []);
+    // useEffect(() => { getAPI(); }, []);
     
     // 각 행의 Title에 맞는 가이드 목록을 받아오는 API
     const getGuideAPI = async () => {
