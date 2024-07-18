@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 interface ImgIframeProps {
     src: string;
-    guideSrc: string;
+    imgDesc: string;
     onClose: () => void;
 }
   
-const ImgIframe: React.FC<ImgIframeProps> = ({ src, guideSrc, onClose }) => {
+const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, onClose }) => {
+  const isMobile = (imgDesc=="Mobile")? "mobile" : "pc";
+  const guideSrc = `http://121.252.183.23:8080/python-api/v1/guide-check?url=${src}&device_type=${isMobile}`;
     const styles = {
         modalBackground: {
             position: 'fixed' as 'fixed',

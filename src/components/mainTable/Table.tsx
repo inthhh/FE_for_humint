@@ -387,7 +387,7 @@ export const Table = () => {
                                             <div>
                                                 <img src={dataList[ri].contents} alt="image" style={{ width: '300px', cursor:"pointer" }} 
                                                 onClick={()=>handleImgclick(dataList[ri].contents)} />
-                                                {iframeSrcs && <ImgIframe src={iframeSrcs.src1} guideSrc={iframeSrcs.src2} onClose={handleIframeClose} />}
+                                                {iframeSrcs && <ImgIframe src={iframeSrcs.src1} imgDesc={dataList[ri].description} onClose={handleIframeClose} />}
                                             </div>
                                         ) : (
                                             null
