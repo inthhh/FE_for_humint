@@ -4,27 +4,33 @@ import axios from 'axios';
 interface ImgIframeProps {
     src: string;
     imgDesc: string;
+    imgArea: string;
     onClose: () => void;
 }
   
-const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, onClose }) => {
+const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, imgArea, onClose }) => {
   const isMobile = (imgDesc=="Mobile")? "mobile" : "pc";
-  const guideSrc = `http://121.252.183.23:8080/python-api/v1/guide-check?url=${src}&device_type=${isMobile}`;
-    const styles = {
+  console.log(imgDesc, imgArea, isMobile);
+  let guideSrc = "";
+  if(imgArea.includes("Large")){
+    guideSrc = `http://121.252.183.23:8080/python-api/v1/guide-check?url=${src}&device_type=${isMobile}`;
+  }
+
+  const styles = {
         modalBackground: {
             position: 'fixed' as 'fixed',
             top: 0,
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.01)',
+            backgroundColor: 'rgba(0, 0, 0, 0.02)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 1000,
         },
         modalContent: {
-            width: '80%',
+            width: '84%',
             height: '90%',
             backgroundColor: 'white',
             padding: '10px',
@@ -64,34 +70,76 @@ const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, onClose }) => {
       <style>
         body {
           margin: 0;
+          display: flex;
           justify-content: center;
           align-items: center;
-          height: 100%;
+          height: 100vh;
           overflow: hidden;
           background-color: transparent;
         }
         .image-container {
           display: flex;
-          flex-direction: row;
+          ${guideSrc ? 'flex-direction: row;' : 'flex-direction: column; align-items: center;'}
+          width: 100%;
+          height: 100%;
+          justify-content: center;
         }
         .image-container img {
-          max-width: ${guideSrc ? '45%' : '100%'};
-          margin: 10px 10px 0px 10px;
-          min-height: ${guideSrc ? '200px' : '500px'};
+          width: auto;
+          max-height: 600px;
+          margin: auto;
+          object-fit: cover;
+        }
+        .guide-image-container {
+          position: relative;
+          width: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .loading-message {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background-color: rgba(255, 255, 255, 0.7);
+          padding: 10px;
+          border-radius: 5px;
+          z-index: 1;
+        }
+        .guide-image {
+          display: none;
+          width: 100%;
           height: auto;
+          object-fit: cover;
+        }
+        .main-image {
+          ${guideSrc ? 'width: 45%; max-height: 350px;' 
+              : 'width: auto; Height: 700px;'}
+          object-fit: cover;
+          margin-right: 10px;
         }
       </style>
     </head>
     <body>
       <div class="image-container">
-        <img src="${src}" alt="Image 1">
-        ${guideSrc ? `<img src="${guideSrc}" alt="Image 2">` : ''}
+        <img src="${src}" alt="Image 1" class="main-image">
+        <div class="guide-image-container">
+        ${guideSrc ? `<div class="loading-message">Grid Guide 로딩 중입니다.<br/>
+          이미지 로딩에는 5초~10초가 소요됩니다.</div>` : ''}
+          ${guideSrc ? `<img src="${guideSrc}" alt="Image 2" class="guide-image" onload="imageLoaded()">` : ''}
+        </div>
       </div>
-      <div>
-    </div>
+      <script>
+        function imageLoaded() {
+          document.querySelector('.loading-message').style.zIndex = '-1';
+          document.querySelector('.guide-image').style.display = 'block';
+        }
+      </script>
     </body>
     </html>
     `;
+
     
     return (
         <div style={styles.modalBackground} onClick={onClose}>
