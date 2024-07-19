@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 
 interface ImgIframeProps {
@@ -10,12 +10,22 @@ interface ImgIframeProps {
   
 const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, imgArea, onClose }) => {
   const isMobile = (imgDesc=="Mobile")? "mobile" : "pc";
-  console.log(imgDesc, imgArea, isMobile);
-  let guideSrc = "";
-  if(imgArea.includes("Large")){
-    guideSrc = `http://121.252.183.23:8080/python-api/v1/guide-check?url=${src}&device_type=${isMobile}`;
-  }
+  const [guideSrc, setGuideSrc] = useState<string>("");
+  console.log(imgDesc, imgArea)
 
+  const calculatedGuideSrc = useMemo(() => {
+    if (imgArea.includes("Large")) {
+      return `http://121.252.183.23:8080/python-api/v1/guide-check?url=${src}&device_type=${isMobile}`;
+    }
+    return "";
+  }, [src, imgDesc, imgArea, isMobile]);
+
+  useEffect(() => {
+    if (calculatedGuideSrc) {
+      setGuideSrc(calculatedGuideSrc);
+    }
+  }, [calculatedGuideSrc]);
+  
   const styles = {
         modalBackground: {
             position: 'fixed' as 'fixed',
@@ -23,7 +33,7 @@ const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, imgArea, onClose })
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.02)',
+            backgroundColor: 'rgba(0, 0, 0, 0.3)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -126,7 +136,7 @@ const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, imgArea, onClose })
         <img src="${src}" alt="Image 1" class="main-image">
         <div class="guide-image-container">
         ${guideSrc ? `<div class="loading-message">Grid Guide 로딩 중입니다.<br/>
-          이미지 로딩에는 5초~10초가 소요됩니다.</div>` : ''}
+          이미지 로딩에는 5초 이내의 시간이 소요됩니다.</div>` : ''}
           ${guideSrc ? `<img src="${guideSrc}" alt="Image 2" class="guide-image" onload="imageLoaded()">` : ''}
         </div>
       </div>

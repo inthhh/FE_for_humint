@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { COLUMNS } from './Columns';
 import { usePagination, useTable } from 'react-table';
 import './Table.css';
@@ -258,13 +258,6 @@ export const Table = () => {
         });
     };
 
-    // 이미지 클릭 시 링크 열기
-    const handleImgclick = (imgData:datalist)=>{
-        setIframeSrcs(imgData.contents);
-        setIframeDesc(imgData.description);
-        setIframeArea(imgData.area);
-    }
-
     // 필터 선택 후 '테이블 보기' 버튼 클릭 시 테이블을 보여주는 이벤트
     const handleFilter=()=>{
         handleSetPageSize();
@@ -289,9 +282,22 @@ export const Table = () => {
         editAPI(id, ri, idlist);
     }
 
-    const handleIframeClose = () => {
+    // 이미지 클릭 시 링크 열기
+    const [isIframeOpen, setIsIframeOpen] = useState(false);
+
+    const handleImgClick = useCallback((imgData:datalist) => {
+        setIframeSrcs(imgData.contents);
+        setIframeDesc(imgData.description);
+        setIframeArea(imgData.area);
+        setIsIframeOpen(true);  // Open the iframe
+    }, [setIframeSrcs, setIframeDesc, setIframeArea]);
+
+    const handleIframeClose = useCallback(() => {
         setIframeSrcs("");
-      };
+        setIframeDesc("");
+        setIframeArea("");
+        setIsIframeOpen(false);  // Close the iframe
+    }, [setIframeSrcs, setIframeDesc, setIframeArea]);
 
     return (
         <div>
@@ -386,13 +392,11 @@ export const Table = () => {
 
                                     <td {...cell.getCellProps()} className="img-wrap">
                                         {/* contents가 https로 시작한다면 이미지 출력, 너비 고정 */}
-                                        {/* {console.log("****",dataList[ri].area)} */}
                                         {dataList[ri].contents && dataList[ri].contents.startsWith("https:") ? (
                                             <div>
                                                 <img src={dataList[ri].contents} alt="image" style={{ width: '300px', cursor:"pointer" }} 
-                                                onClick={()=>handleImgclick(dataList[ri])} />
-                                                {iframeSrcs && <ImgIframe src={iframeSrcs} imgDesc={iframeDesc} imgArea={iframeArea} onClose={handleIframeClose} />}
-                                            </div>
+                                                onClick={()=>handleImgClick(dataList[ri])} />
+                                                </div>
                                         ) : (
                                             null
                                         )}
@@ -437,6 +441,14 @@ export const Table = () => {
                 )}
             </table>
             </div>
+            {isIframeOpen && iframeSrcs ? (
+                <ImgIframe
+                    src={iframeSrcs}
+                    imgDesc={iframeDesc}
+                    imgArea={iframeArea}
+                    onClose={handleIframeClose}
+                />
+            ) : null}
             <ScrollToTopBtn />
         </div>
     );
