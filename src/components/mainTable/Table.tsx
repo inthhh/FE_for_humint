@@ -24,6 +24,10 @@ import {CheckResultColumns} from './tableUtils/resultColumn';
 import {ColGroup} from './tableUtils/colGroup';
 import ImgIframe from './tableUtils/imgIframe';
 
+/**
+ * 모든 데이터를 조회하거나 수정할 수 있는 테이블 컴포넌트입니다.
+ * @returns Table
+ */
 export const Table = () => {
 
     // getAPI에서 불러오는 데이터 목록 전체를 저장
