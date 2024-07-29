@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { DateOption } from "../redux/store";
+import { DateOption } from "../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import './Table.css'
+import '../Table.css'
 import axios from 'axios';
 
 function SelectDate() {
   const [isDropdownView, setDropdownView] = useState(false)
-  // const today = new Date();
-  // const sevendaysago = new Date(today.getTime()-6*24*60*60*1000);
-  // const dateList: string[] = [];
-  // for(let date=sevendaysago; date<=today; date.setDate(date.getDate()+1)){
-  //   const formatDate = date.toISOString().split('T')[0];
-  //   dateList.push(formatDate);
-  // }
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = "http://121.252.183.23:8080"
   const [apiDate, setApiDate] = useState([]);
+  const dispatch = useDispatch();
+  const date = useSelector((state: any) => state.DateOption);
 
   const dateAPI = async()=>{
     try{
         const {data} = await axios.get(`${apiUrl}/api/v1/raw-data-category/date`)
-        setApiDate(data.data);
+        console.log(data.data)
+        const sortedData = data.data.sort((a: { date: string }, b: { date: string }) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
+        console.log(data.data)
+        setApiDate(sortedData);
     } catch(e){
-        console.error('dateReasonAPI 호출 에러:', e);
+        console.error('dateAPI 호출 에러:', e);
     }
   }
 
@@ -41,10 +41,6 @@ function SelectDate() {
       }
     }
     
-
-    const dispatch = useDispatch();
-    const date = useSelector((state: any) => state.DateOption);
-    
     const onClickEvent=(i:string)=>{
       dispatch(DateOption(i));
       setDropdownView(false);
@@ -58,7 +54,8 @@ function SelectDate() {
         {isDropdownView && (<ul style={{
           listStyle: 'none',
           position: 'absolute',
-          zIndex: 1,
+          zIndex: 9, 
+          maxHeight: '300px', overflowY: 'auto',
           margin: 0,
           padding: 0
         }}>

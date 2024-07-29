@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { SiteCodeOption } from "../redux/store";
+import { SiteCodeOption } from "../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import './Table.css'
+import '../Table.css'
 
 function SelectSiteCode() {
     const [isDropdownView, setDropdownView] = useState(false)
@@ -12,7 +12,7 @@ function SelectSiteCode() {
     'in','iq_ar','iq_ku','iran','it','jp','kz_kz','kz_ru','latin','latin_en',
     'lb','levant','levant_ar','lt','lv','mk','mm','mn','mx','my',
     'n_africa','nl','no','nz','pe','ph','pk','pl','ps','pt',
-    'py','ro','rs','ru','sa','sa_en','se','sg','si','sk',
+    'py','ro','rs','ru','sa','sa_en','se','sec','sg','si','sk',
     'th','tr','tw','ua','uk','us','uy','uz_ru','uz_uz','vn',
     'za'
   ]
@@ -40,7 +40,7 @@ function SelectSiteCode() {
           <button className='filter-btn'>Site Code : {ct} {isDropdownView ? '▲' : '▼'}</button>
         </label>
         {isDropdownView && (<ul style={{listStyle:'none',position: 'absolute', 
-        zIndex: 1, 
+        zIndex: 9, 
         maxHeight: '500px', overflowY: 'auto',
         margin: 0, padding: 0 }}>
           {

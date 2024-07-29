@@ -1,9 +1,7 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from './Home';
-import Table from './tabledata/Table';
+import Home from './components/Home_/Home';
+import Table from './components/mainTable/Table';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 

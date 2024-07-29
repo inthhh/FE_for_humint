@@ -136,8 +136,8 @@ textarea {
 select{
   border:1px solid #000;
   border-radius:4px;
-  height:30px;line-height:30px;
-  color:#000;
+  height:32px;line-height:32px;
+  color:#6e6e6e;
 }
 input[type="text"],
 input[type="submit"],
@@ -155,7 +155,7 @@ input[type="tel"] {
   padding: 0 22px;
   height: 46px;
   line-height: 46px;
-  border: 1px solid #000;
+  border: 1px solid #6e6e6e;
   border-radius: 10px;
   font-size: 14px;
   font-weight: 400;
@@ -181,8 +181,8 @@ input[type="tel"]:focus,
 input[type="email"]:focus,
 input[type="search"]:focus,
 textarea:focus {
-  border-color: #000;
-  color:  #000;
+  border-color: #6e6e6e;
+  color:  #6e6e6e;
   background-color: #fff;
   outline: none;
 }
@@ -193,7 +193,7 @@ input[type="tel"]:hover,
 input[type="email"]:hover,
 input[type="search"]:hover,
 textarea:hover {
-  border-color: #000;
+  border-color: #6e6e6e;
   background-color: #fff;
   outline: none;
 }
@@ -204,12 +204,12 @@ input[readonly] {
 
 ::-webkit-input-placeholder {
   font-size: inherit;
-  color: #000;
+  color: #6e6e6e;
 }
 
 ::placeholder {
   font-size: inherit;
-  color: #000;
+  color: #6e6e6e;
 }
 
 textarea {
@@ -217,7 +217,7 @@ textarea {
   padding: 22px;
   resize: none;
   font-size: 14px;
-  border: 1px solid  #000;
+  border: 1px solid  #6e6e6e;
 }
 
 button {
@@ -253,12 +253,12 @@ input::-webkit-search-results-decoration {
 }
 
 ::-moz-selection {
-  background:  #000;
+  background:  #6e6e6e;
   color: #fff;
 }
 
 ::selection {
-  background: #000;
+  background: #6e6e6e;
   color: #fff;
 }
 /* scroll */
@@ -272,7 +272,7 @@ input::-webkit-search-results-decoration {
 }
 
 ::-webkit-scrollbar-thumb {
-  background:#000;
+  background:#6e6e6e;
   border-radius: 14px;
 }
 
@@ -282,21 +282,22 @@ input::-webkit-search-results-decoration {
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  margin-left: 12px;
+  margin-left: 8px;
   transition: 0.3s;
-  border:1px solid #000;
+  border:1px solid #6e6e6e;
   min-width: 100px;
   height: 40px;
   line-height: 40px;
   border-radius: 4px;
-  background-color: #000;
+  background-color: #6e6e6e;
   font-size: 16px;
   color: #fff;
 }
 
 .btn-type:hover{
-  color: #000;
-  background-color: #fff;
+  /* color: #000; */
+  border: none;
+  background-color: #8ca2f1;
 }
 
 .guide-wrap +.guide-wrap{margin-top:10px;}
@@ -313,15 +314,15 @@ input::-webkit-search-results-decoration {
 
 .check-box .checkbox { display: inline-block; position: relative; width: 34px; height: 34px; line-height:30px;margin-right: 7px; border: 1px solid #d7d7d7; background-color: #fff; }
 .check-box .checkbox span{display:inline-block;vertical-align:middle; margin-left:35px;}
-.check-box input[type="checkbox"] + .checkbox:after { content: ""; position: absolute; top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); width: 34px; height: 34px; background-image: url("../styles/icon/check.svg"); background-size: cover; }
+.check-box input[type="checkbox"] + .checkbox:after { content: ""; position: absolute; top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); width: 34px; height: 34px; background-image: url("../../styles/icon/check.svg"); background-size: cover; }
 
-.check-box input[type="checkbox"]:checked ~ .checkbox { border-color: #000; }
+.check-box input[type="checkbox"]:checked ~ .checkbox { border-color: #587cfe; }
 
-.check-box input[type="checkbox"]:checked ~ .checkbox:after { background-image: url("../styles/icon/check_b.svg"); }
+.check-box input[type="checkbox"]:checked ~ .checkbox:after { background-image: url("../../styles/icon/check_b.svg"); }
 
 .check-box input[type="radio"] + .checkbox { width: 30px; height: 30px; border-radius: 50%; }
 
-.check-box input[type="radio"] + .checkbox:after { content: ""; position: absolute; top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%) scale(1); transform: translate(-50%, -50%) scale(1); width: 10px; height: 10px; background-color: #000; border-radius: 50%; -webkit-transform: translate(-50%, -50%) scale(0); transform: translate(-50%, -50%) scale(0); -webkit-transition: .3s; transition: .3s; }
+.check-box input[type="radio"] + .checkbox:after { content: ""; position: absolute; top: 50%; left: 50%; -webkit-transform: translate(-50%, -50%) scale(1); transform: translate(-50%, -50%) scale(1); width: 10px; height: 10px; background-color: #587cfe; border-radius: 50%; -webkit-transform: translate(-50%, -50%) scale(0); transform: translate(-50%, -50%) scale(0); -webkit-transition: .3s; transition: .3s; }
 
 .check-box input[type="radio"]:checked ~ .checkbox:after { -webkit-transform: translate(-50%, -50%) scale(1); transform: translate(-50%, -50%) scale(1); }
 
