@@ -5,10 +5,10 @@ import './Login.css';
 import { Provider } from 'react-redux';
 import store from '../../redux/store';
 import { myName } from "../../redux/store";
-import {setCookie, getCookie} from '../../utils/cookieUtils';
+import { setCookie, getCookie } from '../../utils/cookieUtils';
 
 /**
- * Login.tsx의 로그인 페이지 및 기능 컴포넌트입니다.
+ * Login.tsx - 로그인 페이지 및 기능 컴포넌트입니다.
  * @returns Login Page
  */
 const Login: React.FC = () => {
@@ -52,14 +52,14 @@ const Login: React.FC = () => {
      * 비밀번호를 password 형태로 암호화할지, text로 보여줄지 선택하는 onClick 이벤트입니다.
      */
     const toggleShowPassword = () => {
-      setShowPwChecked(!isShowPwChecked);
-      setPwdType(isShowPwChecked ? "password" : "text");
-  };
+        setShowPwChecked(!isShowPwChecked);
+        setPwdType(isShowPwChecked ? "password" : "text");
+    };
 
     return (
         <div className='login-container'>
             <div className='login-left'>
-                <h1>Thank you for joining our QA team<br/>on this long journey to Neptune.</h1>
+                <h1>Thank you for joining our QA team<br />on this long journey to Neptune.</h1>
                 <div className='rocket'></div>
             </div>
             <div className='login-right'>
@@ -72,24 +72,24 @@ const Login: React.FC = () => {
                             id="id"
                             value={userId}
                             onChange={(e) => setId(e.target.value)}
-                            style={{border:"1px solid #999"}}
+                            style={{ border: "1px solid #999" }}
                         />
                     </div>
                     <div>
-                      <label className="login-label" htmlFor="pwd">Password</label>
-                      <input
+                        <label className="login-label" htmlFor="pwd">Password</label>
+                        <input
                             type={pwdType}
                             id="pwd"
                             value={pwd}
                             onChange={(e) => setPassword(e.target.value)}
-                            style={{marginBottom:"0", border:"1px solid #999"}}
+                            style={{ marginBottom: "0", border: "1px solid #999" }}
                         />
                         <button type="button" className="toggle-password" onClick={toggleShowPassword}>
-                          {isShowPwChecked ? "Hide password": "Show password"}
+                            {isShowPwChecked ? "Hide password" : "Show password"}
                         </button>
                     </div>
-                    <button className="login-btn" type="submit" onMouseEnter={handleHoverBTN} 
-                      onMouseLeave={() => setBTNtext('로그인 🚀')}>{loginBTNtext}</button>
+                    <button className="login-btn" type="submit" onMouseEnter={handleHoverBTN}
+                        onMouseLeave={() => setBTNtext('로그인 🚀')}>{loginBTNtext}</button>
                     <div className="forgot-password">비밀번호를 잊으셨나요? 랍 / 젬마 / 헤더에게 문의하세요.</div>
                 </form>
             </div>

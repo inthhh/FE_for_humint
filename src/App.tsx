@@ -7,15 +7,15 @@ import store from './redux/store';
 
 function App() {
   return (
-  <Provider store={store}>
-    <Router>
-      <Routes>
-      
-            <Route path="/" element={<Home/>} />
-            <Route path="/7u8i9o0p!@" element={<Table/>} />
-          
-      </Routes>
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <Routes>
+
+          <Route path="/" element={<Home />} />
+          <Route path="/7u8i9o0p!@" element={<Table />} />
+
+        </Routes>
+      </Router>
     </Provider>
   );
 }

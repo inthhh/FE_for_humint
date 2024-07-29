@@ -1,41 +1,51 @@
 import React, { useState, useEffect } from 'react';
 
+/**
+ * ScrollToTopBtn.tsx - 페이지의 최상단으로 이동하는 버튼 컴포넌트입니다.
+ * @returns 
+ */
 const ScrollToTopBtn: React.FC = () => {
-    const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
-    // 스크롤 이벤트 핸들러
-    const toggleVisibility = () => {
-      if (window.scrollY > 100) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+  /**
+   * @function
+   * 버튼이 특정 조건일 때만 나타나게 하는 이벤트 핸들러 함수입니다.
+   */
+  const toggleVisibility = () => {
+    if (window.scrollY > 100) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  };
+
+  /**
+   * @function
+   * 페이지의 맨 윗부분으로 자동 스크롤하는 함수입니다.
+   */
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', toggleVisibility);
+    return () => {
+      window.removeEventListener('scroll', toggleVisibility);
     };
-  
-    // 페이지 맨 위로 스크롤하는 함수
-    const scrollToTop = () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    };
-  
-    useEffect(() => {
-      window.addEventListener('scroll', toggleVisibility);
-      return () => {
-        window.removeEventListener('scroll', toggleVisibility);
-      };
-    }, []);
-  
-    return (
-      <div>
-        {isVisible && (
-          <button onClick={scrollToTop} style={styles.scrollToTopButton}>
-            ▲ Top
-          </button>
-        )}
-      </div>
-    );
+  }, []);
+
+  return (
+    <div>
+      {isVisible && (
+        <button onClick={scrollToTop} style={styles.scrollToTopButton}>
+          ▲ Top
+        </button>
+      )}
+    </div>
+  );
 };
 
 const styles = {
