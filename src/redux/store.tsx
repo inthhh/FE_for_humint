@@ -4,10 +4,25 @@ import { getCookie } from "../utils/cookieUtils";
 
 // 초기 상태
 interface AppState {
+  /**
+   * redux : 날짜 옵션
+   */
   DateOption: string | null;
+  /**
+   * redux : 결과값 옵션
+   */
   ResultOption: string | null;
+  /**
+   * redux : 국가코드 옵션
+   */
   SiteCodeOption: string | null;
+  /**
+   * redux : 페이지 타입 옵션
+   */
   PageTypeOption: string | null;
+  /**
+   * redux : 유저 네임 (사용자 아이디)
+   */
   myName: string | null;
 }
 
@@ -60,7 +75,7 @@ const reducer = (
     ResultOption: "", // "ALL"로 초기화
     SiteCodeOption: "uk", // "uk"로 초기화
     myName: getCookie('myName'),
-    PageTypeOption : ""
+    PageTypeOption: ""
   },
   action: AnyAction
 ): AppState => {
@@ -85,11 +100,11 @@ const reducer = (
         ...state,
         myName: action.payload,
       };
-      case SET_PAGETYPE:
-        return {
-          ...state,
-          PageTypeOption: action.payload,
-        };
+    case SET_PAGETYPE:
+      return {
+        ...state,
+        PageTypeOption: action.payload,
+      };
     default:
       return state;
   }

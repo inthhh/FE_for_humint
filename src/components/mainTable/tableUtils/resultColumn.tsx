@@ -1,13 +1,21 @@
 import React from 'react';
 import { Guide, datalist, Guideline } from '../interfaces';
 
+/**
+ * ri, dataList, selectedResult 등을 포함하는 인터페이스입니다.
+ */
 interface checkResultProps {
   ri: number;
   dataList: datalist[];
   selectedResult: string[];
-  handleRadioChange: (ri:number, value: string) => void;
+  handleRadioChange: (ri: number, value: string) => void;
 }
 
+/**
+ * resultColumn.tsx - Check Result(결과값)를 포함하는 열 컴포넌트입니다.
+ * @param param0 
+ * @returns 
+ */
 export const CheckResultColumns: React.FC<checkResultProps> = ({ ri, dataList, selectedResult, handleRadioChange }) => {
   return (
     <td>
