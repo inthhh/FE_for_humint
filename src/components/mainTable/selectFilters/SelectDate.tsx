@@ -7,8 +7,9 @@ import axios from 'axios';
 function SelectDate() {
   const [isDropdownView, setDropdownView] = useState(false)
   const apiUrl = "http://121.252.183.23:8080"
-  
   const [apiDate, setApiDate] = useState([]);
+  const dispatch = useDispatch();
+  const date = useSelector((state: any) => state.DateOption);
 
   const dateAPI = async()=>{
     try{
@@ -39,10 +40,6 @@ function SelectDate() {
         }, 200);
       }
     }
-    
-
-    const dispatch = useDispatch();
-    const date = useSelector((state: any) => state.DateOption);
     
     const onClickEvent=(i:string)=>{
       dispatch(DateOption(i));

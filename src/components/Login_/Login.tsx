@@ -7,6 +7,10 @@ import store from '../../redux/store';
 import { myName } from "../../redux/store";
 import {setCookie, getCookie} from '../../utils/cookieUtils';
 
+/**
+ * Login.tsx의 로그인 페이지 및 기능 컴포넌트입니다.
+ * @returns Login Page
+ */
 const Login: React.FC = () => {
     const dispatch = useDispatch();
     const myname = useSelector((state: any) => state.myName);
@@ -20,11 +24,19 @@ const Login: React.FC = () => {
     const passwordRef = useRef(null);
     const [pwdType, setPwdType] = useState("password");
 
+    /**
+     * @function
+     * 로그인 버튼에 마우스 커서를 올리면 메시지가 나타나는 이벤트 함수입니다.
+     */
     const handleHoverBTN = () => {
         setHover("T");
         setBTNtext("즐거운 하루 되세요");
     }
 
+    /**
+     * @function
+     * 아이디를 redux 변수에 저장하고, 비밀번호를 암호와 비교하는 함수입니다.
+     */
     const handleLogin = () => {
         if (pwd === rightPwd) {
             dispatch(myName(userId));
@@ -35,6 +47,10 @@ const Login: React.FC = () => {
         }
     };
 
+    /**
+     * @function
+     * 비밀번호를 password 형태로 암호화할지, text로 보여줄지 선택하는 onClick 이벤트입니다.
+     */
     const toggleShowPassword = () => {
       setShowPwChecked(!isShowPwChecked);
       setPwdType(isShowPwChecked ? "password" : "text");
