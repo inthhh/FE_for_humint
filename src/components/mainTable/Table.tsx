@@ -6,6 +6,7 @@ import SelectDate from './selectFilters/SelectDate';
 import SelectResult from './selectFilters/SelectResult';
 import SelectSiteCode from './selectFilters/SelectSiteCode';
 import SelectPage from './selectFilters/SelectPage';
+import SelectComponent from './selectFilters/SelectComponent';
 import ScrollToTopBtn from './ScrollToTopBtn';
 import axios from 'axios';
 import { Provider } from 'react-redux';
@@ -69,6 +70,7 @@ export const Table = () => {
     const result = useSelector((state: any) => state.ResultOption);
     const myname = useSelector((state: any) => state.myName);
     const pagetype = useSelector((state: any) => state.PageTypeOption);
+    const component = useSelector((state:any) => state.ComponentOption);
 
     // 검색 ID
     const [searchId, setSearchId] = useState<string>("");
@@ -109,7 +111,7 @@ export const Table = () => {
      */
     const getAPI = async () => {
         setName(getCookie('myName'));
-        const tableData = await getAPI_(apiUrl, date, ct, result, pagetype);
+        const tableData = await getAPI_(apiUrl, date, ct, result, pagetype, component);
         if (tableData != "error") {
             setDataList(tableData);
             setDataBackup(tableData);
@@ -374,6 +376,7 @@ export const Table = () => {
                     <SelectSiteCode />
                     <SelectResult />
                     <SelectPage />
+                    <SelectComponent />
                     <button className='btn-type btn-filter' onClick={() => handleFilter()}>테이블 보기</button>
                     {/* 검색 입력창 및 '검색' 버튼 */}
                     <div className="search-wrap">

@@ -21,6 +21,10 @@ interface AppState {
    */
   PageTypeOption: string | null;
   /**
+   * redux: 컴포넌트 옵션
+   */
+  ComponentOption: string | null;
+  /**
    * redux : 유저 네임 (사용자 아이디)
    */
   myName: string | null;
@@ -41,6 +45,7 @@ const SET_RESULT = "SET_RESULT";
 const SET_SITECODE = "SET_SITECODE";
 const SET_MYNAME = "SET_MYNAME";
 const SET_PAGETYPE = "SET_PAGETYPE"
+const SET_COMPONENT = "SET_COMPONENT";
 
 // 액션 생성자 함수
 export const DateOption = (date: string | null): AnyAction => ({
@@ -68,6 +73,11 @@ export const PageTypeOption = (page: string | null): AnyAction => ({
   payload: page,
 });
 
+export const ComponentOption = (component: string | null): AnyAction => ({
+  type: SET_COMPONENT,
+  payload: component,
+})
+
 // 리듀서 함수
 const reducer = (
   state: AppState = {
@@ -75,7 +85,8 @@ const reducer = (
     ResultOption: "", // "ALL"로 초기화
     SiteCodeOption: "uk", // "uk"로 초기화
     myName: getCookie('myName'),
-    PageTypeOption: ""
+    PageTypeOption: "",
+    ComponentOption:"",
   },
   action: AnyAction
 ): AppState => {
@@ -105,6 +116,11 @@ const reducer = (
         ...state,
         PageTypeOption: action.payload,
       };
+    case SET_COMPONENT:
+      return{
+        ...state,
+        ComponentOption: action.payload,
+      }
     default:
       return state;
   }
