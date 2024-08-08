@@ -59,7 +59,7 @@ function SelectPage() {
    */
   const onClickEvent = (i: string) => {
     setDropdownView(false);
-    if (i == "ALL") {
+    if (i === "ALL") {
       dispatch(PageTypeOption(''))
     }
     else dispatch(PageTypeOption(i)); // home or offer
@@ -68,7 +68,7 @@ function SelectPage() {
   return (
     <div className="container" onBlur={handleBlurContainer}>
       <label onClick={handleClickContainer}>
-        <button className='filter-btn'> Page Type : {pageType == '' ? ('ALL') : (`${pageType}`)} {isDropdownView ? '▲' : '▼'}</button>
+        <button className='filter-btn'> Page Type : {pageType === '' ? ('ALL') : (`${pageType}`)} {isDropdownView ? '▲' : '▼'}</button>
       </label>
       {isDropdownView && (<ul style={{
         listStyle: 'none',

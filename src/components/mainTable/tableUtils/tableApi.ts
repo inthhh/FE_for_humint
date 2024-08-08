@@ -4,11 +4,24 @@ import exp from 'constants';
 /**
  * @function
  * tableApi.ts - Table Data 전체를 받아오는 API를 호출합니다.
+ * 리팩토링 필요
  */
-export const getAPI_ = async (apiUrl: string, date: number, ct: string, result: string, pagetype: string) => {
+export const getAPI_ = async (apiUrl: string, date: number, ct: string, result: string, pagetype: string, component: string) => {
     try {
-        if (pagetype && result) {
+        if (pagetype && result && component) {
+            const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}&page-type=${pagetype}&component=${component}`);
+            return data.data;
+        }
+        else if (pagetype && result) {
             const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}&page-type=${pagetype}`);
+            return data.data;
+        }
+        else if (component && result) {
+            const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}&component=${component}`);
+            return data.data;
+        }
+        else if (pagetype && component) {
+            const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&component=${component}&page-type=${pagetype}`);
             return data.data;
         }
         else if (result) {
@@ -17,6 +30,10 @@ export const getAPI_ = async (apiUrl: string, date: number, ct: string, result: 
         }
         else if (pagetype) {
             const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&page-type=${pagetype}`);
+            return data.data;
+        }
+        else if (component) {
+            const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&component=${component}`);
             return data.data;
         }
         else {
