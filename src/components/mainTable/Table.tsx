@@ -112,7 +112,7 @@ export const Table = () => {
     const getAPI = async () => {
         setName(getCookie('myName'));
         const tableData = await getAPI_(apiUrl, date, ct, result, pagetype, component);
-        if (tableData != "error") {
+        if (tableData !== "error") {
             setDataList(tableData);
             setDataBackup(tableData);
         }
