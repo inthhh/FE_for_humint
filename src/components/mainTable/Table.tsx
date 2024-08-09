@@ -124,7 +124,7 @@ export const Table = () => {
      */
     const getGuideAPI = async () => {
         const guideData = await getGuideAPI_(apiUrl);
-        if (guideData != "error") setGuideObj(guideData);
+        if (guideData !== "error") setGuideObj(guideData);
     }
 
     useEffect(() => { getGuideAPI(); }, [])
