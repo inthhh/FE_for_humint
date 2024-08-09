@@ -5,24 +5,18 @@ import exp from 'constants';
  * @function
  * tableApi.ts - Table Data 전체를 받아오는 API를 호출합니다.
  */
-export const getAPI_ = async (apiUrl: string, date: number, ct: string, result: string, pagetype: string) => {
+export const getAPI_ = async (apiUrl: string, date: number, ct: string, result: string, pagetype: string, component: string) => {
     try {
-        if (pagetype && result) {
-            const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}&page-type=${pagetype}`);
-            return data.data;
-        }
-        else if (result) {
-            const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&check-result=${result}`);
-            return data.data;
-        }
-        else if (pagetype) {
-            const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}&page-type=${pagetype}`);
-            return data.data;
-        }
-        else {
-            const { data } = await axios.get(`${apiUrl}/api/v1/raw-data?date=${date}&site-code=${ct}`);
-            return data.data;
-        }
+        const params = new URLSearchParams({
+            date: String(date),
+            'site-code': ct,
+            ...(result && {'check-result': result}),
+            ...(pagetype && {'page-type': pagetype}),
+            ...(component && {component}),
+        });
+
+        const{ data } = await axios.get(`${apiUrl}/api/v1/raw-data?${params.toString()}`);
+        return data.data;
     } catch (e) {
         console.error('getAPI 에러:', e);
         return "error";
