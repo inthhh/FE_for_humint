@@ -369,32 +369,39 @@ export const Table = () => {
     return (
         <div>
             <Provider store={store}>
-                {/* 테이블 위 Header */}
                 <header className="header-wrap">
-                    {/* 필터 선택 및 '테이블 보기' 버튼 */}
-                    <SelectDate />
-                    <SelectSiteCode />
-                    <SelectResult />
-                    <SelectPage />
-                    <SelectComponent />
-                    <button className='btn-type btn-filter' onClick={() => handleFilter()}>테이블 보기</button>
-                    {/* 검색 입력창 및 '검색' 버튼 */}
-                    <div className="search-wrap">
-                        <input
-                            type="text"
-                            value={searchId}
-                            onChange={(e) => setSearchId(e.target.value)}
-                            placeholder="Search for ID"
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    searchAPI();
-                                }
-                            }}
-                        />
-                        <button onClick={() => searchAPI()} className='btn-type btn-search'>검색</button>
-                    </div>
-                    <p className="text-type">☑️ {getCookie('myName')} 님 환영합니다.</p>
+                    <p className="text-type">Humint QA</p>
+                    <div className="text-user">☑️ {getCookie('myName')}님 환영합니다.</div>
                 </header>
+                    {/* 테이블 위 Filter */}
+                    <div className="filter-wrap">
+                        {/* 필터 선택 및 '테이블 보기' 버튼 */}
+                        <div className= "filter-required">
+                            <SelectDate />
+                            <SelectSiteCode />
+                            <button className='btn-type btn-filter' onClick={() => handleFilter()}>테이블 보기</button>
+                            {/* 검색 입력창 및 '검색' 버튼 */}
+                            <div className="search-wrap">
+                                <input
+                                    type="text"
+                                    value={searchId}
+                                    onChange={(e) => setSearchId(e.target.value)}
+                                    placeholder="Search for ID"
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            searchAPI();
+                                        }
+                                    }}
+                                />
+                                <button onClick={() => searchAPI()} className='btn-type btn-search'>검색</button>
+                            </div>   
+                        </div>
+                        <div className= "filter-selection">
+                            <SelectResult />
+                            <SelectPage />
+                            <SelectComponent />
+                        </div>
+                    </div>
 
             </Provider>
             <div className="table-wrap">

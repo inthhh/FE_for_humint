@@ -282,7 +282,7 @@ input::-webkit-search-results-decoration {
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  margin-left: 8px;
+
   transition: 0.3s;
   border:1px solid #6e6e6e;
   min-width: 100px;
