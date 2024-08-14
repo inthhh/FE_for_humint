@@ -11,7 +11,7 @@
 .text-type{
     display: flex;
     width: 100%;
-    font-size: 40px;
+    font-size: 25px;
     margin-left: 15px;
 }
 
@@ -142,6 +142,28 @@ table th {
     margin-right: 20px;
 }
 
+.filter-btn-sub{
+    position: relative;
+    width: 200px;
+    height: 40px;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #424242;
+    margin-right: 5px;
+    border: none;
+}
+
+.filter-btn-sub::after{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+    width: 80%;
+    height: 4px;
+    background-color: #5e8abd;
+}
+
 .limenu{
     font-size: 16px;
     cursor: pointer;
@@ -168,6 +190,10 @@ table th {
 .container ul::-webkit-scrollbar-thumb {
     background-color: #5e8abd; /* 스크롤바 색상 */
     border-radius: 4px;
+}
+
+.container ul li:hover{
+    background-color: #5e8abd;
 }
 
 .btn-wrapper {

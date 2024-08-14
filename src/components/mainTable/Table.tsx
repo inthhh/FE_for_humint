@@ -7,6 +7,7 @@ import SelectResult from './selectFilters/SelectResult';
 import SelectSiteCode from './selectFilters/SelectSiteCode';
 import SelectPage from './selectFilters/SelectPage';
 import SelectComponent from './selectFilters/SelectComponent';
+import SelectDevice from './selectFilters/SelectDevice'
 import ScrollToTopBtn from './ScrollToTopBtn';
 import axios from 'axios';
 import { Provider } from 'react-redux';
@@ -71,6 +72,7 @@ export const Table = () => {
     const myname = useSelector((state: any) => state.myName);
     const pagetype = useSelector((state: any) => state.PageTypeOption);
     const component = useSelector((state:any) => state.ComponentOption);
+    const device = useSelector((state:any) => state.DeviceOption);
 
     // 검색 ID
     const [searchId, setSearchId] = useState<string>("");
@@ -111,7 +113,7 @@ export const Table = () => {
      */
     const getAPI = async () => {
         setName(getCookie('myName'));
-        const tableData = await getAPI_(apiUrl, date, ct, result, pagetype, component);
+        const tableData = await getAPI_(apiUrl, date, ct, result, pagetype, component, device);
         if (tableData !== "error") {
             setDataList(tableData);
             setDataBackup(tableData);
@@ -218,7 +220,7 @@ export const Table = () => {
         if (YN === 'N') if (combined.includes(1)) return false;
         if (YN === 'Y') {
             if (!combined.includes(1)) return false;
-            if (combined.length != 1) return false;
+            if (combined.length !== 1) return false;
         }
         if (combined == null || combined.length < 1) return false;
         if (YN == null) return false;
@@ -400,6 +402,7 @@ export const Table = () => {
                             <SelectResult />
                             <SelectPage />
                             <SelectComponent />
+                            <SelectDevice />
                         </div>
                     </div>
 

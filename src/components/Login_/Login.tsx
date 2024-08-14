@@ -41,7 +41,7 @@ const Login: React.FC = () => {
         if (pwd === rightPwd) {
             dispatch(myName(userId));
             setCookie('myName', userId, 1);
-            navigate('/7u8i9o0p!@');
+            navigate('/table-board');
         } else {
             alert('비밀번호가 일치하지 않습니다.');
         }
