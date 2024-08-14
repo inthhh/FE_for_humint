@@ -25,6 +25,10 @@ interface AppState {
    */
   ComponentOption: string | null;
   /**
+   * redux: 디바이스 옵션
+   */
+  DeviceOption: string | null;
+  /**
    * redux : 유저 네임 (사용자 아이디)
    */
   myName: string | null;
@@ -46,6 +50,7 @@ const SET_SITECODE = "SET_SITECODE";
 const SET_MYNAME = "SET_MYNAME";
 const SET_PAGETYPE = "SET_PAGETYPE"
 const SET_COMPONENT = "SET_COMPONENT";
+const SET_DEVICE= "SET_DEVICE";
 
 // 액션 생성자 함수
 export const DateOption = (date: string | null): AnyAction => ({
@@ -78,6 +83,11 @@ export const ComponentOption = (component: string | null): AnyAction => ({
   payload: component,
 })
 
+export const DeviceOption = (device: string | null): AnyAction => ({
+  type: SET_DEVICE,
+  payload: device,
+})
+
 // 리듀서 함수
 const reducer = (
   state: AppState = {
@@ -87,6 +97,7 @@ const reducer = (
     myName: getCookie('myName'),
     PageTypeOption: "",
     ComponentOption:"",
+    DeviceOption:"",
   },
   action: AnyAction
 ): AppState => {
@@ -120,6 +131,11 @@ const reducer = (
       return{
         ...state,
         ComponentOption: action.payload,
+      };
+    case SET_DEVICE:
+      return{
+        ...state,
+        DeviceOption: action.payload,
       }
     default:
       return state;

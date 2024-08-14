@@ -12,7 +12,7 @@ function App() {
         <Routes>
 
           <Route path="/" element={<Home />} />
-          <Route path="/7u8i9o0p!@" element={<Table />} />
+          <Route path="/table-board" element={<Table />} />
 
         </Routes>
       </Router>
