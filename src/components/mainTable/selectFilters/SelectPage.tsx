@@ -78,6 +78,7 @@ function SelectPage() {
         margin: 0,
         padding: 0
       }}>
+        {/* sub li */}
         <li className='limenu-sub' onMouseDown={(e) => {
           e.preventDefault()
         }} onClick={() => onClickEvent("ALL")}>ALL</li>

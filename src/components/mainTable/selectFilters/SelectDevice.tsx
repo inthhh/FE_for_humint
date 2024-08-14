@@ -81,6 +81,7 @@ function SelectDevice() {
                     margin: 0,
                     padding: 0
                 }}>
+                    {/* sub li */}
                     {baseDeviceList.concat(apiDevice).map((item, i) => (
                         <li key={i} className='limenu-sub' onMouseDown={(e) => { e.preventDefault() }} onClick={() => onClickEvent(item)}>
                             {item}

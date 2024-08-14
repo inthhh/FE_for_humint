@@ -53,7 +53,8 @@ function SelectResult() {
         listStyle: 'none', position: 'absolute',
         zIndex: 9,
         margin: 0, padding: 0
-      }}>
+      }}> 
+      {/* sub li */}
         <li className='limenu-sub' onMouseDown={(e) => {
           e.preventDefault()
         }} onClick={() => onClickEvent("ALL")}>ALL</li>
@@ -63,7 +64,6 @@ function SelectResult() {
         <li className='limenu-sub' onMouseDown={(e) => {
           e.preventDefault()
         }} onClick={() => onClickEvent('N')}>N</li>
-
       </ul>)}
     </div>
   )
