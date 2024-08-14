@@ -34,7 +34,7 @@ function SelectResult() {
   /**
    * @function
    * 드롭다운 요소 클릭 이벤트 함수입니다.
-   * @param i 
+   * @padram i 
    */
   const onClickEvent = (i: string) => {
     setDropdownView(false);
@@ -47,23 +47,23 @@ function SelectResult() {
   return (
     <div className="container" onBlur={handleBlurContainer}>
       <label onClick={handleClickContainer}>
-        <button className='filter-btn'>Check Result : {yn == '' ? ('ALL') : (`${yn}`)} {isDropdownView ? '▲' : '▼'}</button>
+        <button className='filter-btn-sub'>Check Result : {yn == '' ? ('ALL') : (`${yn}`)} {isDropdownView ? '▲' : '▼'}</button>
       </label>
       {isDropdownView && (<ul style={{
         listStyle: 'none', position: 'absolute',
         zIndex: 9,
         margin: 0, padding: 0
-      }}>
-        <li className='limenu' onMouseDown={(e) => {
+      }}> 
+      {/* sub li */}
+        <li className='limenu-sub' onMouseDown={(e) => {
           e.preventDefault()
         }} onClick={() => onClickEvent("ALL")}>ALL</li>
-        <li className='limenu' onMouseDown={(e) => {
+        <li className='limenu-sub' onMouseDown={(e) => {
           e.preventDefault()
         }} onClick={() => onClickEvent('Y')}>Y</li>
-        <li className='limenu' onMouseDown={(e) => {
+        <li className='limenu-sub' onMouseDown={(e) => {
           e.preventDefault()
         }} onClick={() => onClickEvent('N')}>N</li>
-
       </ul>)}
     </div>
   )

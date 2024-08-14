@@ -68,7 +68,7 @@ function SelectPage() {
   return (
     <div className="container" onBlur={handleBlurContainer}>
       <label onClick={handleClickContainer}>
-        <button className='filter-btn'> Page Type : {pageType === '' ? ('ALL') : (`${pageType}`)} {isDropdownView ? '▲' : '▼'}</button>
+        <button className='filter-btn-sub'> Page Type : {pageType === '' ? ('ALL') : (`${pageType}`)} {isDropdownView ? '▲' : '▼'}</button>
       </label>
       {isDropdownView && (<ul style={{
         listStyle: 'none',
@@ -78,11 +78,12 @@ function SelectPage() {
         margin: 0,
         padding: 0
       }}>
-        <li className='limenu' onMouseDown={(e) => {
+        {/* sub li */}
+        <li className='limenu-sub' onMouseDown={(e) => {
           e.preventDefault()
         }} onClick={() => onClickEvent("ALL")}>ALL</li>
         {apiPage.map((item: { page_type: string }, i: number) => (
-          <li key={i} onMouseDown={(e) => { e.preventDefault() }} onClick={() => onClickEvent(item.page_type)} className='limenu'>{item.page_type}</li>
+          <li key={i} onMouseDown={(e) => { e.preventDefault() }} onClick={() => onClickEvent(item.page_type)} className='limenu-sub'>{item.page_type}</li>
         ))}
       </ul>)}
     </div>
