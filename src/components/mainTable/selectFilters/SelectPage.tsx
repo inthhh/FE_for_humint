@@ -78,11 +78,11 @@ function SelectPage() {
         margin: 0,
         padding: 0
       }}>
-        <li className='limenu' onMouseDown={(e) => {
+        <li className='limenu-sub' onMouseDown={(e) => {
           e.preventDefault()
         }} onClick={() => onClickEvent("ALL")}>ALL</li>
         {apiPage.map((item: { page_type: string }, i: number) => (
-          <li key={i} onMouseDown={(e) => { e.preventDefault() }} onClick={() => onClickEvent(item.page_type)} className='limenu'>{item.page_type}</li>
+          <li key={i} onMouseDown={(e) => { e.preventDefault() }} onClick={() => onClickEvent(item.page_type)} className='limenu-sub'>{item.page_type}</li>
         ))}
       </ul>)}
     </div>

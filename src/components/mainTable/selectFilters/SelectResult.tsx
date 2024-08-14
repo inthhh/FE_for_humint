@@ -54,13 +54,13 @@ function SelectResult() {
         zIndex: 9,
         margin: 0, padding: 0
       }}>
-        <li className='limenu' onMouseDown={(e) => {
+        <li className='limenu-sub' onMouseDown={(e) => {
           e.preventDefault()
         }} onClick={() => onClickEvent("ALL")}>ALL</li>
-        <li className='limenu' onMouseDown={(e) => {
+        <li className='limenu-sub' onMouseDown={(e) => {
           e.preventDefault()
         }} onClick={() => onClickEvent('Y')}>Y</li>
-        <li className='limenu' onMouseDown={(e) => {
+        <li className='limenu-sub' onMouseDown={(e) => {
           e.preventDefault()
         }} onClick={() => onClickEvent('N')}>N</li>
 

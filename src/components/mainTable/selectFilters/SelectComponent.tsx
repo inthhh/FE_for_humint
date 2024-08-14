@@ -87,7 +87,7 @@ function SelectComponent() {
                     padding: 0
                 }}>
                     {baseComponentList.concat(apiComponent).map((item, i) => (
-                        <li key={i} className='limenu' onMouseDown={(e) => { e.preventDefault() }} onClick={() => onClickEvent(item)}>
+                        <li key={i} className='limenu-sub' onMouseDown={(e) => { e.preventDefault() }} onClick={() => onClickEvent(item)}>
                             {item}
                         </li>
                     ))}

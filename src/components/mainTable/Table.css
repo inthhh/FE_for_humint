@@ -13,6 +13,7 @@
     width: 100%;
     font-size: 25px;
     margin-left: 15px;
+    font-weight: 600;
 }
 
 .text-user{
@@ -144,13 +145,13 @@ table th {
 
 .filter-btn-sub{
     position: relative;
-    width: 200px;
+    width: 160px;
     height: 40px;
-    padding: 5px;
+    padding: 2px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
     color: #424242;
-    margin-right: 5px;
+    /* margin-right: 2px; */
     border: none;
 }
 
@@ -158,16 +159,31 @@ table th {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 20px;
-    width: 80%;
-    height: 4px;
-    background-color: #5e8abd;
+    left: 5%;
+    width: 90%;
+    height: 3px;
+    background-color: #6088b6;
 }
 
 .limenu{
     font-size: 16px;
     cursor: pointer;
     width: 200px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    border-top: 1px solid rgb(219, 219, 219);
+    border-bottom: 1px solid rgb(219, 219, 219);;
+    border-right: 2px solid rgb(219, 219, 219);
+    border-left: 2px solid rgb(219, 219, 219);
+}
+
+.limenu-sub{
+    font-size: 14px;
+    cursor: pointer;
+    width: 160px;
     height: 40px;
     display: flex;
     align-items: center;
@@ -193,7 +209,7 @@ table th {
 }
 
 .container ul li:hover{
-    background-color: #5e8abd;
+    background-color: #93b1d4;
 }
 
 .btn-wrapper {
