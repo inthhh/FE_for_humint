@@ -3,7 +3,7 @@ import { legacy_createStore as createStore, Action, AnyAction } from "redux";
 import { getCookie } from "../utils/cookieUtils";
 
 // 초기 상태
-interface AppState {
+export interface AppState {
   /**
    * redux : 날짜 옵션
    */
