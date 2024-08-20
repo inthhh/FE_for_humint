@@ -15,7 +15,7 @@
 
     sftp -P 10022 ptkconnec@121.252.183.23
 
-    (비밀번호 입력)
+    (비밀번호 입력)[참조](http://121.252.183.23:8081/PTK-DSG-T6/README/src/branch/main/ACCOUNT.md#server-%EA%B3%84%EC%A0%95-%EC%A0%95%EB%B3%B4)
 
     cd humint-web-frontend
     put /<your>/<path>/humint-web-front/build/build.zip
@@ -26,7 +26,7 @@
 ```
     ssh ptkconnec@121.252.183.23 -p 10022
 
-    (비밀번호 입력)
+    (비밀번호 입력)[참조](http://121.252.183.23:8081/PTK-DSG-T6/README/src/branch/main/ACCOUNT.md#server-%EA%B3%84%EC%A0%95-%EC%A0%95%EB%B3%B4)
 
     cd humint-web-frontend
 
