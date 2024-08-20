@@ -6,12 +6,12 @@
     npm install
     npm run build
 
-    (dist 폴더 생성 됐는지 확인)
+    (build 폴더 생성 됐는지 확인)
 ```
 
 - STEP 2. upload dist file to server(183.23) through SFTP
 ```
-    (dist 폴더 내에 있는 모든 파일 압축 : 주의 = dist 폴더가 아닌 폴더에 들어가서 모든 파일 압축)
+    (build 폴더 내에 있는 모든 파일 압축 : 주의 = build 폴더를 압축 하는것이 아니고, 폴더에 들어가서 모든 파일 압축)
 
     sftp -P 10022 ptkconnec@121.252.183.23
 
