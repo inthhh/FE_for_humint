@@ -1,3 +1,50 @@
+# How to deploy this project on server
+
+- STEP 1. build
+```
+    git clone http://121.252.183.23:8081/PTK-DSG-T6/humint-web-front.git
+    npm install
+    npm run build
+
+    (dist 폴더 생성 됐는지 확인)
+```
+
+- STEP 2. upload dist file to server(183.23) through SFTP
+```
+    (dist 폴더 내에 있는 모든 파일 압축 : 주의 = dist 폴더가 아닌 폴더에 들어가서 모든 파일 압축)
+
+    sftp -P 10022 ptkconnec@121.252.183.23
+
+    (비밀번호 입력)
+
+    cd humint-web-frontend
+    put /your/path/humint-web-front/build/build.zip
+
+```
+
+- STEP 3. restart httpd2 container
+```
+    ssh ptkconnec@121.252.183.23 -p 10022
+
+    (비밀번호 입력)
+
+    cd humint-web-frontend
+
+    unzip build.zip
+
+    (replace A/All)
+
+    ------압축 해제 완료------
+
+    sudo docker restart humint-web-front
+
+
+```
+
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
