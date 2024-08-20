@@ -9,24 +9,24 @@
     (build 폴더 생성 됐는지 확인)
 ```
 
-- STEP 2. upload dist file to server(183.23) through SFTP
+- STEP 2. upload dist file to server(183.23) through SFTP [PW](http://121.252.183.23:8081/PTK-DSG-T6/README/src/branch/main/ACCOUNT.md#server-%EA%B3%84%EC%A0%95-%EC%A0%95%EB%B3%B4)
 ```
     (build 폴더 내에 있는 모든 파일 압축 : 주의 = build 폴더를 압축 하는것이 아니고, 폴더에 들어가서 모든 파일 압축)
 
     sftp -P 10022 ptkconnec@121.252.183.23
 
-    (비밀번호 입력)[참조](http://121.252.183.23:8081/PTK-DSG-T6/README/src/branch/main/ACCOUNT.md#server-%EA%B3%84%EC%A0%95-%EC%A0%95%EB%B3%B4)
+    (비밀번호 입력)
 
     cd humint-web-frontend
     put /<your>/<path>/humint-web-front/build/build.zip
 
 ```
 
-- STEP 3. restart httpd2 container
+- STEP 3. restart httpd2 container  [PW](http://121.252.183.23:8081/PTK-DSG-T6/README/src/branch/main/ACCOUNT.md#server-%EA%B3%84%EC%A0%95-%EC%A0%95%EB%B3%B4)
 ```
     ssh ptkconnec@121.252.183.23 -p 10022
 
-    (비밀번호 입력)[참조](http://121.252.183.23:8081/PTK-DSG-T6/README/src/branch/main/ACCOUNT.md#server-%EA%B3%84%EC%A0%95-%EC%A0%95%EB%B3%B4)
+    (비밀번호 입력)
 
     cd humint-web-frontend
 
