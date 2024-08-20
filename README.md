@@ -18,7 +18,7 @@
     (비밀번호 입력)
 
     cd humint-web-frontend
-    put /your/path/humint-web-front/build/build.zip
+    put /<your>/<path>/humint-web-front/build/build.zip
 
 ```
 
