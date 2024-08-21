@@ -13,7 +13,7 @@ import { setCookie, getCookie } from '../../utils/cookieUtils';
  */
 const Login: React.FC = () => {
     const dispatch = useDispatch();
-    const myname = useSelector((state: any) => state.myName);
+    const myname = useSelector((state: any) => state.user.myName);
     const [hover, setHover] = useState<string>('');
     const [userId, setId] = useState('');
     const [pwd, setPassword] = useState('');
