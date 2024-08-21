@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SiteCodeOption } from "../../../redux/store";
+import { SiteCodeOption } from '../../../redux/actions/productAction';
 import { useDispatch, useSelector } from "react-redux";
 import '../Table.css'
 
@@ -21,7 +21,7 @@ function SelectSiteCode() {
     'za'
   ]
   const dispatch = useDispatch();
-  const ct = useSelector((state: any) => state.SiteCodeOption);
+  const ct = useSelector((state: any) => state.product.SiteCodeOption);
 
   /**
    * @function

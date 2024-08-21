@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import './Login.css';
 import { Provider } from 'react-redux';
-import store from '../../redux/store';
-import { myName } from "../../redux/store";
+import { store } from '../../redux/store';
+import { myName } from '../../redux/actions/userAction';
 import { setCookie, getCookie } from '../../utils/cookieUtils';
 
 /**

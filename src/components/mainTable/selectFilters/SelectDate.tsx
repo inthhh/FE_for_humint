@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DateOption } from "../../../redux/store";
+import { DateOption } from '../../../redux/actions/productAction';
 import { useDispatch, useSelector } from "react-redux";
 import '../Table.css'
 import axios from 'axios';
@@ -13,7 +13,7 @@ function SelectDate() {
   const apiUrl = "http://121.252.183.23:8080"
   const [apiDate, setApiDate] = useState([]);
   const dispatch = useDispatch();
-  const date = useSelector((state: any) => state.DateOption);
+  const date = useSelector((state: any) => state.product.DateOption);
 
   /**
    * @function

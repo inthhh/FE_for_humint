@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ComponentOption } from "../../../redux/store";
+import { ComponentOption } from '../../../redux/actions/productAction';
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 
@@ -13,7 +13,7 @@ function SelectComponent() {
     const apiUrl = process.env.REACT_APP_API_URL;
     const [apiComponent, setApiComponent] = useState([]);
     const dispatch = useDispatch();
-    const component = useSelector((state: any) => state.ComponentOption);
+    const component = useSelector((state: any) => state.product.ComponentOption);
 
     // 컴포넌트 목록 정의
     const baseComponentList = ["ALL", "KV", "co05"];

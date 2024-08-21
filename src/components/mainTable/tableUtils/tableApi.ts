@@ -17,6 +17,7 @@ export const getAPI_ = async (apiUrl: string, date: number, ct: string, result: 
         });
 
         const{ data } = await axios.get(`${apiUrl}/api/v1/raw-data?${params.toString()}`);
+        console.log(`${apiUrl}/api/v1/raw-data?${params.toString()}`, Array(data.data))
         return data.data;
     } catch (e) {
         console.error('getAPI 에러:', e);

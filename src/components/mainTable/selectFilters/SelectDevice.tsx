@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from "react";
-import { DeviceOption } from "../../../redux/store";
+import { DeviceOption } from '../../../redux/actions/productAction';
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -8,7 +8,7 @@ function SelectDevice() {
     const apiUrl = process.env.REACT_APP_API_URL;
     const [apiDevice, setApiDevice] = useState([]);
     const dispatch = useDispatch();
-    const device = useSelector((state: any) => state.DeviceOption);
+    const device = useSelector((state: any) => state.product.DeviceOption);
 
     // 디바이스 목록 정의
     const baseDeviceList = ["ALL", "Mobile", "Desktop"];

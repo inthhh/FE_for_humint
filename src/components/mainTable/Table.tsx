@@ -11,8 +11,7 @@ import SelectDevice from './selectFilters/SelectDevice'
 import ScrollToTopBtn from './ScrollToTopBtn';
 import axios from 'axios';
 import { Provider } from 'react-redux';
-import store from '../../redux/store';
-import { DateOption, SiteCodeOption, ResultOption } from "../../redux/store";
+import { store } from '../../redux/store';
 import { useDispatch, useSelector } from "react-redux";
 import { Cookies } from 'react-cookie';
 import { setCookie, getCookie } from '../../utils/cookieUtils';
@@ -66,13 +65,13 @@ export const Table = () => {
 
     // redux data
     const dispatch = useDispatch();
-    const date = useSelector((state: any) => state.DateOption);
-    const ct = useSelector((state: any) => state.SiteCodeOption);
-    const result = useSelector((state: any) => state.ResultOption);
-    const myname = useSelector((state: any) => state.myName);
-    const pagetype = useSelector((state: any) => state.PageTypeOption);
-    const component = useSelector((state:any) => state.ComponentOption);
-    const device = useSelector((state:any) => state.DeviceOption);
+    const date = useSelector((state: any) => state.product.DateOption);
+    const ct = useSelector((state: any) => state.product.SiteCodeOption);
+    const result = useSelector((state: any) => state.product.ResultOption);
+    const myname = useSelector((state: any) => state.user.myName);
+    const pagetype = useSelector((state: any) => state.product.PageTypeOption);
+    const component = useSelector((state:any) => state.product.ComponentOption);
+    const device = useSelector((state:any) => state.product.DeviceOption);
 
     // 검색 ID
     const [searchId, setSearchId] = useState<string>("");
@@ -250,7 +249,7 @@ export const Table = () => {
         dataList?.forEach((item, index) => {
             const guideIds = item.check_reason;
             const uniqueKoreans: Set<string> = new Set();
-            if (Array.isArray(guideIds)) {
+            if (Array.isArray(guideIds) && Array.isArray(guideObj)) {
                 guideIds.forEach((guideId) => {
                     guideObj.forEach((obj) => {
                         if (obj.id === guideId) {

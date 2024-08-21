@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PageTypeOption } from "../../../redux/store";
+import { PageTypeOption } from '../../../redux/actions/productAction';
 import { useDispatch, useSelector } from "react-redux";
 import '../Table.css'
 import axios from 'axios';
@@ -13,7 +13,7 @@ function SelectPage() {
   const apiUrl = "http://121.252.183.23:8080"
   const [apiPage, setApiPage] = useState([]);
   const dispatch = useDispatch();
-  const pageType = useSelector((state: any) => state.PageTypeOption);
+  const pageType = useSelector((state: any) => state.product.PageTypeOption);
 
   /**
    * @function
