@@ -31,3 +31,8 @@ export interface UserState {
      */
     myName: string | null;
 }
+
+export interface RootState {
+    product: ProductState;
+    user: UserState;
+}

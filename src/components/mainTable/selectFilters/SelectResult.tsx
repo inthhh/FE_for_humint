@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ResultOption } from '../../../redux/actions/productAction';
 import { useDispatch, useSelector } from "react-redux";
 import '../Table.css'
-import { ProductState } from '../../../interfaces/interfaceRedux';
+import { RootState } from '../../../interfaces/interfaceRedux';
 
 /**
  * SelectResult.tsx - 결과값(Y/N)을 필터링하는 드롭다운 컴포넌트입니다.
@@ -11,7 +11,7 @@ import { ProductState } from '../../../interfaces/interfaceRedux';
 function SelectResult() {
   const [isDropdownView, setDropdownView] = useState(false)
   const dispatch = useDispatch();
-  const yn = useSelector((state: ProductState) => state.ResultOption);
+  const yn = useSelector((state: RootState) => state.product.ResultOption);
 
   /**
    * @function

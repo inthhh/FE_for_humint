@@ -2,14 +2,14 @@ import React, {useState,useEffect} from "react";
 import { DeviceOption } from '../../../redux/actions/productAction';
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { ProductState } from "../../../interfaces/interfaceRedux";
+import { RootState } from "../../../interfaces/interfaceRedux";
 
 function SelectDevice() {
     const [isDropdownView, setDropdownView] = useState(false);
     const apiUrl = process.env.REACT_APP_API_URL;
     const [apiDevice, setApiDevice] = useState([]);
     const dispatch = useDispatch();
-    const device = useSelector((state: ProductState) => state.DeviceOption);
+    const device = useSelector((state: RootState) => state.product.DeviceOption);
 
     // 디바이스 목록 정의
     const baseDeviceList = ["ALL", "Mobile", "Desktop"];

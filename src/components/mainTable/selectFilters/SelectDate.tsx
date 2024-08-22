@@ -3,7 +3,7 @@ import { DateOption } from '../../../redux/actions/productAction';
 import { useDispatch, useSelector } from "react-redux";
 import '../Table.css'
 import axios from 'axios';
-import { ProductState } from '../../../interfaces/interfaceRedux';
+import { RootState } from '../../../interfaces/interfaceRedux';
 
 /**
  * SelectDate.tsx - 날짜 정보를 필터링하는 드롭다운 컴포넌트입니다.
@@ -14,7 +14,7 @@ function SelectDate() {
   const apiUrl = "http://121.252.183.23:8080"
   const [apiDate, setApiDate] = useState([]);
   const dispatch = useDispatch();
-  const date = useSelector((state: ProductState) => state.DateOption);
+  const date = useSelector((state: RootState) => state.product.DateOption);
 
   /**
    * @function
