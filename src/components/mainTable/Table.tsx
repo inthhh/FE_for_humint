@@ -15,7 +15,7 @@ import { store } from '../../redux/store';
 import { useDispatch, useSelector } from "react-redux";
 import { Cookies } from 'react-cookie';
 import { setCookie, getCookie } from '../../utils/cookieUtils';
-import { Guide, datalist, Guideline } from './interfaces';
+import { Guide, datalist, Guideline } from '../../interfaces/interfaceTable';
 import './base.css'
 
 import { getAPI_, searchAPI_, editAPI_, getGuideAPI_ } from './tableUtils/tableApi';

@@ -1,7 +1,7 @@
 import { AnyAction } from "redux";
 import { getCookie } from "../../utils/cookieUtils";
 import { SET_MYNAME } from "../constants/userConstant";
-import { UserState } from "../interfacesRedux";
+import { UserState } from "../../interfaces/interfaceRedux";
 
 export const userReducer = (
     state: UserState = {

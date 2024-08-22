@@ -1,5 +1,5 @@
 import React from 'react';
-import { Guide, datalist, Guideline } from '../interfaces';
+import { Guide, datalist, Guideline } from '../../../interfaces/interfaceTable';
 
 /**
  * ri, dataList, selectedResult 등을 포함하는 인터페이스입니다.

@@ -1,7 +1,7 @@
 import { AnyAction } from "redux";
 import { SET_DATE, SET_RESULT, SET_SITECODE, SET_PAGETYPE, SET_COMPONENT, SET_DEVICE } from "../constants/productConstant";
 import { getTodayDate } from "../store";
-import { ProductState } from "../interfacesRedux";
+import { ProductState } from "../../interfaces/interfaceRedux";
 
 export const productReducer = (
     state: ProductState = {
