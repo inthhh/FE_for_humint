@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { SiteCodeOption } from '../../../redux/actions/productAction';
 import { useDispatch, useSelector } from "react-redux";
 import '../Table.css'
+import { ProductState } from '../../../interfaces/interfaceRedux';
 
 /**
  * SelectSiteCode.tsx - 국가 코드를 필터링하는 드롭다운 컴포넌트입니다.
@@ -21,7 +22,7 @@ function SelectSiteCode() {
     'za'
   ]
   const dispatch = useDispatch();
-  const ct = useSelector((state: any) => state.product.SiteCodeOption);
+  const ct = useSelector((state: ProductState) => state.SiteCodeOption);
 
   /**
    * @function
