@@ -3,6 +3,7 @@ import { PageTypeOption } from '../../../redux/actions/productAction';
 import { useDispatch, useSelector } from "react-redux";
 import '../Table.css'
 import axios from 'axios';
+import { ProductState } from '../../../interfaces/interfaceRedux';
 
 /**
  * SelectPage.tsx - 페이지 타입을 필터링하는 드롭다운 컴포넌트입니다.
@@ -13,7 +14,7 @@ function SelectPage() {
   const apiUrl = "http://121.252.183.23:8080"
   const [apiPage, setApiPage] = useState([]);
   const dispatch = useDispatch();
-  const pageType = useSelector((state: any) => state.product.PageTypeOption);
+  const pageType = useSelector((state: ProductState) => state.PageTypeOption);
 
   /**
    * @function

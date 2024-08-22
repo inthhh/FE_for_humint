@@ -24,6 +24,7 @@ import { CheckReasonColumns } from './tableUtils/reasonColumn';
 import { CheckResultColumns } from './tableUtils/resultColumn';
 import { ColGroup } from './tableUtils/colGroup';
 import ImgIframe from './tableUtils/imgIframe';
+import { ProductState, UserState } from '../../interfaces/interfaceRedux';
 
 /**
  * Table.tsx - 모든 데이터를 조회하거나 수정할 수 있는 테이블 컴포넌트입니다.
@@ -65,13 +66,13 @@ export const Table = () => {
 
     // redux data
     const dispatch = useDispatch();
-    const date = useSelector((state: any) => state.product.DateOption);
-    const ct = useSelector((state: any) => state.product.SiteCodeOption);
-    const result = useSelector((state: any) => state.product.ResultOption);
-    const myname = useSelector((state: any) => state.user.myName);
-    const pagetype = useSelector((state: any) => state.product.PageTypeOption);
-    const component = useSelector((state:any) => state.product.ComponentOption);
-    const device = useSelector((state:any) => state.product.DeviceOption);
+    const date = useSelector((state: ProductState) => state.DateOption);
+    const ct = useSelector((state: ProductState) => state.SiteCodeOption);
+    const result = useSelector((state: ProductState) => state.ResultOption);
+    const myname = useSelector((state: UserState) => state.myName);
+    const pagetype = useSelector((state: ProductState) => state.PageTypeOption);
+    const component = useSelector((state:ProductState) => state.ComponentOption);
+    const device = useSelector((state:ProductState) => state.DeviceOption);
 
     // 검색 ID
     const [searchId, setSearchId] = useState<string>("");

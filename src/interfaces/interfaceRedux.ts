@@ -10,7 +10,7 @@ export interface ProductState {
     /**
      * redux : 국가코드 옵션
      */
-    SiteCodeOption: string | null;
+    SiteCodeOption: string;
     /**
      * redux : 페이지 타입 옵션
      */
