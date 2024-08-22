@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ComponentOption } from '../../../redux/actions/productAction';
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { ProductState } from "../../../interfaces/interfaceRedux";
+import { ProductState, RootState } from "../../../interfaces/interfaceRedux";
 
 
 /**
@@ -14,7 +14,7 @@ function SelectComponent() {
     const apiUrl = process.env.REACT_APP_API_URL;
     const [apiComponent, setApiComponent] = useState([]);
     const dispatch = useDispatch();
-    const component = useSelector((state: ProductState) => state.ComponentOption);
+    const component = useSelector((state: RootState) => state.product.ComponentOption);
 
     // 컴포넌트 목록 정의
     const baseComponentList = ["ALL", "KV", "co05"];

@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { store } from '../../redux/store';
 import { myName } from '../../redux/actions/userAction';
 import { setCookie, getCookie } from '../../utils/cookieUtils';
-import { UserState } from '../../interfaces/interfaceRedux';
+import { RootState } from '../../interfaces/interfaceRedux';
 
 /**
  * Login.tsx - 로그인 페이지 및 기능 컴포넌트입니다.
@@ -14,7 +14,7 @@ import { UserState } from '../../interfaces/interfaceRedux';
  */
 const Login: React.FC = () => {
     const dispatch = useDispatch();
-    const myname = useSelector((state: UserState) => state.myName);
+    const myname = useSelector((state: RootState) => state.user.myName);
     const [hover, setHover] = useState<string>('');
     const [userId, setId] = useState('');
     const [pwd, setPassword] = useState('');
