@@ -1,28 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import {AppState, DateOption, SiteCodeOption, PageTypeOption, ResultOption, ComponentOption, DeviceOption, } from "../../redux/store";
+import { FilterDropdownProps } from "../../interfaces/interfaceTable";
+import { ProductState} from "../../interfaces/interfaceRedux";
+import { ComponentOption, DateOption, DeviceOption, PageTypeOption, ResultOption, SiteCodeOption } from "../../redux/actions/productAction";
+import { countryCodes, ynOptions, baseComponentList, baseDeviceList } from "../../constants/filterOptions";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
-/**
- * 공통적인 필터 드롭다운 컴포넌트의 속성 타입 정의
- * 
- * @typedef {Object} FilterDropdownProps
- * @property {string} label - 드롭다운의 라벨 텍스트
- * @property {string} currentValue - 현재 선택된 값
- * @property {string[]} options - 드롭다운에 표시될 옵션 배열
- * @property {function(string): void} onOptionChange - 선택된 값이 변경될 때 호출되는 콜백 함수
- * @property {'primary' | 'sub'} [filterType] - 드롭다운 버튼 스타일 타입
- */
-interface FilterDropdownProps { //다양한 데이터 렌더링 시 ReactNode 사용
-    label: string;
-    currentValue: string;
-    options: string[];
-    onOptionChange: (value: string) => void;
-    buttonCSS?: string; // 드롭다운 버튼 CSS
-    dropdownCSS?: string; // 드롭다운 리스트 CSS
-}
 
 /**
  * CommonFilter.tsx - 다양한 필터의 공통적인 속성을 정리한 컴포넌트
@@ -59,9 +44,9 @@ function FilterDropdown({ label, currentValue, options, onOptionChange, buttonCS
         setDropdownView(false);
         if (option === "ALL") {
             onOptionChange("");
-        } else {
-            onOptionChange(option);
+            return;
         }
+        onOptionChange(option);
     };
 
     return (
@@ -141,7 +126,7 @@ export const Filters = {
      */
     SelectDate: () => {
         const dispatch = useDispatch();
-        const date = useSelector((state: AppState) => state.DateOption);
+        const date = useSelector((state: any) => state.product.DateOption);
         const apiDate = useApiData<{ date: string }>('/api/v1/raw-data-category/date', 'date');
         
         return (
@@ -160,19 +145,7 @@ export const Filters = {
      */
     SelectSiteCode: () => {
         const dispatch = useDispatch();
-        const siteCode = useSelector((state: AppState) => state.SiteCodeOption);
-        const countryCodes: string[] = [
-        "ae", "ae_ar", "africa_en", "africa_fr", "africa_pt", "al", "ar", "at", 
-        "au", "az", "ba", "bd", "be", "be_fr", "bg", "br", "ca", "ca_fr", "ch", 
-        "ch_fr", "cl", "cn", "co", "cz", "de", "dk", "ee", "eg", "es", "fi", 
-        "fr", "ge", "gr", "hk", "hk_en", "hr", "hu", "id", "ie", "il", "in", 
-        "iq_ar", "iq_ku", "iran", "it", "jp", "kz_kz", "kz_ru", "latin", 
-        "latin_en", "lb", "levant", "levant_ar", "lt", "lv", "mk", "mm", 
-        "mn", "mx", "my", "n_africa", "nl", "no", "nz", "pe", "ph", "pk", 
-        "pl", "ps", "pt", "py", "ro", "rs", "ru", "sa", "sa_en", "se", "sec", 
-        "sg", "si", "sk", "th", "tr", "tw", "ua", "uk", "us", "uy", "uz_ru", 
-        "uz_uz", "vn", "za"
-        ];
+        const siteCode = useSelector((state: any) => state.product.SiteCodeOption);
 
         return (
             <FilterDropdown
@@ -190,12 +163,8 @@ export const Filters = {
      */
     SelectPage: () => {
         const dispatch = useDispatch();
-        const pageType = useSelector((state: AppState) => state.PageTypeOption);
+        const pageType = useSelector((state: any) => state.product.PageTypeOption);
         const apiPage = useApiData<{ page_type: string }>('/api/v1/raw-data-category/page-type', 'page_type');
-
-        useEffect(() => {
-            console.log("apiPage in SelectPage:", apiPage);  // apiPage 값이 무엇인지 확인
-        }, [apiPage]);
 
         return (
             <FilterDropdown
@@ -215,8 +184,7 @@ export const Filters = {
      */
     SelectResult: () => {
         const dispatch = useDispatch();
-        const yn = useSelector((state: AppState) => state.ResultOption); 
-        const ynOptions = ["ALL", "Y", "N"];
+        const yn = useSelector((state: any) => state.product.ResultOption);
 
         return (
             <FilterDropdown
@@ -236,10 +204,8 @@ export const Filters = {
      */
     SelectComponent: () => {
         const dispatch = useDispatch();
-        const component = useSelector((state: AppState) => state.ComponentOption);
+        const component = useSelector((state: any) => state.product.ComponentOption);
         const apiComponent = useApiData<{ component: string }>('/api/v1/raw-data/component', 'component').filter(item => item.trim() !== '');
-    
-        const baseComponentList = ["ALL", "KV", "co05"];
     
         return (
             <FilterDropdown
@@ -258,10 +224,8 @@ export const Filters = {
      */
     SelectDevice: () => {
         const dispatch = useDispatch();
-        const device = useSelector((state: AppState) => state.DeviceOption);
+        const device = useSelector((state: ProductState) => state.DeviceOption);
         const apiDevice = useApiData<{ device: string }>(`/api/v1/raw-data?description=${device || "ALL"}`, 'device');
-        
-        const baseDeviceList = ["ALL", "Mobile", "Desktop"];
 
         return (
             <FilterDropdown

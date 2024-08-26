@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Guide, datalist, Guideline } from '../../../interfaces/interfaceTable';
+import { Guide } from '../../../interfaces/interfaceTable';
 
 /**
  * saveEditData.tsx - 편집된 데이터를 저장하기 위해 전처리를 진행하는 클래스 함수입니다.
