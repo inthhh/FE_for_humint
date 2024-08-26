@@ -1,3 +1,50 @@
+# How to deploy this project on server
+
+- STEP 1. build
+```
+    git clone http://121.252.183.23:8081/PTK-DSG-T6/humint-web-front.git
+    npm install
+    npm run build
+
+    (build 폴더 생성 됐는지 확인)
+```
+
+- STEP 2. upload dist file to server(183.23) through SFTP ([SERVER PW](http://121.252.183.23:8081/PTK-DSG-T6/README/src/branch/main/ACCOUNT.md#server-%EA%B3%84%EC%A0%95-%EC%A0%95%EB%B3%B4))
+```
+    (build 폴더 내에 있는 모든 파일 압축 : 주의 = build 폴더를 압축 하는것이 아니고, 폴더에 들어가서 모든 파일 압축)
+
+    sftp -P 10022 ptkconnec@121.252.183.23
+
+    (비밀번호 입력)
+
+    cd humint-web-frontend
+    put /<your>/<path>/humint-web-front/build/build.zip
+
+```
+
+- STEP 3. restart httpd2 container  ([SERVER PW](http://121.252.183.23:8081/PTK-DSG-T6/README/src/branch/main/ACCOUNT.md#server-%EA%B3%84%EC%A0%95-%EC%A0%95%EB%B3%B4))
+```
+    ssh ptkconnec@121.252.183.23 -p 10022
+
+    (비밀번호 입력)
+
+    cd humint-web-frontend
+
+    unzip build.zip
+
+    (replace A/All)
+
+    ------압축 해제 완료------
+
+    sudo docker restart humint-web-front
+
+
+```
+
+> 안녕하세요. 랍입니다. 이 레포지토리를 이어 받으시는 분 중, 유능하고 재주 있으신분이 계시다면, CI/CD 구축을 부탁드립니다. gitea actions와 jenkins는 설정과 플러그인 설치가 완료되어 있습니다. 
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

@@ -5,7 +5,7 @@ import exp from 'constants';
  * @function
  * tableApi.ts - Table Data 전체를 받아오는 API를 호출합니다.
  */
-export const getAPI_ = async (apiUrl: string, date: number, ct: string, result: string, pagetype: string, component: string, device: string) => {
+export const getAPI_ = async (apiUrl: string, date: string|null, ct: string, result: string|null, pagetype: string|null, component: string|null, device: string|null) => {
     try {
         const params = new URLSearchParams({
             date: String(date),
@@ -17,6 +17,7 @@ export const getAPI_ = async (apiUrl: string, date: number, ct: string, result: 
         });
 
         const{ data } = await axios.get(`${apiUrl}/api/v1/raw-data?${params.toString()}`);
+        console.log(`${apiUrl}/api/v1/raw-data?${params.toString()}`, Array(data.data))
         return data.data;
     } catch (e) {
         console.error('getAPI 에러:', e);
