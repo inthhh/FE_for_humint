@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { FilterDropdownProps } from "../../interfaces/interfaceTable";
+import LabelComponent from "./filter/Label";
+import OptionsComponent from "./filter/Options";
 import { ProductState} from "../../interfaces/interfaceRedux";
 import { ComponentOption, DateOption, DeviceOption, PageTypeOption, ResultOption, SiteCodeOption } from "../../redux/actions/productAction";
 import { countryCodes, ynOptions, baseComponentList, baseDeviceList } from "../../constants/filterOptions";
@@ -42,44 +44,25 @@ function FilterDropdown({ label, currentValue, options, onOptionChange, buttonCS
      */
     const handleOptionClick = (option: string) => {
         setDropdownView(false);
-        if (option === "ALL") {
-            onOptionChange("");
-            return;
-        }
-        onOptionChange(option);
+        onOptionChange(option === "ALL" ? "" : option);
     };
 
     return (
         <div className="container" onBlur={handleBlurContainer}>
-        <label onClick={handleClickContainer}>
-            <button className={buttonCSS}>
-                {label}: {currentValue || "ALL"} {isDropdownView ? "▲" : "▼"}
-            </button>
-        </label>
-        {isDropdownView && (
-            <ul
-                style={{
-                    listStyle: "none",
-                    position: "absolute",
-                    zIndex: 9,
-                    maxHeight: "300px",
-                    overflowY: "auto",
-                    margin: 0,
-                    padding: 0,
-                }}
-            >
-            {options.map((option, i) => (
-                <li
-                    key={i}
-                    className={dropdownCSS}
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => handleOptionClick(option)}
-                >
-                    {option}
-                </li>
-            ))}
-            </ul>
-        )}
+            <LabelComponent 
+                label={label} 
+                currentValue={currentValue} 
+                isDropdownView={isDropdownView} 
+                handleClick={handleClickContainer} 
+                buttonCSS={buttonCSS} 
+            />
+            {isDropdownView && (
+                <OptionsComponent 
+                    options={options} 
+                    handleOptionClick={handleOptionClick} 
+                    dropdownCSS={dropdownCSS} 
+                />
+            )}
         </div>
     );
 }

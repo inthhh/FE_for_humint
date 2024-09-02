@@ -58,3 +58,17 @@ export interface FilterDropdownProps { //다양한 데이터 렌더링 시 React
   buttonCSS?: string; // 드롭다운 버튼 CSS
   dropdownCSS?: string; // 드롭다운 리스트 CSS
 }
+
+export interface LabelComponentProps {
+  label: string;
+  currentValue: string;
+  isDropdownView: boolean;
+  handleClick: () => void;
+  buttonCSS: string;
+}
+
+export interface OptionsComponentProps {
+  options: string[];
+  handleOptionClick: (option: string) => void;
+  dropdownCSS: string;
+}
