@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import axios from 'axios';
 
 /**
  * src, imgDesc, imgArea 등을 포함하는 인터페이스입니다.
@@ -17,7 +16,7 @@ interface ImgIframeProps {
  * @returns 
  */
 const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, imgArea, onClose }) => {
-  const isMobile = (imgDesc == "Mobile") ? "mobile" : "pc";
+  const isMobile = (imgDesc === "Mobile") ? "mobile" : "pc";
   const [guideSrc, setGuideSrc] = useState<string>("");
   console.log(imgDesc, imgArea)
 
@@ -30,7 +29,7 @@ const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, imgArea, onClose })
       return `http://121.252.183.23:8080/python-api/v1/guide-check?url=${src}&device_type=${isMobile}`;
     }
     return "";
-  }, [src, imgDesc, imgArea, isMobile]);
+  }, [src, imgArea, isMobile]);
 
   useEffect(() => {
     if (calculatedGuideSrc) {

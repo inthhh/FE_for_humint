@@ -1,5 +1,4 @@
 // store.ts
-import { legacy_createStore as createStore, Action, AnyAction } from "redux";
 import { userReducer } from "./reducers/userReducer";
 import { productReducer } from "./reducers/productReducer";
 import { configureStore } from '@reduxjs/toolkit';

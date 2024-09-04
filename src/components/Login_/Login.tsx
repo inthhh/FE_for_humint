@@ -1,12 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, {useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import './Login.css';
-import { Provider } from 'react-redux';
-import { store } from '../../redux/store';
 import { myName } from '../../redux/actions/userAction';
-import { setCookie, getCookie } from '../../utils/cookieUtils';
-import { RootState } from '../../interfaces/interfaceRedux';
+import { setCookie } from '../../utils/cookieUtils';
 
 /**
  * Login.tsx - 로그인 페이지 및 기능 컴포넌트입니다.
@@ -14,15 +11,15 @@ import { RootState } from '../../interfaces/interfaceRedux';
  */
 const Login: React.FC = () => {
     const dispatch = useDispatch();
-    const myname = useSelector((state: RootState) => state.user.myName);
-    const [hover, setHover] = useState<string>('');
+    // const myname = useSelector((state: RootState) => state.user.myName);
+    const [, setHover] = useState<string>('');
     const [userId, setId] = useState('');
     const [pwd, setPassword] = useState('');
     const navigate = useNavigate();
     const [loginBTNtext, setBTNtext] = useState<string>('로그인 🚀');
     const rightPwd = "neptunepulse@@";
     const [isShowPwChecked, setShowPwChecked] = useState(false);
-    const passwordRef = useRef(null);
+    // const passwordRef = useRef(null);
     const [pwdType, setPwdType] = useState("password");
 
     /**
