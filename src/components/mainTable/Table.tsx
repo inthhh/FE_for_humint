@@ -372,14 +372,14 @@ export const Table = () => {
             <Provider store={store}>
                 <header className="header-wrap">
                     <p className="text-type">Humint QA</p>
-                    <div className="text-user">☑️ {getCookie('myName')}님 환영합니다.</div>
+	                    <div className="text-user">☑️ {getCookie('myName')}님 환영합니다.</div>
                 </header>
                     {/* 테이블 위 Filter */}
                     <div className="filter-wrap">
                         {/* 필터 선택 및 '테이블 보기' 버튼 */}
                         <div className= "filter-required">
-                            <Filters.SelectDate />
-                            <Filters.SelectSiteCode />
+                            <SelectDate />
+                            <SelectSiteCode />
                             <button className='btn-type btn-filter' onClick={() => handleFilter()}>테이블 보기</button>
                             {/* 검색 입력창 및 '검색' 버튼 */}
                             <div className="search-wrap">
@@ -398,10 +398,10 @@ export const Table = () => {
                             </div>   
                         </div>
                         <div className= "filter-selection">
-                            <Filters.SelectResult />
-                            <Filters.SelectPage />
-                            <Filters.SelectComponent />
-                            <Filters.SelectDevice />
+                            <SelectResult />
+                            <SelectPage />
+                            <SelectComponent />
+                            <SelectDevice />
                         </div>
                     </div>
 
