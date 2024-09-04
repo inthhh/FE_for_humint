@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { FilterDropdownProps } from "../../interfaces/interfaceTable";
+import { CommonFilterProps } from "../../interfaces/interfaceTable";
 import LabelComponent from "./filter/Label";
 import OptionsComponent from "./filter/Options";
 import { ProductState} from "../../interfaces/interfaceRedux";
@@ -15,7 +15,7 @@ const apiUrl = process.env.REACT_APP_API_URL;
  * CommonFilter.tsx - 다양한 필터의 공통적인 속성을 정리한 컴포넌트
  * @returns 
  */ 
-function FilterDropdown({ label, currentValue, options, onOptionChange, buttonCSS = 'filter-btn', dropdownCSS = 'limenu'}: FilterDropdownProps) {
+function CommonFilter({ label, currentValue, options, onOptionChange, buttonCSS = 'filter-btn', dropdownCSS = 'limenu'}: CommonFilterProps) {
     const [isDropdownView, setDropdownView] = useState(false);
     
     /**
@@ -111,13 +111,17 @@ export const Filters = {
         const dispatch = useDispatch();
         const date = useSelector((state: any) => state.product.DateOption);
         const apiDate = useApiData<{ date: string }>('/api/v1/raw-data-category/date', 'date');
+
+        const handleOptionChange = (value: string) => {
+            dispatch(DateOption(value));
+        };
         
         return (
-            <FilterDropdown
+            <CommonFilter
                 label="QA Date"
                 currentValue={date || ""}
                 options={apiDate}
-                onOptionChange={(value) => dispatch(DateOption(value))}
+                onOptionChange={handleOptionChange}
             />
         );
     },
@@ -130,12 +134,16 @@ export const Filters = {
         const dispatch = useDispatch();
         const siteCode = useSelector((state: any) => state.product.SiteCodeOption);
 
+        const handleOptionChange = (value: string) => {
+            dispatch(SiteCodeOption(value));
+        };
+
         return (
-            <FilterDropdown
+            <CommonFilter
                 label="Site Code"
                 currentValue={siteCode || ""}
                 options={countryCodes}
-                onOptionChange={(value) => dispatch(SiteCodeOption(value))}
+                onOptionChange={handleOptionChange}
             />
         );
     },
@@ -149,12 +157,16 @@ export const Filters = {
         const pageType = useSelector((state: any) => state.product.PageTypeOption);
         const apiPage = useApiData<{ page_type: string }>('/api/v1/raw-data-category/page-type', 'page_type');
 
+        const handleOptionChange = (value: string) => {
+            dispatch(PageTypeOption(value));
+        };
+
         return (
-            <FilterDropdown
+            <CommonFilter
                 label="Page Type"
                 currentValue={pageType || "ALL"}
                 options={["ALL", ...apiPage]}
-                onOptionChange={(value) => dispatch(PageTypeOption(value))}
+                onOptionChange={handleOptionChange}
                 buttonCSS = "filter-btn-sub"
                 dropdownCSS = "limenu-sub"
             />
@@ -169,12 +181,16 @@ export const Filters = {
         const dispatch = useDispatch();
         const yn = useSelector((state: any) => state.product.ResultOption);
 
+        const handleOptionChange = (value: string) => {
+            dispatch(ResultOption(value));
+        };
+
         return (
-            <FilterDropdown
+            <CommonFilter
                 label="Check Result"
                 currentValue={yn || "ALL"}
                 options={ynOptions}
-                onOptionChange={(value) => dispatch(ResultOption(value))}
+                onOptionChange={handleOptionChange}
                 buttonCSS = "filter-btn-sub"
                 dropdownCSS = "limenu-sub"
             />
@@ -189,13 +205,17 @@ export const Filters = {
         const dispatch = useDispatch();
         const component = useSelector((state: any) => state.product.ComponentOption);
         const apiComponent = useApiData<{ component: string }>('/api/v1/raw-data/component', 'component').filter(item => item.trim() !== '');
+
+        const handleOptionChange = (value: string) => {
+            dispatch(ComponentOption(value));
+        };
     
         return (
-            <FilterDropdown
+            <CommonFilter
                 label="Component"
                 currentValue={component || "ALL"}
                 options={[...baseComponentList, ...apiComponent]}
-                onOptionChange={(value) => dispatch(ComponentOption(value))}
+                onOptionChange={handleOptionChange}
                 buttonCSS = "filter-btn-sub"
                 dropdownCSS = "limenu-sub"
             />
@@ -210,12 +230,16 @@ export const Filters = {
         const device = useSelector((state: ProductState) => state.DeviceOption);
         const apiDevice = useApiData<{ device: string }>(`/api/v1/raw-data?description=${device || "ALL"}`, 'device');
 
+        const handleOptionChange = (value: string) => {
+            dispatch(ComponentOption(value));
+        };
+
         return (
-            <FilterDropdown
+            <CommonFilter
                 label="Device"
                 currentValue={device || "ALL"}
                 options={[...baseDeviceList, ...apiDevice]}
-                onOptionChange={(value) => dispatch(DeviceOption(value))}
+                onOptionChange={handleOptionChange}
                 buttonCSS = "filter-btn-sub"
                 dropdownCSS = "limenu-sub"
             />

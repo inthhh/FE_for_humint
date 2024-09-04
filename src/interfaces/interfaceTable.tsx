@@ -43,14 +43,14 @@ export interface Guideline {
 /**
  * interfaces.tsx - 공통적인 필터 드롭다운 컴포넌트의 속성 타입을 저장하는 인터페이스입니다.
  * 
- * @typedef {Object} FilterDropdownProps
+ * @typedef {Object} CommonFilterProps
  * @property {string} label - 드롭다운의 라벨 텍스트
  * @property {string} currentValue - 현재 선택된 값
  * @property {string[]} options - 드롭다운에 표시될 옵션 배열
  * @property {function(string): void} onOptionChange - 선택된 값이 변경될 때 호출되는 콜백 함수
  * @property {'primary' | 'sub'} [filterType] - 드롭다운 버튼 스타일 타입
  */
-export interface FilterDropdownProps { //다양한 데이터 렌더링 시 ReactNode 사용
+export interface CommonFilterProps { //다양한 데이터 렌더링 시 ReactNode 사용
   label: string;
   currentValue: string;
   options: string[];
