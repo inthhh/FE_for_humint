@@ -72,3 +72,13 @@ export interface OptionsComponentProps {
   handleOptionClick: (option: string) => void;
   dropdownCSS: string;
 }
+
+export interface GeneralFilterProps {
+  label: string;
+  selectedValue: string;
+  action: (value: string) => any;
+  options: string[];
+  defaultValue?: string;
+  buttonCSS?: string;
+  dropdownCSS?: string;
+}

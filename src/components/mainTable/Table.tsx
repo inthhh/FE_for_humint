@@ -2,7 +2,12 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { COLUMNS } from './Columns';
 import { usePagination, useTable } from 'react-table';
 import './Table.css';
-import { Filters } from './CommonFilter';
+import SelectDate from './selectFilters/SelectDate';
+import SelectSiteCode from './selectFilters/SelectSiteCode';
+import SelectPage from './selectFilters/SelectPage';
+import SelectResult from './selectFilters/SelectResult';
+import SelectComponent from './selectFilters/SelectComponent';
+import SelectDevice from './selectFilters/SelectDevice';
 import ScrollToTopBtn from './ScrollToTopBtn';
 import { Provider } from 'react-redux';
 import { store } from '../../redux/store';
@@ -373,8 +378,8 @@ export const Table = () => {
                     <div className="filter-wrap">
                         {/* 필터 선택 및 '테이블 보기' 버튼 */}
                         <div className= "filter-required">
-                            <Filters.SelectDate />
-                            <Filters.SelectSiteCode />
+                            <SelectDate />
+                            <SelectSiteCode />
                             <button className='btn-type btn-filter' onClick={() => handleFilter()}>테이블 보기</button>
                             {/* 검색 입력창 및 '검색' 버튼 */}
                             <div className="search-wrap">
@@ -393,10 +398,10 @@ export const Table = () => {
                             </div>   
                         </div>
                         <div className= "filter-selection">
-                            <Filters.SelectResult />
-                            <Filters.SelectPage />
-                            <Filters.SelectComponent />
-                            <Filters.SelectDevice />
+                            <SelectResult />
+                            <SelectPage />
+                            <SelectComponent />
+                            <SelectDevice />
                         </div>
                     </div>
 
