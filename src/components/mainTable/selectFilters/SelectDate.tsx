@@ -12,13 +12,14 @@ function SelectDate(){
 
   const apiDate = useApiData('/api/v1/raw-data-category/date', 'date');
   const date = useSelector((state: any) => state.product.DateOption);
+  const sortedDates = apiDate.sort((a: string, b: string) => new Date(b).getTime() - new Date(a).getTime());
 
   return (
      <GeneralFilter
             label="QA Date"
             selectedValue={date}  
             action={DateOption}  
-            options={apiDate}
+            options={sortedDates}
         />
     );
 }
