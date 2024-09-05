@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from "react";
 
 /**
  * src, imgDesc, imgArea 등을 포함하는 인터페이스입니다.
@@ -12,13 +12,13 @@ interface ImgIframeProps {
 
 /**
  * imgIframe.tsx - 이미지 클릭 시 나타나는 Grid 가이드를 포함한 Iframe 컴포넌트입니다.
- * @param param0 
- * @returns 
+ * @param param0
+ * @returns
  */
 const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, imgArea, onClose }) => {
-  const isMobile = (imgDesc === "Mobile") ? "mobile" : "pc";
+  const isMobile = imgDesc === "Mobile" ? "mobile" : "pc";
   const [guideSrc, setGuideSrc] = useState<string>("");
-  console.log(imgDesc, imgArea)
+  console.log(imgDesc, imgArea);
 
   /**
    * @function
@@ -26,7 +26,7 @@ const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, imgArea, onClose })
    */
   const calculatedGuideSrc = useMemo(() => {
     if (imgArea.includes("Large")) {
-      return `http://121.252.183.23:8080/python-api/v1/guide-check?url=${src}&device_type=${isMobile}`;
+      return `${process.env.REACT_APP_API_URL}/python-api/v1/guide-check?url=${src}&device_type=${isMobile}`;
     }
     return "";
   }, [src, imgArea, isMobile]);
@@ -42,46 +42,46 @@ const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, imgArea, onClose })
    */
   const styles = {
     modalBackground: {
-      position: 'fixed' as 'fixed',
+      position: "fixed" as "fixed",
       top: 0,
       left: 0,
-      width: '100%',
-      height: '100%',
-      backgroundColor: 'rgba(0, 0, 0, 0.3)',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0, 0, 0, 0.3)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
       zIndex: 1000,
     },
     modalContent: {
-      width: '84%',
-      height: '90%',
-      backgroundColor: 'white',
-      padding: '10px',
-      borderRadius: '8px',
-      overflow: 'hidden',
-      flexDirection: 'column' as const,
-      display: 'flex',
-      justifyContent: 'space-between',
-      position: 'relative' as const,
+      width: "84%",
+      height: "90%",
+      backgroundColor: "white",
+      padding: "10px",
+      borderRadius: "8px",
+      overflow: "hidden",
+      flexDirection: "column" as const,
+      display: "flex",
+      justifyContent: "space-between",
+      position: "relative" as const,
     },
     iframeStyle: {
-      width: '100%',
-      height: '100%',
-      border: 'none',
-      backgroundColor: 'transparent',
+      width: "100%",
+      height: "100%",
+      border: "none",
+      backgroundColor: "transparent",
     },
     closeButton: {
-      position: 'absolute' as const,
-      top: '10px',
-      right: '10px',
-      cursor: 'pointer',
+      position: "absolute" as const,
+      top: "10px",
+      right: "10px",
+      cursor: "pointer",
       fontSize: "20px",
     },
     text: {
-      textAlign: 'center' as const,
-      marginTop: '5px',
-      marginBottom: '0px',
+      textAlign: "center" as const,
+      marginTop: "5px",
+      marginBottom: "0px",
     },
   };
 
@@ -106,7 +106,7 @@ const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, imgArea, onClose })
         }
         .image-container {
           display: flex;
-          ${guideSrc ? 'flex-direction: row;' : 'flex-direction: column; align-items: center;'}
+          ${guideSrc ? "flex-direction: row;" : "flex-direction: column; align-items: center;"}
           width: 100%;
           height: 100%;
           justify-content: center;
@@ -141,8 +141,7 @@ const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, imgArea, onClose })
           object-fit: cover;
         }
         .main-image {
-          ${guideSrc ? 'width: 45%; max-height: 350px;'
-      : 'width: auto; Height: 700px;'}
+          ${guideSrc ? "width: 45%; max-height: 350px;" : "width: auto; Height: 700px;"}
           object-fit: cover;
           margin-right: 10px;
         }
@@ -152,9 +151,13 @@ const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, imgArea, onClose })
       <div class="image-container">
         <img src="${src}" alt="Image 1" class="main-image">
         <div class="guide-image-container">
-        ${guideSrc ? `<div class="loading-message">Grid Guide 로딩 중입니다.<br/>
-          이미지 로딩에는 5초 이내의 시간이 소요됩니다.</div>` : ''}
-          ${guideSrc ? `<img src="${guideSrc}" alt="Image 2" class="guide-image" onload="imageLoaded()">` : ''}
+        ${
+          guideSrc
+            ? `<div class="loading-message">Grid Guide 로딩 중입니다.<br/>
+          이미지 로딩에는 5초 이내의 시간이 소요됩니다.</div>`
+            : ""
+        }
+          ${guideSrc ? `<img src="${guideSrc}" alt="Image 2" class="guide-image" onload="imageLoaded()">` : ""}
         </div>
       </div>
       <script>
@@ -167,7 +170,6 @@ const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, imgArea, onClose })
     </html>
     `;
 
-
   return (
     <div style={styles.modalBackground} onClick={onClose}>
       <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -175,10 +177,12 @@ const ImgIframe: React.FC<ImgIframeProps> = ({ src, imgDesc, imgArea, onClose })
           id="imageFrame"
           srcDoc={iframeContent}
           title="Image Frame"
-          style={{ width: '100%', height: '100%', border: 'none' }}
+          style={{ width: "100%", height: "100%", border: "none" }}
         ></iframe>
         <p style={styles.text}>모달의 바깥 영역을 클릭 시 창이 닫힙니다.</p>
-        <div style={styles.closeButton} onClick={onClose}>X</div>
+        <div style={styles.closeButton} onClick={onClose}>
+          X
+        </div>
       </div>
     </div>
   );
