@@ -53,6 +53,7 @@
     "proxy": "http://121.252.182.166:8080"
   },
   "devDependencies": {
+    "@reduxjs/toolkit": "^2.2.7",
     "@types/jquery": "^3.5.29"
   }
 }

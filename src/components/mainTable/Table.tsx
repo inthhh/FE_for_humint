@@ -1,22 +1,19 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { COLUMNS } from './Columns';
 import { usePagination, useTable } from 'react-table';
 import './Table.css';
 import SelectDate from './selectFilters/SelectDate';
-import SelectResult from './selectFilters/SelectResult';
 import SelectSiteCode from './selectFilters/SelectSiteCode';
 import SelectPage from './selectFilters/SelectPage';
+import SelectResult from './selectFilters/SelectResult';
 import SelectComponent from './selectFilters/SelectComponent';
-import SelectDevice from './selectFilters/SelectDevice'
+import SelectDevice from './selectFilters/SelectDevice';
 import ScrollToTopBtn from './ScrollToTopBtn';
-import axios from 'axios';
 import { Provider } from 'react-redux';
-import store from '../../redux/store';
-import { DateOption, SiteCodeOption, ResultOption } from "../../redux/store";
-import { useDispatch, useSelector } from "react-redux";
-import { Cookies } from 'react-cookie';
-import { setCookie, getCookie } from '../../utils/cookieUtils';
-import { Guide, datalist, Guideline } from './interfaces';
+import { store } from '../../redux/store';
+import { useSelector } from "react-redux";
+import { getCookie } from '../../utils/cookieUtils';
+import { Guide, datalist } from '../../interfaces/interfaceTable';
 import './base.css'
 
 import { getAPI_, searchAPI_, editAPI_, getGuideAPI_ } from './tableUtils/tableApi';
@@ -25,6 +22,7 @@ import { CheckReasonColumns } from './tableUtils/reasonColumn';
 import { CheckResultColumns } from './tableUtils/resultColumn';
 import { ColGroup } from './tableUtils/colGroup';
 import ImgIframe from './tableUtils/imgIframe';
+import { RootState } from '../../interfaces/interfaceRedux';
 
 /**
  * Table.tsx - 모든 데이터를 조회하거나 수정할 수 있는 테이블 컴포넌트입니다.
@@ -45,15 +43,15 @@ export const Table = () => {
         getTableBodyProps,
         headerGroups,
         page,
-        nextPage,
-        previousPage,
-        canNextPage,
-        canPreviousPage,
-        pageOptions,
-        gotoPage,
-        pageCount,
+        // nextPage,
+        // previousPage,
+        // canNextPage,
+        // canPreviousPage,
+        // pageOptions,
+        // gotoPage,
+        // pageCount,
         setPageSize,
-        state,
+        // state,
         prepareRow,
     } = useTable({
         // @ts-ignore
@@ -64,15 +62,16 @@ export const Table = () => {
 
     );
 
+
     // redux data
-    const dispatch = useDispatch();
-    const date = useSelector((state: any) => state.DateOption);
-    const ct = useSelector((state: any) => state.SiteCodeOption);
-    const result = useSelector((state: any) => state.ResultOption);
-    const myname = useSelector((state: any) => state.myName);
-    const pagetype = useSelector((state: any) => state.PageTypeOption);
-    const component = useSelector((state:any) => state.ComponentOption);
-    const device = useSelector((state:any) => state.DeviceOption);
+    // const dispatch = useDispatch();
+    // const myname = useSelector((state: RootState) => state.user.myName);
+    const date = useSelector((state: RootState) => state.product.DateOption);
+    const ct = useSelector((state: RootState) => state.product.SiteCodeOption);
+    const result = useSelector((state: RootState) => state.product.ResultOption);
+    const pagetype = useSelector((state: RootState) => state.product.PageTypeOption);
+    const component = useSelector((state:RootState) => state.product.ComponentOption);
+    const device = useSelector((state:RootState) => state.product.DeviceOption);
 
     // 검색 ID
     const [searchId, setSearchId] = useState<string>("");
@@ -91,7 +90,7 @@ export const Table = () => {
     // check_reason 한글로 저장
     const [ByRowKorean, setByRowKorean] = useState<{ [key: number]: string[] }>({});
     // 페이지 인덱싱
-    const { pageIndex, pageSize } = state
+    // const { pageIndex, pageSize } = state
     // 이미지 클릭 시 띄울 iframe
     const [iframeSrcs, setIframeSrcs] = useState<string>("");
     const [iframeDesc, setIframeDesc] = useState<string>("");
@@ -138,7 +137,7 @@ export const Table = () => {
     const searchAPI = async () => {
         if (Number(searchId) > 0) {
             const tableData = await searchAPI_(searchId, apiUrl);
-            if (tableData != "error") {
+            if (tableData !== "error") {
                 setDataList(tableData);
                 setDataBackup(tableData);
             }
@@ -170,7 +169,7 @@ export const Table = () => {
             }
             console.log(name)
             const editData = await editAPI_(apiUrl, YN, name, id, ri, idlist);
-            if (editData != "error") {
+            if (editData !== "error") {
                 console.log("저장 완료", YN, idlist);
 
                 setDataList(prevDataList => {
@@ -231,26 +230,26 @@ export const Table = () => {
      * @function
      * Check 값을 저장해둔 dataList 배열을 초기화 및 갱신하는 함수입니다.
      */
-    const resetSelectedResult = () => {
+    const resetSelectedResult = useCallback(() => {
         const updatedValues: string[] = [];
         dataList.forEach((item, index) => {
             updatedValues[index] = dataList[index].check_result;
         });
         setSelectedResult(updatedValues);
-    };
+    }, [dataList]);
 
     /**
      * @function
      * 가이드 ID 리스트를 한글값 리스트로 초기화 및 갱신하는 함수입니다.
      */
-    const resetSelectedGuides = () => {
+    const resetSelectedGuides = useCallback(() => {
         setByRowKorean([]);
         const koreans: { [key: number]: string[] } = {};
 
         dataList?.forEach((item, index) => {
             const guideIds = item.check_reason;
             const uniqueKoreans: Set<string> = new Set();
-            if (Array.isArray(guideIds)) {
+            if (Array.isArray(guideIds) && Array.isArray(guideObj)) {
                 guideIds.forEach((guideId) => {
                     guideObj.forEach((obj) => {
                         if (obj.id === guideId) {
@@ -263,13 +262,13 @@ export const Table = () => {
             koreans[index] = Array.from(uniqueKoreans);
         });
         setByRowKorean(koreans);
-    };
+    }, [dataList, guideObj]);
 
     // dataList(전체 데이터)가 변경될때마다 결과 및 가이드 배열을 갱신
     useEffect(() => {
         resetSelectedResult();
         resetSelectedGuides();
-    }, [dataList]);
+    }, [dataList, resetSelectedGuides, resetSelectedResult]);
 
     /**
      * @function
@@ -373,7 +372,7 @@ export const Table = () => {
             <Provider store={store}>
                 <header className="header-wrap">
                     <p className="text-type">Humint QA</p>
-                    <div className="text-user">☑️ {getCookie('myName')}님 환영합니다.</div>
+	                    <div className="text-user">☑️ {getCookie('myName')}님 환영합니다.</div>
                 </header>
                     {/* 테이블 위 Filter */}
                     <div className="filter-wrap">
@@ -472,7 +471,7 @@ export const Table = () => {
                                                             {/* contents가 https로 시작한다면 이미지 출력, 너비 고정 */}
                                                             {dataList[ri].contents && dataList[ri].contents.startsWith("https:") ? (
                                                                 <div>
-                                                                    <img src={dataList[ri].contents} alt="image" style={{ width: '300px', cursor: "pointer" }}
+                                                                    <img src={dataList[ri].contents} alt="" style={{ width: '300px', cursor: "pointer" }}
                                                                         onClick={() => handleImgClick(dataList[ri])} />
                                                                 </div>
                                                             ) : (

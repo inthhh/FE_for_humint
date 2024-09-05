@@ -1,0 +1,1 @@
+export const SET_MYNAME = "SET_MYNAME";

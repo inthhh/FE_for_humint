@@ -1,5 +1,5 @@
 import React from 'react';
-import { Guide, datalist, Guideline } from '../interfaces';
+import { Guide, datalist } from '../../../interfaces/interfaceTable';
 import '../Table.css'
 
 /**
@@ -41,7 +41,7 @@ export const CheckReasonColumns: React.FC<checkReasonProps> = ({ ri, dataList, g
                                     dataList[ri].title === "Description Text" ||
                                     dataList[ri].title === "Title" ||
                                     dataList[ri].title === "Description")
-                                && obj.reason_subject == "Text"
+                                && obj.reason_subject === "Text"
                             ) {
                                 return (
                                     <option value={obj.id} id={obj.id}>{obj.reason_value_kor}</option>
